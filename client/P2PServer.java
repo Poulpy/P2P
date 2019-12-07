@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-
+import java.security.MessageDigest;
+import java.security.DigestException;
+import java.security.NoSuchAlgorithmException;
 public class P2PServer {
 
    public static void main(String[] args){
@@ -18,11 +20,29 @@ public class P2PServer {
           System.out.println(user_id + " " + passwd);*/
          Socket sock = new Socket("127.0.0.1", 50000);
          //String request = user_id + "," + passwd;
-         String request = "truc" + "," + "bidule";
+         String data = "truc" + "," + "bidule";
+
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(data.getBytes());
+            byte[] messageDigestMD5 = messageDigest.digest();
+            StringBuffer stringBuffer = new StringBuffer();
+            for (byte bytes : messageDigestMD5) {
+                stringBuffer.append(String.format("%02x", bytes & 0xff));
+            }
+
+            System.out.println("data:" + data);
+            System.out.println("digestedMD5(hex):" + stringBuffer.toString());
+        } catch (NoSuchAlgorithmException exception) {
+            // TODO Auto-generated catch block
+            exception.printStackTrace();
+        }
+         /*
          BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
 
          bos.write(request.getBytes());
-         bos.flush();
+         bos.flush();*/
 
 
          /*Socket sock = new Socket("127.0.0.1", 20);
