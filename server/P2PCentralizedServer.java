@@ -25,6 +25,13 @@ public class P2PCentralizedServer {
 
          System.out.println("CONTENT : " + content);
 
+         int index = content.indexOf(' ');
+         String cmd = content.substring(0, index - 1);
+         String text = content.substring(index + 1, content.length() - 1);
+         System.out.println("COMMAND " + cmd);
+         System.out.println("TEXT " + text);
+
+
       } catch (UnknownHostException e) {
          e.printStackTrace();
       } catch (IOException e) {
