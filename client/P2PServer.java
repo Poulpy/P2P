@@ -1,4 +1,3 @@
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -8,6 +7,7 @@ import java.util.Scanner;
 import java.security.MessageDigest;
 import java.security.DigestException;
 import java.security.NoSuchAlgorithmException;
+
 public class P2PServer {
 
     // Identifiant de l'utilisateur
@@ -50,6 +50,8 @@ public class P2PServer {
             System.out.println(s.id + " " + s.mdp);
             Socket sock = new Socket(s.adrServeurCentral, s.port);
 
+            // Chiffrement du mot de passe
+            // -> méthode ?
             MessageDigest messageDigest;
             try {
                 messageDigest = MessageDigest.getInstance("MD5");
@@ -66,6 +68,7 @@ public class P2PServer {
             }
          BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
 
+         // Envoi de l'identifiant et du mot de passe au serveur
          bos.write(s.getUserCmd().getBytes());
          bos.flush();
          bos.write(s.getPassCmd().getBytes());
