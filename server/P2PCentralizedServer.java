@@ -1,4 +1,3 @@
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -23,8 +22,13 @@ public class P2PCentralizedServer {
             content += new String(b, 0, stream);
          }
 
+         // Affichage du message reçu
          System.out.println("CONTENT : " + content);
 
+         // Séparation de la commande et du texte. Exemple :
+         // USER toto
+         // PASS mot_de_passe
+         // On récupère l'indice où apparaît le le permier espace
          int index = content.indexOf(' ');
          String cmd = content.substring(0, index - 1);
          String text = content.substring(index + 1, content.length() - 1);
