@@ -9,14 +9,22 @@ import java.util.Scanner;
 public class P2PServer {
 
    public static void main(String[] args){
-      //try {
-          Scanner scan = new Scanner(System.in);
+      try {
+          /*Scanner scan = new Scanner(System.in);
           System.out.print("Identifiant : ");
           String user_id = scan.nextLine();
           System.out.print("Mot de passe : ");
           String passwd = scan.nextLine();
-          System.out.println(user_id + " " + passwd);
-         //On se connecte à Wikipedia
+          System.out.println(user_id + " " + passwd);*/
+         Socket sock = new Socket("127.0.0.1", 50000);
+         //String request = user_id + "," + passwd;
+         String request = "truc" + "," + "bidule";
+         BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
+
+         bos.write(request.getBytes());
+         bos.flush();
+
+
          /*Socket sock = new Socket("127.0.0.1", 20);
 
          //Nous allons faire une demande au serveur web
@@ -48,11 +56,11 @@ public class P2PServer {
 
          //On affiche la page !
          Browser browser = new Browser("fr.wikipedia.org", content);*/
-/*
+
       } catch (UnknownHostException e) {
          e.printStackTrace();
       } catch (IOException e) {
          e.printStackTrace();
-      }*/
+      }
    }
 }
