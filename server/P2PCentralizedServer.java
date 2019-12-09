@@ -10,56 +10,43 @@ import java.util.Scanner;
 
 public class P2PCentralizedServer {
 
+    private String adresseIP = "127.0.0.1";
+    private int port = 50000;
+
+    public P2PCentralizedServer() {
+    }
+
    public static void main(String[] args){
-      try {
-         ServerSocket serveurCentral = new ServerSocket(50000, 10, InetAddress.getByName("127.0.0.1"));
-         Socket client = serveurCentral.accept();
-         //PrintWriter ecrivain = new PrintWriter(client.getOutputStream());
-         BufferedInputStream bis = new BufferedInputStream(client.getInputStream());
+        P2PCentralizedServer s = new P2PCentralizedServer();
+        String contenu = "";
+        int stream;
+        byte[] b = new byte[1024];
+        int index;
 
-         String contenu = "";
-         int stream;
-         byte[] b = new byte[1024];
-         int index;
-         stream = bis.read(b);
-         contenu = new String(b, 0, stream);
+        try {
+            ServerSocket serveurCentral = new ServerSocket(s.port, 10, InetAddress.getByName(s.adresseIP));
+            Socket client = serveurCentral.accept();
+            BufferedInputStream lecteur = new BufferedInputStream(client.getInputStream());
 
-         // Affichage du message reçu
-         System.out.println("CONTENT : " + contenu);
+            // le serveur écoute/reçoit ce qu'on lui envoie
+            while ((stream = lecteur.read(b)) != -1) {
+                contenu = new String(b, 0, stream);
 
-         // Séparation de la commande et du texte. Exemple :
-         // USER toto
-         // PASS mot_de_passe
-         // On récupère l'indice où apparaît le le permier espace
+                // Séparation de la commande et du texte. Exemple :
+                // USER toto
+                // PASS mot_de_passe
+                // On récupère l'indice où apparaît le le permier espace
 
-         index = contenu.indexOf(' ');
-         String type = contenu.substring(0, index);
-         String text = contenu.substring(index + 1, contenu.length() - 1);
-         System.out.println("COMMAND " + type);
-         System.out.println("TEXT " + text);
-
-
-         stream = bis.read(b);
-         contenu = new String(b, 0, stream);
-
-         // Affichage du message reçu
-         System.out.println("CONTENT : " + contenu);
-
-         // Séparation de la commande et du texte. Exemple :
-         // USER toto
-         // PASS mot_de_passe
-         // On récupère l'indice où apparaît le le permier espace
-
-         index = contenu.indexOf(' ');
-         type = contenu.substring(0, index);
-         text = contenu.substring(index + 1, contenu.length() - 1);
-         System.out.println("COMMAND " + type);
-         System.out.println("TEXT " + text);
-
-      } catch (UnknownHostException e) {
-         e.printStackTrace();
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-   }
+                index = contenu.indexOf(' ');
+                String type = contenu.substring(0, index);
+                String text = contenu.substring(index + 1, contenu.length() - 1);
+                System.out.println("COMMAND " + type);
+                System.out.println("TEXT " + text);
+            }
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
