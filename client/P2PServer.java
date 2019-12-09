@@ -1,4 +1,5 @@
 import java.io.BufferedInputStream;
+import java.io.PrintWriter;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -21,6 +22,8 @@ public class P2PServer {
     // Port de la socket
     private int port = 50000;
 
+    private PrintWriter ecrivain;
+
     public P2PServer() {
     }
 
@@ -35,6 +38,13 @@ public class P2PServer {
         mdp = scan.nextLine();
     }
 
+    public void envoyerCommande(String cmd) {
+        cmd += "\r\n";
+        ecrivain.write(cmd);
+        ecrivain.flush();
+    }
+
+
     public String getUserCmd() {
         return "USER " + id;
     }
@@ -45,10 +55,12 @@ public class P2PServer {
 
     public static void main(String[] args) {
         P2PServer s= new P2PServer();
+        Socket sock = null;
+
         try {
             // s.entreIdentifiantEtMotDePasse();
             System.out.println(s.id + " " + s.mdp);
-            Socket sock = new Socket(s.adrServeurCentral, s.port);
+            sock = new Socket(s.adrServeurCentral, s.port);
 
             // Chiffrement du mot de passe
             // -> méthode ?
@@ -66,18 +78,26 @@ public class P2PServer {
             } catch (NoSuchAlgorithmException exception) {
                 exception.printStackTrace();
             }
-         BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
+            s.ecrivain = new PrintWriter(sock.getOutputStream());
+            BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
 
-         // Envoi de l'identifiant et du mot de passe au serveur
-         bos.write(s.getUserCmd().getBytes());
-         bos.flush();
-         bos.write(s.getPassCmd().getBytes());
-         bos.flush();
+            // Envoi de l'identifiant et du mot de passe au serveur
+            s.envoyerCommande(s.getUserCmd());
+            s.envoyerCommande(s.getPassCmd());
 
-      } catch (UnknownHostException e) {
-         e.printStackTrace();
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-   }
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (sock != null) {
+                try {
+                    sock.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    sock = null;
+                }
+            }
+        }
+    }
 }
