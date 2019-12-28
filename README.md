@@ -9,12 +9,12 @@ Le client envoie des *commandes* au serveur :
 Une communication TCP ressemble donc à ça :
 Le client envoie le message suivant au serveur grâce à une socket :
 
-´´´USER toto´´´
+´USER toto´
 
 
 Si succès, le client envoie son mot de passe pour finaliser sa connexion :
 
-´´´PASS password´´´
+´PASS password´
 
 Si le mot de passe est correct, l'utilisateur est connecté au serveur et peut donc lui
 envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serveur par exemple).
