@@ -21,7 +21,7 @@ public class P2PServer {
     private String adrServeurCentral = "127.0.0.1";
     // Port de la socket
     private int port = 50000;
-
+    // Sert à envoyer des messages à travers une socket
     private PrintWriter ecrivain;
 
     public P2PServer() {
@@ -38,19 +38,47 @@ public class P2PServer {
         mdp = scan.nextLine();
     }
 
+    /**
+     * Envoi d'une commande au serveur
+     */
     public void envoyerCommande(String cmd) {
         cmd += "\r\n";
         ecrivain.write(cmd);
         ecrivain.flush();
     }
 
-
+    /**
+     * String correspondant à la commande USER
+     */
     public String getUserCmd() {
         return "USER " + id;
     }
 
+    /**
+     * String correspondant à la commande PASS
+     */
     public String getPassCmd() {
         return "PASS " + hashMdp;
+    }
+
+    // Chiffrement du mot de passe
+    // Le mot de passe chiffré est dans les champs
+    // Je sais pas si c'est une bonne ou mauvaise idée
+    public void chiffreMdp() {
+        MessageDigest messageDigest;
+        try {
+            messageDigest = MessageDigest.getInstance("MD5");
+            messageDigest.update(this.mdp.getBytes());
+            byte[] messageDigestMD5 = messageDigest.digest();
+            StringBuffer stringBuffer = new StringBuffer();
+            for (byte bytes : messageDigestMD5) {
+                stringBuffer.append(String.format("%02x", bytes & 0xff));
+            }
+
+            this.hashMdp = stringBuffer.toString();
+        } catch (NoSuchAlgorithmException exception) {
+            exception.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
@@ -63,28 +91,17 @@ public class P2PServer {
             sock = new Socket(s.adrServeurCentral, s.port);
 
             // Chiffrement du mot de passe
-            // -> méthode ?
-            MessageDigest messageDigest;
-            try {
-                messageDigest = MessageDigest.getInstance("MD5");
-                messageDigest.update(s.mdp.getBytes());
-                byte[] messageDigestMD5 = messageDigest.digest();
-                StringBuffer stringBuffer = new StringBuffer();
-                for (byte bytes : messageDigestMD5) {
-                    stringBuffer.append(String.format("%02x", bytes & 0xff));
-                }
-
-                s.hashMdp = stringBuffer.toString();
-            } catch (NoSuchAlgorithmException exception) {
-                exception.printStackTrace();
-            }
+            s.chiffreMdp();
             s.ecrivain = new PrintWriter(sock.getOutputStream());
             BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
 
-            // Envoi de l'identifiant et du mot de passe au serveur
+            // Faire un méthode login() ?
+            // Envoi de l'identifiant ...
             s.envoyerCommande(s.getUserCmd());
+            // ... et du mot de passe au serveur
             s.envoyerCommande(s.getPassCmd());
 
+        // Gestion d'exceptions
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
