@@ -12,11 +12,11 @@ import java.security.NoSuchAlgorithmException;
 public class P2PServer {
 
     // Identifiant de l'utilisateur
-    private String id = "toto";
+    public   String id = " ";
     // Mot de passe
-    private String mdp = "changeme";
+    public  String mdp = " ";
     // Hash du mot de passe
-    private String hashMdp;
+    public  String hashMdp = " 12333";
     // Adresse du serveur centralisé
     private String adrServeurCentral = "127.0.0.1";
     // Port de la socket
@@ -50,20 +50,21 @@ public class P2PServer {
     /**
      * String correspondant à la commande USER
      */
-    public String getUserCmd() {
-        return "USER " + id;
+    public  String getUserCmd() {
+        return  id;
     }
 
     /**
      * String correspondant à la commande PASS
      */
-    public String getPassCmd() {
-        return "PASS " + hashMdp;
+    public  String getPassCmd() {
+        return  mdp;
     }
 
     // Chiffrement du mot de passe
     // Le mot de passe chiffré est dans les champs
     // Je sais pas si c'est une bonne ou mauvaise idée
+    
     public void chiffreMdp() {
         MessageDigest messageDigest;
         try {
@@ -83,10 +84,14 @@ public class P2PServer {
 
     public static void main(String[] args) {
         P2PServer s= new P2PServer();
+        P2PCentralizedServer c= new P2PCentralizedServer();
+        
+        
+        
         Socket sock = null;
 
         try {
-            // s.entreIdentifiantEtMotDePasse();
+            s.entreIdentifiantEtMotDePasse();
             System.out.println(s.id + " " + s.mdp);
             sock = new Socket(s.adrServeurCentral, s.port);
 
@@ -116,5 +121,16 @@ public class P2PServer {
                 }
             }
         }
+        
+        
+        
+        
+        try {
+			c.EnregistrerUtilisateur(s.id,s.mdp);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+        
     }
 }
