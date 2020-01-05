@@ -35,10 +35,10 @@ public class P2PCentralizedServer {
 				if (utilisateurExiste(contenu)) {
 					// Renvoyer code de succès
 				} else {
-					//EnregistrerUtilisateur("tmp", "tmp");
+					//EnregistrerUtilisateur("tmp", "tmp");// TODO: à remplacer, j'ai juste mis des valeurs bidons
 				}
 			case "PASS":
-				if (mdpCorrect("tmp", "tmp")) {// TODO: à rempplacer, j'ai juste mis des valeurs bidons
+				if (mdpCorrect("tmp", "tmp")) {// TODO: à remplacer, j'ai juste mis des valeurs bidons
 					// Renvoyer code succès
 				} else {
 					// Code erreur
@@ -87,6 +87,7 @@ public class P2PCentralizedServer {
 		{
 			out.println(s + "    " + c);
 		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
