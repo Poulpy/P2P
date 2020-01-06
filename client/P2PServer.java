@@ -37,15 +37,6 @@ public class P2PServer {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (socket != null) {
-				try {
-					socket.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-					socket = null;
-				}
-			}
 		}
 	}
 
@@ -103,8 +94,10 @@ public class P2PServer {
 			do {
 				System.out.print("Identifiant : ");
 				id = scan.nextLine();
+				System.out.println("ID envoyé " + id);
 				envoyerCommande(getUserCmd());
 				reponse = recevoirMessage();
+				System.out.println(reponse);
 			} while (!reponse.startsWith("2"));
 
 			// ... puis le mot de passe
@@ -112,9 +105,11 @@ public class P2PServer {
 				System.out.print("Mot de passe : ");
 				mdp = scan.nextLine();
 				chiffreMdp();
+				System.out.println("Mot de passe envoyé " + mdp + "/" + hashMdp);
 				envoyerCommande(getPassCmd());
 				reponse = recevoirMessage();
-			} while (!reponse.startsWith("3"));
+				System.out.println(reponse);
+			} while (!reponse.startsWith("2"));
 
 			// Authentification réussie
 
@@ -172,7 +167,7 @@ public class P2PServer {
 	public static void main(String[] args) {
 		P2PServer s = new P2PServer();
 		s.open();
-		//s.login();
+		s.login();
 		s.close();
 	}
 }
