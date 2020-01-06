@@ -16,7 +16,7 @@ public class P2PCentralizedServer {
 	private String cheminUtilisateurs = "utilisateurs.csv";
 	private ServerSocket socket;
 	private Socket client;
-	private String sep = ",";
+	private String sep = "    ";
 	private String id;
 	private String mdp;
 	private PrintWriter ecrivain;
