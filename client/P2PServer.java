@@ -39,6 +39,48 @@ public class P2PServer {
 	}
 
 	/**
+	 * Authentification
+	 */
+	public void login() {
+		Scanner scan = new Scanner(System.in);
+
+		Socket sock = null;
+
+		try {
+			sock = new Socket(s.adrServeurCentral, s.port);
+
+			s.ecrivain = new PrintWriter(sock.getOutputStream());
+			BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
+
+			// On entre et on envoie l'identifiant ...
+			System.out.print("Identifiant : ");
+			id = scan.nextLine();
+			s.envoyerCommande(s.getUserCmd());
+
+			// ... puis le mot de passe
+			System.out.print("Mot de passe : ");
+			mdp = scan.nextLine();
+			s.chiffreMdp();
+			s.envoyerCommande(s.getPassCmd());
+
+		// Gestion d'exceptions
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (sock != null) {
+				try {
+					sock.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					sock = null;
+				}
+			}
+		}
+	}
+
+	/**
 	 * Envoi d'une commande au serveur
 	 */
 	public void envoyerCommande(String cmd) {
@@ -49,16 +91,18 @@ public class P2PServer {
 
 	/**
 	 * String correspondant à la commande USER
+	 * Commande pour envoyer son identifiant
 	 */
 	public	String getUserCmd() {
-		return	id;
+		return "USER" + id;
 	}
 
 	/**
 	 * String correspondant à la commande PASS
+	 * Commande pour envoyer le hash de son mot de passe
 	 */
 	public	String getPassCmd() {
-		return	hashMdp;
+		return "PASS" + hashMdp;
 	}
 
 	// Chiffrement du mot de passe
@@ -83,11 +127,13 @@ public class P2PServer {
 	}
 
 	public static void main(String[] args) {
-		P2PServer s= new P2PServer();
+		P2PServer s = new P2PServer();
+		s.login();
+
 		//P2PCentralizedServer c= new P2PCentralizedServer();
 
 
-
+		/*
 		Socket sock = null;
 
 		try {
@@ -121,6 +167,7 @@ public class P2PServer {
 				}
 			}
 		}
+		*/
 
 		/*
 		try {

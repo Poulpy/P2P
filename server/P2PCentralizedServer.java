@@ -58,10 +58,31 @@ public class P2PCentralizedServer {
 	 * On regarde si son identifiant/nom est présent
 	 * dans le fichier utilisateurs.csv
 	 * Les utilisateurs sont stockés comme ça :
-	 * identifiant,hash_du_mot_de_passe
+	 * identifiant    hash_du_mot_de_passe
 	 */
 	public boolean utilisateurExiste(String identifiant) {
-		return true;
+		BufferedReader lecteur;
+		String[] idMdp = new String[2];
+		String ligne;
+
+		try {
+			lecteur = new BufferedReader(new FileReader(cheminUtilisateurs));
+
+			// Lecture de chaque ligne
+			while ((ligne = lecteur.readLine()) != null) {
+				idMdp = ligne.split("    ");// TODO: constante pour séparateur
+
+				if (idMdp[0].compareTo(identifiant) == 0) {
+					return true;
+				}
+			}
+
+			lecteur.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 	/**
@@ -91,16 +112,18 @@ public class P2PCentralizedServer {
 		}
 	}
 
+	public void testUtilisateurExiste() {
+		if (utilisateurExiste("toto")) System.out.println("toto existe");
+		if (utilisateurExiste("titi")) System.out.println("titi existe");
+		if (utilisateurExiste("truc")) System.out.println("truc existe");
+	}
+
 
 	public static void main(String[] args){
 		 P2PCentralizedServer s= new P2PCentralizedServer();
 
-		try {
-			s.EnregistrerUtilisateur("toto", "qerghqmerguqhemgiu");
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		//s.EnregistrerUtilisateur("toto", "qerghqmerguqhemgiu");
+		s.testUtilisateurExiste();
 
 	}
 }
