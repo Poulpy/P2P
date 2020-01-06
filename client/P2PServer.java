@@ -23,6 +23,7 @@ public class P2PServer {
 	private int port = 50000;
 	// Sert à envoyer des messages à travers une socket
 	private PrintWriter ecrivain;
+	private Socket socket;
 
 	public P2PServer() {
 	}
@@ -38,45 +39,62 @@ public class P2PServer {
 		mdp = scan.nextLine();
 	}
 
+	public void open() {
+		try {
+			socket = new Socket(adrServeurCentral, port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (socket != null) {
+				try {
+					socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+					socket = null;
+				}
+			}
+		}
+	}
+
+	/**
+	 * Ferme la socket du client
+	 * Après que le client ait envoyé la commande QUIT
+	 */
+	public void close() {
+		try {
+			socket.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * Authentification
 	 */
 	public void login() {
 		Scanner scan = new Scanner(System.in);
 
-		Socket sock = null;
-
 		try {
-			sock = new Socket(s.adrServeurCentral, s.port);
-
-			s.ecrivain = new PrintWriter(sock.getOutputStream());
-			BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
+			ecrivain = new PrintWriter(socket.getOutputStream());
+			BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
 
 			// On entre et on envoie l'identifiant ...
 			System.out.print("Identifiant : ");
 			id = scan.nextLine();
-			s.envoyerCommande(s.getUserCmd());
+			envoyerCommande(getUserCmd());
 
 			// ... puis le mot de passe
 			System.out.print("Mot de passe : ");
 			mdp = scan.nextLine();
-			s.chiffreMdp();
-			s.envoyerCommande(s.getPassCmd());
+			chiffreMdp();
+			envoyerCommande(getPassCmd());
 
-		// Gestion d'exceptions
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			if (sock != null) {
-				try {
-					sock.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-					sock = null;
-				}
-			}
 		}
 	}
 
@@ -128,54 +146,8 @@ public class P2PServer {
 
 	public static void main(String[] args) {
 		P2PServer s = new P2PServer();
-		s.login();
-
-		//P2PCentralizedServer c= new P2PCentralizedServer();
-
-
-		/*
-		Socket sock = null;
-
-		try {
-			s.entreIdentifiantEtMotDePasse();
-			System.out.println(s.id + " " + s.mdp);
-			sock = new Socket(s.adrServeurCentral, s.port);
-
-			// Chiffrement du mot de passe
-			s.chiffreMdp();
-			s.ecrivain = new PrintWriter(sock.getOutputStream());
-			BufferedOutputStream bos = new BufferedOutputStream(sock.getOutputStream());
-
-			// Faire un méthode login() ?
-			// Envoi de l'identifiant ...
-			s.envoyerCommande(s.getUserCmd());
-			// ... et du mot de passe au serveur
-			s.envoyerCommande(s.getPassCmd());
-
-		// Gestion d'exceptions
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			if (sock != null) {
-				try {
-					sock.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-					sock = null;
-				}
-			}
-		}
-		*/
-
-		/*
-		try {
-			c.EnregistrerUtilisateur(s.id, s.hashMdp);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		*/
+		s.open();
+		//s.login();
+		s.close();
 	}
 }

@@ -14,6 +14,8 @@ public class P2PCentralizedServer {
 	// Chemin du fichier contenant les utilisateurs connus du serveur
 	// identifiant,hash du mot de passe
 	private String cheminUtilisateurs = "utilisateurs.csv";
+	private ServerSocket socket;
+	private Socket client;
 
 	public P2PCentralizedServer() {
 	}
@@ -48,6 +50,47 @@ public class P2PCentralizedServer {
 	}
 
 	/**
+	 * Ouvre une socket pour le serveur
+	 * Ouvre une socket pour le client
+	 * TODO: gérer plusieurs clients, méthode pour ouvrir une socket seulement
+	 * pour le client ? Les sockets des clients seraient stockées dans un tableau
+	 */
+	public void open() {
+		try {
+			socket = new ServerSocket(port, 10, InetAddress.getByName(adresseIP));
+			client = socket.accept();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void closeServerSocket() {
+		try {
+			socket.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Ferme la socket du client
+	 * Après que le client ait envoyé la commande QUIT
+	 */
+	public void closeClientSocket() {
+		try {
+			client.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
 	 * TODO Renvoie un code (succès / échec)
 	 */
 	public void renvoyerCode() {
@@ -58,7 +101,7 @@ public class P2PCentralizedServer {
 	 * On regarde si son identifiant/nom est présent
 	 * dans le fichier utilisateurs.csv
 	 * Les utilisateurs sont stockés comme ça :
-	 * identifiant    hash_du_mot_de_passe
+	 * identifiant	  hash_du_mot_de_passe
 	 */
 	public boolean utilisateurExiste(String identifiant) {
 		BufferedReader lecteur;
@@ -70,7 +113,7 @@ public class P2PCentralizedServer {
 
 			// Lecture de chaque ligne
 			while ((ligne = lecteur.readLine()) != null) {
-				idMdp = ligne.split("    ");// TODO: constante pour séparateur
+				idMdp = ligne.split("	 ");// TODO: constante pour séparateur
 
 				if (idMdp[0].compareTo(identifiant) == 0) {
 					return true;
@@ -100,7 +143,7 @@ public class P2PCentralizedServer {
 
 			// Lecture de chaque ligne
 			while ((ligne = lecteur.readLine()) != null) {
-				idMdp = ligne.split("    ");// TODO: constante pour séparateur
+				idMdp = ligne.split("	 ");// TODO: constante pour séparateur
 
 				if (idMdp[0].compareTo(identifiant) == 0 && idMdp[1].compareTo(hashMdp) == 0) {
 					return true;
@@ -127,7 +170,7 @@ public class P2PCentralizedServer {
 			BufferedWriter bw = new BufferedWriter(fw);
 			PrintWriter out = new PrintWriter(bw))
 		{
-			out.println(s + "    " + c);
+			out.println(s + "	 " + c);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -148,10 +191,13 @@ public class P2PCentralizedServer {
 
 	public static void main(String[] args){
 		 P2PCentralizedServer s= new P2PCentralizedServer();
+		 s.open();
 
 		//s.EnregistrerUtilisateur("toto", "qerghqmerguqhemgiu");
 		//s.testUtilisateurExiste();
-		s.testMdpCorrect();
+		//s.testMdpCorrect();
+		s.closeServerSocket();
+		s.closeClientSocket();
 
 	}
 }
