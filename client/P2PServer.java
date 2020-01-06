@@ -28,16 +28,7 @@ public class P2PServer {
 	public P2PServer() {
 	}
 
-	/**
-	 * L'utilisateur entre son identifiant et mot de passe
-	 */
-	public void entreIdentifiantEtMotDePasse() {
-		Scanner scan = new Scanner(System.in);
-		System.out.print("Identifiant : ");
-		id = scan.nextLine();
-		System.out.print("Mot de passe : ");
-		mdp = scan.nextLine();
-	}
+
 
 	public void open() {
 		try {
@@ -73,25 +64,59 @@ public class P2PServer {
 	}
 
 	/**
+	 * Retourne un message reçut par socket
+	 */
+	public String recevoirMessage() {
+		int index;
+		int stream;
+		byte[] b = new byte[1024];
+		String msg = new String();
+
+		try {
+			BufferedInputStream lecteur = new BufferedInputStream(socket.getInputStream());
+
+			// A revoir
+			while ((stream = lecteur.read(b)) != -1) {
+				msg = new String(b, 0, stream);
+				break;// pas beau
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return msg;
+	}
+
+	/**
 	 * Authentification
 	 */
 	public void login() {
 		Scanner scan = new Scanner(System.in);
+		String reponse;
 
 		try {
 			ecrivain = new PrintWriter(socket.getOutputStream());
 			BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
+			BufferedInputStream lecteur = new BufferedInputStream(socket.getInputStream());
 
 			// On entre et on envoie l'identifiant ...
-			System.out.print("Identifiant : ");
-			id = scan.nextLine();
-			envoyerCommande(getUserCmd());
+			do {
+				System.out.print("Identifiant : ");
+				id = scan.nextLine();
+				envoyerCommande(getUserCmd());
+				reponse = recevoirMessage();
+			} while (!reponse.startsWith("2"));
 
 			// ... puis le mot de passe
-			System.out.print("Mot de passe : ");
-			mdp = scan.nextLine();
-			chiffreMdp();
-			envoyerCommande(getPassCmd());
+			do {
+				System.out.print("Mot de passe : ");
+				mdp = scan.nextLine();
+				chiffreMdp();
+				envoyerCommande(getPassCmd());
+				reponse = recevoirMessage();
+			} while (!reponse.startsWith("3"));
+
+			// Authentification réussie
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -111,16 +136,16 @@ public class P2PServer {
 	 * String correspondant à la commande USER
 	 * Commande pour envoyer son identifiant
 	 */
-	public	String getUserCmd() {
-		return "USER" + id;
+	public String getUserCmd() {
+		return "USER " + id;
 	}
 
 	/**
 	 * String correspondant à la commande PASS
 	 * Commande pour envoyer le hash de son mot de passe
 	 */
-	public	String getPassCmd() {
-		return "PASS" + hashMdp;
+	public String getPassCmd() {
+		return "PASS " + hashMdp;
 	}
 
 	// Chiffrement du mot de passe

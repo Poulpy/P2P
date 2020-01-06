@@ -16,6 +16,13 @@ public class P2PCentralizedServer {
 	private String cheminUtilisateurs = "utilisateurs.csv";
 	private ServerSocket socket;
 	private Socket client;
+	private String sep = "    ";
+	private String id;
+	private String mdp;
+	private PrintWriter ecrivain;
+	private BufferedOutputStream bos;
+	// voir méthode gererMessage
+	private boolean nouvelUtilisateur = false;
 
 	public P2PCentralizedServer() {
 	}
@@ -35,18 +42,70 @@ public class P2PCentralizedServer {
 		switch (commande) {
 			case "USER":
 				if (utilisateurExiste(contenu)) {
-					// Renvoyer code de succès
+					id = contenu;
+					envoyerMessage("200 Bon identifiant");
 				} else {
-					//EnregistrerUtilisateur("tmp", "tmp");// TODO: à remplacer, j'ai juste mis des valeurs bidons
+					nouvelUtilisateur = true;
+					envoyerMessage("201 Identifiant inconnu");
 				}
 			case "PASS":
-				if (mdpCorrect("tmp", "tmp")) {// TODO: à remplacer, j'ai juste mis des valeurs bidons
-					// Renvoyer code succès
+				if (mdpCorrect(id, mdp)) {
+					mdp = contenu;
+					envoyerMessage("200 Mot de passe correct");
+				} else if (nouvelUtilisateur) {
+					EnregistrerUtilisateur(id, mdp);
+					nouvelUtilisateur = false;
+					envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
 				} else {
-					// Code erreur
+					envoyerMessage("300 Mot de passe incorrect pour " + id);
 				}
+			case "QUIT":
+				// fermer la socket du client
 			default:
 		}
+	}
+
+	public void envoyerMessage(String msg) {
+		msg += "\r\n";
+		ecrivain.write(msg);
+		ecrivain.flush();
+	}
+
+	/**
+	 */
+	public void listen() {
+		String contenu = "";
+
+		int stream;
+		byte[] b = new byte[1024];
+		int index;
+
+		try {
+			BufferedInputStream lecteur = new BufferedInputStream(client.getInputStream());
+
+			// le serveur écoute/reçoit ce qu'on lui envoie
+			while ((stream = lecteur.read(b)) != -1) {
+				contenu = new String(b, 0, stream);
+
+				// Séparation de la commande et du texte. Exemple :
+				// USER toto
+				// PASS mot_de_passe
+				// On récupère l'indice où apparaît le le permier espace
+				// On ne peut utiliser split car le message peut contenir aussi des espaces
+
+				index = contenu.indexOf(' ');
+				String type = contenu.substring(0, index);
+				String text = contenu.substring(index + 1, contenu.length() - 1);
+				System.out.println("COMMAND " + type);
+				System.out.println("TEXT " + text);
+                gererMessage(type, text);
+			}
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 	}
 
 	/**
@@ -59,6 +118,8 @@ public class P2PCentralizedServer {
 		try {
 			socket = new ServerSocket(port, 10, InetAddress.getByName(adresseIP));
 			client = socket.accept();
+			ecrivain = new PrintWriter(client.getOutputStream());
+			bos = new BufferedOutputStream(client.getOutputStream());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -113,7 +174,7 @@ public class P2PCentralizedServer {
 
 			// Lecture de chaque ligne
 			while ((ligne = lecteur.readLine()) != null) {
-				idMdp = ligne.split("	 ");// TODO: constante pour séparateur
+				idMdp = ligne.split(sep);// TODO: constante pour séparateur
 
 				if (idMdp[0].compareTo(identifiant) == 0) {
 					return true;
@@ -143,7 +204,7 @@ public class P2PCentralizedServer {
 
 			// Lecture de chaque ligne
 			while ((ligne = lecteur.readLine()) != null) {
-				idMdp = ligne.split("	 ");// TODO: constante pour séparateur
+				idMdp = ligne.split(sep);
 
 				if (idMdp[0].compareTo(identifiant) == 0 && idMdp[1].compareTo(hashMdp) == 0) {
 					return true;
@@ -164,17 +225,21 @@ public class P2PCentralizedServer {
 	 * Ou on renseigne d'abord l'identifiant puis on complète plus
 	 * tard par le mot de passe ?
 	 * On suppose que l'utilisateur n'existe pas déjà
+	 * TODO : relire le code, le try est un peu bizare
 	 */
-	public	void EnregistrerUtilisateur(String s, String c ) throws IOException {
-		try(FileWriter fw = new FileWriter(cheminUtilisateurs, true);
+	public void EnregistrerUtilisateur(String s, String c) {
+		try (FileWriter fw = new FileWriter(cheminUtilisateurs, true);
 			BufferedWriter bw = new BufferedWriter(fw);
 			PrintWriter out = new PrintWriter(bw))
 		{
-			out.println(s + "	 " + c);
+			out.println(s + sep + c);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
+	/* Tests
+	 * TODO: mettre dans une classe à part */
 
 	public void testUtilisateurExiste() {
 		if (utilisateurExiste("toto")) System.out.println("toto existe");
@@ -183,19 +248,21 @@ public class P2PCentralizedServer {
 	}
 
 	public void testMdpCorrect() {
-		if (mdpCorrect("toto", "4cb9c8a8048fd02294477fcb1a41191a")) System.out.println("toto 4cb9c8a8048fd02294477fcb1a41191a");
-		if (mdpCorrect("toto", "a")) System.out.println("toto a");
-		if (mdpCorrect("titi", "21232f297a57a5a743894a0e4a801fc3")) System.out.println("titi 21232f297a57a5a743894a0e4a801fc3");
+		if (mdpCorrect("toto", "4cb9c8a8048fd02294477fcb1a41191a"))
+			System.out.println("toto 4cb9c8a8048fd02294477fcb1a41191a");
+		if (mdpCorrect("toto", "a"))
+			System.out.println("toto a");
+		if (mdpCorrect("titi", "21232f297a57a5a743894a0e4a801fc3"))
+			System.out.println("titi 21232f297a57a5a743894a0e4a801fc3");
 	}
 
+	/* Main */
 
 	public static void main(String[] args){
-		 P2PCentralizedServer s= new P2PCentralizedServer();
-		 s.open();
+		P2PCentralizedServer s = new P2PCentralizedServer();
+		s.open();
 
-		//s.EnregistrerUtilisateur("toto", "qerghqmerguqhemgiu");
-		//s.testUtilisateurExiste();
-		//s.testMdpCorrect();
+		s.listen();
 		s.closeServerSocket();
 		s.closeClientSocket();
 
