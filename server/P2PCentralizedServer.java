@@ -42,9 +42,6 @@ public class P2PCentralizedServer {
 		switch (commande) {
 			case "USER":
 				id = contenu;
-				System.out.println(id);
-				System.out.println(contenu);
-				System.out.println("id :" + id + ":");
 				if (utilisateurExiste(id)) {
 					envoyerMessage("200 Bon identifiant");
 				} else {
@@ -54,7 +51,6 @@ public class P2PCentralizedServer {
 				break;
 			case "PASS":
 				mdp = contenu;
-				System.out.println(mdp);
 
 				if (nouvelUtilisateur) {
 					EnregistrerUtilisateur(id, mdp);
@@ -67,60 +63,27 @@ public class P2PCentralizedServer {
 				}
 				break;
 			case "QUIT":
-				// fermer la socket du client
+				// TODO: fermer la socket du client
 			default:
 		}
 	}
 
+	/**
+	 * Envoie un message sur la socket
+	 */
 	public void envoyerMessage(String msg) {
 		msg += "\r\n";
 		ecrivain.write(msg);
 		ecrivain.flush();
 	}
 
-	/**
-	 */
-	public void listen() {
-		String contenu = "";
-
-		int stream;
-		byte[] b = new byte[1024];
-		int index;
-
-		try {
-			BufferedInputStream lecteur = new BufferedInputStream(client.getInputStream());
-
-			// le serveur écoute/reçoit ce qu'on lui envoie
-			while ((stream = lecteur.read(b)) != -1) {
-				contenu = new String(b, 0, stream);
-
-				// Séparation de la commande et du texte. Exemple :
-				// USER toto
-				// PASS mot_de_passe
-				// On récupère l'indice où apparaît le le permier espace
-				// On ne peut utiliser split car le message peut contenir aussi des espaces
-
-				index = contenu.indexOf(' ');
-				String type = contenu.substring(0, index);
-				String text = contenu.substring(index + 1, contenu.length() - 1);
-				System.out.println("COMMAND " + type);
-				System.out.println("TEXT " + text);
-				text = text.replaceAll("(\\r|\\n)", "");
-                gererMessage(type, text);
-			}
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-	}
 
 	/**
 	 * Ouvre une socket pour le serveur
 	 * Ouvre une socket pour le client
 	 * TODO: gérer plusieurs clients, méthode pour ouvrir une socket seulement
-	 * pour le client ? Les sockets des clients seraient stockées dans un tableau
+	 * pour le client ? Les sockets des clients seraient stockées dans un
+	 * tableau
 	 */
 	public void open() {
 		try {
@@ -184,7 +147,6 @@ public class P2PCentralizedServer {
 			while ((ligne = lecteur.readLine()) != null) {
 				idMdp = ligne.split(sep);// TODO: constante pour séparateur
 
-				System.out.println(idMdp[0] + " : " + identifiant);
 				if (idMdp[0].compareTo(identifiant) == 0) {
 					return true;
 				}
@@ -296,7 +258,6 @@ public class P2PCentralizedServer {
 				System.out.println("COMMAND " + type);
 				System.out.println("TEXT " + text);
 				text = text.substring(0, text.length() - 1);
-				//text = text.replaceAll("\\r\\n", "");
 				s.gererMessage(type, text);
 			}
 		} catch (UnknownHostException e) {

@@ -94,7 +94,6 @@ public class P2PServer {
 			do {
 				System.out.print("Identifiant : ");
 				id = scan.nextLine();
-				System.out.println("ID envoyé " + id);
 				envoyerCommande(getUserCmd());
 				reponse = recevoirMessage();
 				System.out.println(reponse);
@@ -105,7 +104,6 @@ public class P2PServer {
 				System.out.print("Mot de passe : ");
 				mdp = scan.nextLine();
 				chiffreMdp();
-				System.out.println("Mot de passe envoyé " + mdp + "/" + hashMdp);
 				envoyerCommande(getPassCmd());
 				reponse = recevoirMessage();
 				System.out.println(reponse);
