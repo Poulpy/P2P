@@ -91,7 +91,28 @@ public class P2PCentralizedServer {
 	 * utilisateurs.csv
 	 */
 	public boolean mdpCorrect(String identifiant, String hashMdp) {
-		return true;
+		BufferedReader lecteur;
+		String[] idMdp = new String[2];
+		String ligne;
+
+		try {
+			lecteur = new BufferedReader(new FileReader(cheminUtilisateurs));
+
+			// Lecture de chaque ligne
+			while ((ligne = lecteur.readLine()) != null) {
+				idMdp = ligne.split("    ");// TODO: constante pour séparateur
+
+				if (idMdp[0].compareTo(identifiant) == 0 && idMdp[1].compareTo(hashMdp) == 0) {
+					return true;
+				}
+			}
+
+			lecteur.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return false;
 	}
 
 	/**
@@ -118,12 +139,20 @@ public class P2PCentralizedServer {
 		if (utilisateurExiste("truc")) System.out.println("truc existe");
 	}
 
+	public void testMdpCorrect() {
+		if (mdpCorrect("toto", "4cb9c8a8048fd02294477fcb1a41191a")) System.out.println("toto 4cb9c8a8048fd02294477fcb1a41191a");
+		if (mdpCorrect("toto", "a")) System.out.println("toto a");
+		if (mdpCorrect("titi", "21232f297a57a5a743894a0e4a801fc3")) System.out.println("titi 21232f297a57a5a743894a0e4a801fc3");
+	}
+
 
 	public static void main(String[] args){
 		 P2PCentralizedServer s= new P2PCentralizedServer();
 
 		//s.EnregistrerUtilisateur("toto", "qerghqmerguqhemgiu");
-		s.testUtilisateurExiste();
+		//s.testUtilisateurExiste();
+		s.testMdpCorrect();
 
 	}
 }
+
