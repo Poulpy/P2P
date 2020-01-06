@@ -9,12 +9,12 @@ Le client envoie des *commandes* au serveur :
 Une communication TCP ressemble donc à ça :
 Le client envoie le message suivant au serveur grâce à une socket :
 
-´USER toto´
+`USER toto`
 
 
 Si succès, le client envoie son mot de passe pour finaliser sa connexion :
 
-´PASS password´
+`PASS password`
 
 Si le mot de passe est correct, l'utilisateur est connecté au serveur et peut donc lui
 envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serveur par exemple).
@@ -26,11 +26,11 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - après renseignement de l'identifiant et du mot de passe, le serveur les envoie au serveur centralisé
 - le serveur chiffre le mot de passe
 - le serveur centralisé enregistre les utilisateurs (identifiant et mot de passe chiffré) dans un fichier
+- le serveur centralisé authentifie l'utilisateur et renvoie le résultat au serveur (succès échec)
 
 ## Todo
 
 
-- le serveur centralisé authentifie l'utilisateur et renvoie le résultat au serveur (succès échec)
 - le serveur centralisé garde les noms et descriptions des fichiers téléchargés
 - le serveur après l'authentification télécharge à partir du serveur centralisé les noms des fichiers partagés et leurs descriptions
 - recherche entre le client et le serveur centralisé et téléchargement
@@ -45,8 +45,25 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - renommer les classes, leur donner de jolis noms
 - une classe abstraite, qui aurait dans ses champs adresse ip et port. Les classes serveur et client hériteraient de cette classe pour éviter des redondances
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
-- une méthode login() pour le client ?
 
+
+### Comment exécuter le projet ?
+
+Dans `client/` :
+
+`javac P2PServer.java`
+
+Dans `server/` :
+
+`javac P2PCentralizedServer.java`
+
+D'abord faire :
+
+`java P2PCentralizedServer`
+
+puis :
+
+`java P2PServer`
 
 ### Utilisateurs
 
