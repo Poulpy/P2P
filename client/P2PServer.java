@@ -1,4 +1,5 @@
 import java.io.BufferedInputStream;
+import java.io.DataInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -7,6 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.io.FileWriter;
+import java.io.BufferedWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.DigestException;
@@ -31,13 +34,12 @@ public class P2PServer {
 	// Sert à envoyer des messages à travers une socket
 	private PrintWriter ecrivain;
 	private Socket socket;
-	private FileOutputStream fos;
-	private BufferedOutputStream bos;
+	//private FileOutputStream fos;
+	//private BufferedOutputStream bos;
+	private String repPartage = "shared/";
 
 	public P2PServer() {
 	}
-
-
 
 	public void open() {
 		try {
@@ -64,37 +66,42 @@ public class P2PServer {
 	}
 
 	public void recevoirDescriptions() {
-		int bytesRead;
-		int current = 0;
-		fos = null;
-		bos = null;
+		/*
 		try {
-			// receive file
-			byte [] mybytearray  = new byte [FILE_SIZE];
+			byte[] mybytearray = new byte[1024];
 			InputStream is = socket.getInputStream();
-			fos = new FileOutputStream("download.txt");
-			bos = new BufferedOutputStream(fos);
-			bytesRead = is.read(mybytearray,0,mybytearray.length);
-			current = bytesRead;
-
-			do {
-				bytesRead =
-					is.read(mybytearray, current, (mybytearray.length-current));
-				if(bytesRead >= 0) current += bytesRead;
-			} while(bytesRead > -1);
-
-			bos.write(mybytearray, 0 , current);
-			bos.flush();
-			System.out.println("File " + "download.txt"
-			+ " downloaded (" + current + " bytes read)");
-			fos.close();
+			FileOutputStream fos = new FileOutputStream("download.txt");
+			BufferedOutputStream bos = new BufferedOutputStream(fos);
+			int bytesRead = is.read(mybytearray, 0, mybytearray.length);
+			bos.write(mybytearray, 0, bytesRead);
 			bos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println("Done.");
 		envoyerMessage("200 fichier reçu");
-	}
+		*/
 
+	}
+	private void saveFile(Socket clientSock) throws IOException {
+		DataInputStream dis = new DataInputStream(clientSock.getInputStream());
+		FileOutputStream fos = new FileOutputStream(repPartage + "starwars");
+		byte[] buffer = new byte[4096];
+
+		int filesize = 15123; // Send file size in separate msg
+		int read = 0;
+		int totalRead = 0;
+		int remaining = filesize;
+		while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
+			totalRead += read;
+			remaining -= read;
+			System.out.println("read " + totalRead + " bytes.");
+			fos.write(buffer, 0, read);
+		}
+
+		fos.close();
+		dis.close();
+	}
 	public void envoyerMessage(String msg) {
 		msg += "\r\n";
 		ecrivain.write(msg);
@@ -156,7 +163,8 @@ public class P2PServer {
 			} while (!reponse.startsWith("2"));
 
 			// Authentification réussie
-			recevoirDescriptions();
+			//recevoirDescriptions();
+			saveFile(socket);
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -188,6 +196,10 @@ public class P2PServer {
 		return "PASS " + hashMdp;
 	}
 
+	public void quit() {
+		envoyerMessage("QUIT a");
+	}
+
 	// Chiffrement du mot de passe
 	// Le mot de passe chiffré est dans les champs
 	// Je sais pas si c'est une bonne ou mauvaise idée
@@ -213,6 +225,7 @@ public class P2PServer {
 		P2PServer s = new P2PServer();
 		s.open();
 		s.login();
+		s.quit();
 		s.close();
 	}
 }

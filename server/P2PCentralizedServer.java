@@ -23,8 +23,8 @@ public class P2PCentralizedServer {
 	private PrintWriter ecrivain;
 	private BufferedOutputStream bos;
 	private FileInputStream fis;
-	private BufferedInputStream bis;
-	private OutputStream os;
+	//private BufferedInputStream bis;
+	//private OutputStream os;
 	// voir méthode gererMessage
 	private boolean nouvelUtilisateur = false;
 
@@ -42,7 +42,7 @@ public class P2PCentralizedServer {
 	 * Le serveur vérifie que le mot de passe est correct en fonction
 	 * de l'identifiant précédemment envoyé
 	 */
-	public void gererMessage(String commande, String contenu) {
+	public int gererMessage(String commande, String contenu) {
 		switch (commande) {
 			case "USER":
 				id = contenu;
@@ -62,15 +62,22 @@ public class P2PCentralizedServer {
 					envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
 				} else if (mdpCorrect(id, mdp)) {
 					envoyerMessage("200 Mot de passe correct");
-					envoyerDescriptions();
+					//envoyerDescriptions();
+					try {
+					sendFile(repPartage + "starwars");
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 				} else {
 					envoyerMessage("300 Mot de passe incorrect pour " + id);
 				}
 				break;
 			case "QUIT":
 				// TODO: fermer la socket du client
+				return 0;
 			default:
 		}
+		return 1;
 	}
 
 	/**
@@ -81,36 +88,47 @@ public class P2PCentralizedServer {
 		ecrivain.write(msg);
 		ecrivain.flush();
 	}
+	public void sendFile(String file) throws IOException {
+		DataOutputStream dos = new DataOutputStream(client.getOutputStream());
+		FileInputStream fis = new FileInputStream(file);
+		byte[] buffer = new byte[4096];
 
+		while (fis.read(buffer) > 0) {
+			dos.write(buffer);
+		}
+
+		fis.close();
+		dos.close();
+		System.out.println("Fichier envoyé");
+	}
 
 	/**
 	 * Envoi au client des descriptions des fichiers partagés
 	 * Envoie la commande "DESC" puis une description
 	 */
 	public void envoyerDescriptions() {
+		/*
 		File fichier = new File(repPartage + "starwars");
 		byte [] mybytearray = new byte [(int)fichier.length()];
+		String reponse;
+
 		try {
-			fis = new FileInputStream(fichier);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return;
-		}
-		bis = new BufferedInputStream(fis);
-		do {
-			try {
-				bis.read(mybytearray,0,mybytearray.length);
-				os = client.getOutputStream();
-				System.out.println("Sending " + repPartage + "starwars" + "(" + mybytearray.length + " bytes)");
-				os.write(mybytearray,0,mybytearray.length);
+			do {
+				BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fichier));
+				bis.read(mybytearray, 0, mybytearray.length);
+				OutputStream os = client.getOutputStream();//hm
+				os.write(mybytearray, 0, mybytearray.length);
 				os.flush();
-			} catch (IOException e) {
-				e.printStackTrace();
-				return;
-			}
-		} while (!recevoirMessage().startsWith("2"));
-		System.out.println("Done.");
+				reponse = recevoirMessage();
+				System.out.println(reponse);
+			} while (!reponse.startsWith("2"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Done.");*/
 	}
+
+
 	/**
 	 * Retourne un message reçut par socket
 	 */
@@ -319,7 +337,7 @@ public class P2PCentralizedServer {
 				System.out.println("COMMAND " + type);
 				System.out.println("TEXT " + text);
 				text = text.substring(0, text.length() - 1);
-				s.gererMessage(type, text);
+				if (s.gererMessage(type, text) == 0) break;
 			}
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
