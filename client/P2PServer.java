@@ -1,22 +1,29 @@
 import java.io.BufferedInputStream;
-import java.io.PrintWriter;
 import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.Scanner;
-import java.security.MessageDigest;
 import java.security.DigestException;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
 
 public class P2PServer {
 
+	public final static int FILE_SIZE = 6022386;
+
 	// Identifiant de l'utilisateur
-	public	 String id = " ";
+	public String id = " ";
 	// Mot de passe
-	public	String mdp = " ";
+	public String mdp = " ";
 	// Hash du mot de passe
-	public	String hashMdp = " 12333";
+	public String hashMdp = " 12333";
 	// Adresse du serveur centralisé
 	private String adrServeurCentral = "127.0.0.1";
 	// Port de la socket
@@ -24,6 +31,8 @@ public class P2PServer {
 	// Sert à envoyer des messages à travers une socket
 	private PrintWriter ecrivain;
 	private Socket socket;
+	private FileOutputStream fos;
+	private BufferedOutputStream bos;
 
 	public P2PServer() {
 	}
@@ -54,6 +63,43 @@ public class P2PServer {
 		}
 	}
 
+	public void recevoirDescriptions() {
+		int bytesRead;
+		int current = 0;
+		fos = null;
+		bos = null;
+		try {
+			// receive file
+			byte [] mybytearray  = new byte [FILE_SIZE];
+			InputStream is = socket.getInputStream();
+			fos = new FileOutputStream("download.txt");
+			bos = new BufferedOutputStream(fos);
+			bytesRead = is.read(mybytearray,0,mybytearray.length);
+			current = bytesRead;
+
+			do {
+				bytesRead =
+					is.read(mybytearray, current, (mybytearray.length-current));
+				if(bytesRead >= 0) current += bytesRead;
+			} while(bytesRead > -1);
+
+			bos.write(mybytearray, 0 , current);
+			bos.flush();
+			System.out.println("File " + "download.txt"
+			+ " downloaded (" + current + " bytes read)");
+			fos.close();
+			bos.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		envoyerMessage("200 fichier reçu");
+	}
+
+	public void envoyerMessage(String msg) {
+		msg += "\r\n";
+		ecrivain.write(msg);
+		ecrivain.flush();
+	}
 	/**
 	 * Retourne un message reçut par socket
 	 */
@@ -110,6 +156,7 @@ public class P2PServer {
 			} while (!reponse.startsWith("2"));
 
 			// Authentification réussie
+			recevoirDescriptions();
 
 		} catch (IOException e) {
 			e.printStackTrace();

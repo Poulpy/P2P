@@ -1,10 +1,9 @@
-
+import java.io.*;
 import java.net.InetAddress;
-import java.net.Socket;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-import java.io.*;
 
 
 public class P2PCentralizedServer {
@@ -14,6 +13,8 @@ public class P2PCentralizedServer {
 	// Chemin du fichier contenant les utilisateurs connus du serveur
 	// identifiant,hash du mot de passe
 	private String cheminUtilisateurs = "utilisateurs.csv";
+	// Répertoire des fichiers partagés
+	private String repPartage = "shared/";
 	private ServerSocket socket;
 	private Socket client;
 	private String sep = "    ";
@@ -21,6 +22,9 @@ public class P2PCentralizedServer {
 	private String mdp;
 	private PrintWriter ecrivain;
 	private BufferedOutputStream bos;
+	private FileInputStream fis;
+	private BufferedInputStream bis;
+	private OutputStream os;
 	// voir méthode gererMessage
 	private boolean nouvelUtilisateur = false;
 
@@ -58,6 +62,7 @@ public class P2PCentralizedServer {
 					envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
 				} else if (mdpCorrect(id, mdp)) {
 					envoyerMessage("200 Mot de passe correct");
+					envoyerDescriptions();
 				} else {
 					envoyerMessage("300 Mot de passe incorrect pour " + id);
 				}
@@ -79,6 +84,57 @@ public class P2PCentralizedServer {
 
 
 	/**
+	 * Envoi au client des descriptions des fichiers partagés
+	 * Envoie la commande "DESC" puis une description
+	 */
+	public void envoyerDescriptions() {
+		File fichier = new File(repPartage + "starwars");
+		byte [] mybytearray = new byte [(int)fichier.length()];
+		try {
+			fis = new FileInputStream(fichier);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		bis = new BufferedInputStream(fis);
+		do {
+			try {
+				bis.read(mybytearray,0,mybytearray.length);
+				os = client.getOutputStream();
+				System.out.println("Sending " + repPartage + "starwars" + "(" + mybytearray.length + " bytes)");
+				os.write(mybytearray,0,mybytearray.length);
+				os.flush();
+			} catch (IOException e) {
+				e.printStackTrace();
+				return;
+			}
+		} while (!recevoirMessage().startsWith("2"));
+		System.out.println("Done.");
+	}
+	/**
+	 * Retourne un message reçut par socket
+	 */
+	public String recevoirMessage() {
+		int index;
+		int stream;
+		byte[] b = new byte[1024];
+		String msg = new String();
+
+		try {
+			BufferedInputStream lecteur = new BufferedInputStream(client.getInputStream());
+
+			// A revoir
+			while ((stream = lecteur.read(b)) != -1) {
+				msg = new String(b, 0, stream);
+				break;// pas beau
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return msg;
+	}
+	/**
 	 * Ouvre une socket pour le serveur
 	 * Ouvre une socket pour le client
 	 * TODO: gérer plusieurs clients, méthode pour ouvrir une socket seulement
@@ -98,8 +154,13 @@ public class P2PCentralizedServer {
 		}
 	}
 
+	/**
+	 * Libère toutes les ressources
+	 */
 	public void closeServerSocket() {
 		try {
+			ecrivain.close();
+			bos.close();
 			socket.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
