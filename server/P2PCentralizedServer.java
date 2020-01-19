@@ -18,6 +18,7 @@ public class P2PCentralizedServer extends Yoda {
 	private String cheminUtilisateurs = "utilisateurs.csv";
 	private String sep = "    ";
 	// Répertoire des fichiers partagés
+	// TODO renommer, et le créer au lancement du serveur
 	private String repPartage = "shared/";
 	private ServerSocket serverSocket;
 	// voir méthode gererMessage
@@ -28,6 +29,28 @@ public class P2PCentralizedServer extends Yoda {
 	public P2PCentralizedServer() {
 	}
 
+	public void disconnect() {
+		try {
+			socket.close();
+			serverSocket.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public void connect() {
+		try {
+			serverSocket = new ServerSocket(port, 10, InetAddress.getByName(adresseIP));
+			socket = serverSocket.accept();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * Gestion des commandes
 	 * En fonction de la commande, le serveur fait une action
@@ -68,41 +91,6 @@ public class P2PCentralizedServer extends Yoda {
 			default:
 		}
 	}
-
-	/**
-	 * Ouvre une socket pour le serveur
-	 * Ouvre une socket pour le socket
-	 * TODO: gérer plusieurs sockets, méthode pour ouvrir une socket seulement
-	 * pour le socket ? Les sockets des sockets seraient stockées dans un
-	 * tableau
-	 */
-	public void open() {
-		try {
-			serverSocket = new ServerSocket(port, 10, InetAddress.getByName(adresseIP));
-			super.socket = serverSocket.accept();
-			super.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			super.writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Libère toutes les ressources
-	 */
-	public void close() {
-		try {
-			super.close();
-			serverSocket.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 
 	/**
 	 * Vérifier qu'un utilisateur existe
@@ -187,6 +175,7 @@ public class P2PCentralizedServer extends Yoda {
 		P2PCentralizedServer s = new P2PCentralizedServer();
 		String msg;
 		int index;
+		s.connect();
 		s.open();
 
 			s.envoyerDescription("shared/starwars");
@@ -218,6 +207,7 @@ public class P2PCentralizedServer extends Yoda {
 		*/
 
 
+		s.disconnect();
 		s.close();
 	}
 

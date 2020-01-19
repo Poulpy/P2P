@@ -8,10 +8,15 @@ import outils.FTPCommand;
 
 public class Yoda {
 
+	// Message
 	// Ecriture dans une socket
 	protected BufferedReader reader;
 	// Lecture dans une socket
 	protected PrintWriter writer;
+
+	// Fichier
+	protected DataOutputStream dos;
+	protected DataInputStream dis;
 
 	// Adresse IP de l'utilisateur
 	protected String adresseIP = "127.0.0.1";
@@ -35,9 +40,10 @@ public class Yoda {
 	 */
 	protected void open() {
 		try {
-			socket = new Socket(adresseIPServeur, port);
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+			dis = new DataInputStream(socket.getInputStream());
+			dos = new DataOutputStream(socket.getOutputStream());
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -50,24 +56,21 @@ public class Yoda {
 	 * TODO mettre variables en champs
 	 */
 	public void sendFile(String filePath) throws IOException {
-		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-		FileInputStream fis = new FileInputStream(filePath);
+		FileInputStream fileWriter = new FileInputStream(filePath);
 		byte[] buffer = new byte[4096];
 
-		while (fis.read(buffer) > 0) {
+		while (fileWriter.read(buffer) > 0) {
 			dos.write(buffer);
 		}
 
-		fis.close();
-		dos.close();
+		fileWriter.close();
 	}
 
 	/**
 	 * Récupère un fichier envoyé par socket
 	 */
 	protected void saveFile(String filePath) throws IOException {
-		DataInputStream dis = new DataInputStream(socket.getInputStream());
-		FileOutputStream fos = new FileOutputStream(filePath);
+		FileOutputStream fileReader = new FileOutputStream(filePath);
 		byte[] buffer = new byte[4096];
 
 		int filesize = 15123; // Send file size in separate msg
@@ -79,11 +82,10 @@ public class Yoda {
 			totalRead += read;
 			remaining -= read;
 			System.out.println("read " + totalRead + " bytes.");
-			fos.write(buffer, 0, read);
+			fileReader.write(buffer, 0, read);
 		}
 
-		fos.close();
-		dis.close();
+		fileReader.close();
 	}
 
 	/**
@@ -94,7 +96,7 @@ public class Yoda {
 		String fileName = filePath.substring(index + 1, filePath.length());
 		FTPCommand ftpCmd = new FTPCommand("FILE", fileName);
 
-		envoyerMessage("FILE " + fileName);
+		envoyerMessage(ftpCmd.toString());
 		System.out.println(ftpCmd);
 
 		try {
@@ -104,6 +106,9 @@ public class Yoda {
 		}
 	}
 
+	/**
+	 * Réception de la description d'un fichier dans un répertoire dir
+	 */
 	protected void recevoirDescription(String dir) {
 		String msg;
 		FTPCommand ftpCmd;
@@ -143,9 +148,10 @@ public class Yoda {
 	 */
 	protected void close() {
 		try {
-			socket.close();
 			reader.close();
 			writer.close();
+			dos.close();
+			dis.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

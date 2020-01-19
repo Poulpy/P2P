@@ -27,7 +27,7 @@ public class FTPCommand {
 		return new FTPCommand(type, desc);
 	}
 
-	// TODO Vérifier qu'une commande existe
+	// TODO Vérifier qu'une commande existe => enum ?
 	// exemple : BIDULE (on ne l'utilise pas dans notre projet !)
 }
 

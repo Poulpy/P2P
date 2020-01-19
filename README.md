@@ -46,7 +46,7 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv
 - créer un fichier main pour le client et les 2 serveurs
 - une classe Message, qui enverrait des messages à travers des sockets (xml, json)
-- renommer les classes, leur donner de jolis noms
+- renommer les classes et les variables, leur donner de jolis noms
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - mettre les tests dans une classe à part
 

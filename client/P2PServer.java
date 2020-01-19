@@ -29,6 +29,7 @@ public class P2PServer extends Yoda {
 	// Hash du mot de passe
 	public String hashMdp = " 12333";
 	// Répertoire qui contient les descriptions des fichiers partagés par le serveur
+	// TODO renommer
 	private String repPartage = "shared2/";
 
 	public String getRepPartage() {
@@ -38,6 +39,26 @@ public class P2PServer extends Yoda {
 	public P2PServer() {
 	}
 
+	public void disconnect() {
+		try {
+			socket.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+
+	public void connect() {
+		try {
+			socket = new Socket(adresseIPServeur, port);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	/**
 	 * Authentification
 	 */
@@ -118,10 +139,12 @@ public class P2PServer extends Yoda {
 
 	public static void main(String[] args) {
 		P2PServer client= new P2PServer();
+		client.connect();
 		client.open();
 		client.recevoirDescription(client.getRepPartage());
 
 		client.quit();
+		client.disconnect();
 		client.close();
 	}
 }
