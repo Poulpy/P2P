@@ -1,3 +1,6 @@
+package client;
+
+import abstractions.Yoda;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.BufferedOutputStream;
@@ -17,7 +20,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-public class P2PServer {
+public class P2PServer extends Yoda {
 
 	public final static int FILE_SIZE = 6022386;
 
@@ -27,64 +30,15 @@ public class P2PServer {
 	public String mdp = " ";
 	// Hash du mot de passe
 	public String hashMdp = " 12333";
-	// Adresse du serveur centralisé
-	private String adrServeurCentral = "127.0.0.1";
-	// Port de la socket
-	private int port = 50000;
-	// Sert à envoyer des messages à travers une socket
-	private PrintWriter ecrivain;
-	private Socket socket;
-	//private FileOutputStream fos;
 	//private BufferedOutputStream bos;
 	private String repPartage = "shared/";
 
 	public P2PServer() {
 	}
 
-	public void open() {
-		try {
-			socket = new Socket(adrServeurCentral, port);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Ferme la socket du client
-	 * Après que le client ait envoyé la commande QUIT
-	 */
-	public void close() {
-		try {
-			socket.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void recevoirDescriptions() {
-		/*
-		try {
-			byte[] mybytearray = new byte[1024];
-			InputStream is = socket.getInputStream();
-			FileOutputStream fos = new FileOutputStream("download.txt");
-			BufferedOutputStream bos = new BufferedOutputStream(fos);
-			int bytesRead = is.read(mybytearray, 0, mybytearray.length);
-			bos.write(mybytearray, 0, bytesRead);
-			bos.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Done.");
-		envoyerMessage("200 fichier reçu");
-		*/
-
-	}
-	private void saveFile(Socket clientSock) throws IOException {
-		DataInputStream dis = new DataInputStream(clientSock.getInputStream());
+	private void saveFile() throws IOException {
+		System.out.println("AVANT");
+		DataInputStream dis = new DataInputStream(socket.getInputStream());
 		FileOutputStream fos = new FileOutputStream(repPartage + "starwars");
 		byte[] buffer = new byte[4096];
 
@@ -92,45 +46,18 @@ public class P2PServer {
 		int read = 0;
 		int totalRead = 0;
 		int remaining = filesize;
+		System.out.println("ATTENTION");
 		while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
 			totalRead += read;
 			remaining -= read;
-			System.out.println("read " + totalRead + " bytes.");
 			fos.write(buffer, 0, read);
+			fos.flush();
 		}
 
 		fos.close();
 		dis.close();
+		System.out.println("read " + totalRead + " bytes.");
 	}
-	public void envoyerMessage(String msg) {
-		msg += "\r\n";
-		ecrivain.write(msg);
-		ecrivain.flush();
-	}
-	/**
-	 * Retourne un message reçut par socket
-	 */
-	public String recevoirMessage() {
-		int index;
-		int stream;
-		byte[] b = new byte[1024];
-		String msg = new String();
-
-		try {
-			BufferedInputStream lecteur = new BufferedInputStream(socket.getInputStream());
-
-			// A revoir
-			while ((stream = lecteur.read(b)) != -1) {
-				msg = new String(b, 0, stream);
-				break;// pas beau
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return msg;
-	}
-
 	/**
 	 * Authentification
 	 */
@@ -139,16 +66,12 @@ public class P2PServer {
 		String reponse;
 
 		try {
-			ecrivain = new PrintWriter(socket.getOutputStream());
-			BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
-			BufferedInputStream lecteur = new BufferedInputStream(socket.getInputStream());
-
 			// On entre et on envoie l'identifiant ...
 			do {
 				System.out.print("Identifiant : ");
 				id = scan.nextLine();
-				envoyerCommande(getUserCmd());
-				reponse = recevoirMessage();
+				super.envoyerMessage(getUserCmd());
+				reponse = super.lireMessage();
 				System.out.println(reponse);
 			} while (!reponse.startsWith("2"));
 
@@ -157,14 +80,13 @@ public class P2PServer {
 				System.out.print("Mot de passe : ");
 				mdp = scan.nextLine();
 				chiffreMdp();
-				envoyerCommande(getPassCmd());
-				reponse = recevoirMessage();
+				super.envoyerMessage(getPassCmd());
+				reponse = super.lireMessage();
+				System.out.println("Hein");
 				System.out.println(reponse);
 			} while (!reponse.startsWith("2"));
 
-			// Authentification réussie
-			//recevoirDescriptions();
-			saveFile(socket);
+			saveFile();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -174,11 +96,6 @@ public class P2PServer {
 	/**
 	 * Envoi d'une commande au serveur
 	 */
-	public void envoyerCommande(String cmd) {
-		cmd += "\r\n";
-		ecrivain.write(cmd);
-		ecrivain.flush();
-	}
 
 	/**
 	 * String correspondant à la commande USER
@@ -197,7 +114,7 @@ public class P2PServer {
 	}
 
 	public void quit() {
-		envoyerMessage("QUIT a");
+		super.envoyerMessage("QUIT a");
 	}
 
 	// Chiffrement du mot de passe
@@ -224,8 +141,7 @@ public class P2PServer {
 	public static void main(String[] args) {
 		P2PServer s = new P2PServer();
 		s.open();
-		s.login();
-		s.quit();
+
 		s.close();
 	}
 }

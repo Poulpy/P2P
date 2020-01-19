@@ -51,11 +51,11 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 
 Dans `client/` :
 
-`javac P2PServer.java`
+`javac P2PServer.java -cp ..`
 
 Dans `server/` :
 
-`javac P2PCentralizedServer.java`
+`javac P2PCentralizedServer.java -cp ..`
 
 D'abord faire :
 

@@ -1,3 +1,7 @@
+package server;
+
+import abstractions.Yoda;
+import java.util.concurrent.TimeUnit;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -6,22 +10,17 @@ import java.net.UnknownHostException;
 import java.util.Scanner;
 
 
-public class P2PCentralizedServer {
+public class P2PCentralizedServer extends Yoda {
 
-	private String adresseIP = "127.0.0.1";
-	private int port = 50000;
 	// Chemin du fichier contenant les utilisateurs connus du serveur
 	// identifiant,hash du mot de passe
 	private String cheminUtilisateurs = "utilisateurs.csv";
 	// Répertoire des fichiers partagés
 	private String repPartage = "shared/";
-	private ServerSocket socket;
-	private Socket client;
+	private ServerSocket serverSocket;
 	private String sep = "    ";
 	private String id;
 	private String mdp;
-	private PrintWriter ecrivain;
-	private BufferedOutputStream bos;
 	private FileInputStream fis;
 	//private BufferedInputStream bis;
 	//private OutputStream os;
@@ -47,10 +46,10 @@ public class P2PCentralizedServer {
 			case "USER":
 				id = contenu;
 				if (utilisateurExiste(id)) {
-					envoyerMessage("200 Bon identifiant");
+					super.envoyerMessage("200 Bon identifiant");
 				} else {
 					nouvelUtilisateur = true;
-					envoyerMessage("201 Identifiant inconnu");
+					super.envoyerMessage("201 Identifiant inconnu");
 				}
 				break;
 			case "PASS":
@@ -59,37 +58,34 @@ public class P2PCentralizedServer {
 				if (nouvelUtilisateur) {
 					EnregistrerUtilisateur(id, mdp);
 					nouvelUtilisateur = false;
-					envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
+					super.envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
 				} else if (mdpCorrect(id, mdp)) {
-					envoyerMessage("200 Mot de passe correct");
+					super.envoyerMessage("200 Mot de passe correct");
 					//envoyerDescriptions();
+					try {
+						TimeUnit.SECONDS.sleep(2);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					try {
 					sendFile(repPartage + "starwars");
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 				} else {
-					envoyerMessage("300 Mot de passe incorrect pour " + id);
+					super.envoyerMessage("300 Mot de passe incorrect pour " + id);
 				}
 				break;
 			case "QUIT":
-				// TODO: fermer la socket du client
+				// TODO: fermer la socket du socket
 				return 0;
 			default:
 		}
 		return 1;
 	}
 
-	/**
-	 * Envoie un message sur la socket
-	 */
-	public void envoyerMessage(String msg) {
-		msg += "\r\n";
-		ecrivain.write(msg);
-		ecrivain.flush();
-	}
 	public void sendFile(String file) throws IOException {
-		DataOutputStream dos = new DataOutputStream(client.getOutputStream());
+		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 		FileInputStream fis = new FileInputStream(file);
 		byte[] buffer = new byte[4096];
 
@@ -102,69 +98,21 @@ public class P2PCentralizedServer {
 		System.out.println("Fichier envoyé");
 	}
 
-	/**
-	 * Envoi au client des descriptions des fichiers partagés
-	 * Envoie la commande "DESC" puis une description
-	 */
-	public void envoyerDescriptions() {
-		/*
-		File fichier = new File(repPartage + "starwars");
-		byte [] mybytearray = new byte [(int)fichier.length()];
-		String reponse;
-
-		try {
-			do {
-				BufferedInputStream bis = new BufferedInputStream(new FileInputStream(fichier));
-				bis.read(mybytearray, 0, mybytearray.length);
-				OutputStream os = client.getOutputStream();//hm
-				os.write(mybytearray, 0, mybytearray.length);
-				os.flush();
-				reponse = recevoirMessage();
-				System.out.println(reponse);
-			} while (!reponse.startsWith("2"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Done.");*/
-	}
 
 
-	/**
-	 * Retourne un message reçut par socket
-	 */
-	public String recevoirMessage() {
-		int index;
-		int stream;
-		byte[] b = new byte[1024];
-		String msg = new String();
-
-		try {
-			BufferedInputStream lecteur = new BufferedInputStream(client.getInputStream());
-
-			// A revoir
-			while ((stream = lecteur.read(b)) != -1) {
-				msg = new String(b, 0, stream);
-				break;// pas beau
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return msg;
-	}
 	/**
 	 * Ouvre une socket pour le serveur
-	 * Ouvre une socket pour le client
-	 * TODO: gérer plusieurs clients, méthode pour ouvrir une socket seulement
-	 * pour le client ? Les sockets des clients seraient stockées dans un
+	 * Ouvre une socket pour le socket
+	 * TODO: gérer plusieurs sockets, méthode pour ouvrir une socket seulement
+	 * pour le socket ? Les sockets des sockets seraient stockées dans un
 	 * tableau
 	 */
 	public void open() {
 		try {
-			socket = new ServerSocket(port, 10, InetAddress.getByName(adresseIP));
-			client = socket.accept();
-			ecrivain = new PrintWriter(client.getOutputStream());
-			bos = new BufferedOutputStream(client.getOutputStream());
+			serverSocket = new ServerSocket(port, 10, InetAddress.getByName(adresseIP));
+			super.socket = serverSocket.accept();
+			super.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			super.writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -175,11 +123,10 @@ public class P2PCentralizedServer {
 	/**
 	 * Libère toutes les ressources
 	 */
-	public void closeServerSocket() {
+	public void close() {
 		try {
-			ecrivain.close();
-			bos.close();
-			socket.close();
+			super.close();
+			serverSocket.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -187,19 +134,6 @@ public class P2PCentralizedServer {
 		}
 	}
 
-	/**
-	 * Ferme la socket du client
-	 * Après que le client ait envoyé la commande QUIT
-	 */
-	public void closeClientSocket() {
-		try {
-			client.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	/**
 	 * TODO Renvoie un code (succès / échec)
@@ -215,15 +149,15 @@ public class P2PCentralizedServer {
 	 * identifiant	  hash_du_mot_de_passe
 	 */
 	public boolean utilisateurExiste(String identifiant) {
-		BufferedReader lecteur;
+		BufferedReader reader;
 		String[] idMdp = new String[2];
 		String ligne;
 
 		try {
-			lecteur = new BufferedReader(new FileReader(cheminUtilisateurs));
+			reader = new BufferedReader(new FileReader(cheminUtilisateurs));
 
 			// Lecture de chaque ligne
-			while ((ligne = lecteur.readLine()) != null) {
+			while ((ligne = reader.readLine()) != null) {
 				idMdp = ligne.split(sep);// TODO: constante pour séparateur
 
 				if (idMdp[0].compareTo(identifiant) == 0) {
@@ -231,7 +165,7 @@ public class P2PCentralizedServer {
 				}
 			}
 
-			lecteur.close();
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -245,15 +179,15 @@ public class P2PCentralizedServer {
 	 * utilisateurs.csv
 	 */
 	public boolean mdpCorrect(String identifiant, String hashMdp) {
-		BufferedReader lecteur;
+		BufferedReader reader;
 		String[] idMdp = new String[2];
 		String ligne;
 
 		try {
-			lecteur = new BufferedReader(new FileReader(cheminUtilisateurs));
+			reader = new BufferedReader(new FileReader(cheminUtilisateurs));
 
 			// Lecture de chaque ligne
-			while ((ligne = lecteur.readLine()) != null) {
+			while ((ligne = reader.readLine()) != null) {
 				idMdp = ligne.split(sep);
 
 				if (idMdp[0].compareTo(identifiant) == 0 && idMdp[1].compareTo(hashMdp) == 0) {
@@ -261,7 +195,7 @@ public class P2PCentralizedServer {
 				}
 			}
 
-			lecteur.close();
+			reader.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -312,17 +246,8 @@ public class P2PCentralizedServer {
 		P2PCentralizedServer s = new P2PCentralizedServer();
 		s.open();
 
-		String contenu = "";
-
-		int stream;
-		byte[] b = new byte[1024];
-		int index;
-
-		try {
-			BufferedInputStream lecteur = new BufferedInputStream(s.client.getInputStream());
-
 			// le serveur écoute/reçoit ce qu'on lui envoie
-			while ((stream = lecteur.read(b)) != -1) {
+			/*while ((stream = reader.read(b)) != -1) {
 				contenu = new String(b, 0, stream);
 
 				// Séparation de la commande et du texte. Exemple :
@@ -338,17 +263,16 @@ public class P2PCentralizedServer {
 				System.out.println("TEXT " + text);
 				text = text.substring(0, text.length() - 1);
 				if (s.gererMessage(type, text) == 0) break;
-			}
+			}*/
+		/*
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 
-		//s.listen();
-		s.closeServerSocket();
-		s.closeClientSocket();
 
+		s.close();
 	}
 }
 
