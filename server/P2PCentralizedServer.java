@@ -57,10 +57,10 @@ public class P2PCentralizedServer extends Yoda {
 					EnregistrerUtilisateur(id, mdp);
 					nouvelUtilisateur = false;
 					super.envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
-					sendFile(repPartage + "starwars");
+					super.sendFile(repPartage + "starwars");
 				} else if (mdpCorrect(id, mdp)) {
 					super.envoyerMessage("200 Mot de passe correct");
-					sendFile(repPartage + "starwars");
+					super.sendFile(repPartage + "starwars");
 				} else {
 					super.envoyerMessage("300 Mot de passe incorrect pour " + id);
 				}
@@ -72,22 +72,6 @@ public class P2PCentralizedServer extends Yoda {
 		}
 		return 1;
 	}
-
-	public void sendFile(String file) throws IOException {
-		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-		FileInputStream fis = new FileInputStream(file);
-		byte[] buffer = new byte[4096];
-
-		while (fis.read(buffer) > 0) {
-			dos.write(buffer);
-		}
-
-		fis.close();
-		dos.close();
-		System.out.println("Fichier envoyé");
-	}
-
-
 
 	/**
 	 * Ouvre une socket pour le serveur

@@ -6,17 +6,23 @@ import java.net.UnknownHostException;
 
 public class Yoda {
 
+	// Ecriture dans une socket
 	protected BufferedReader reader;
+	// Lecture dans une socket
 	protected PrintWriter writer;
 
+	// Adresse IP de l'utilisateur
 	protected String adresseIP = "127.0.0.1";
+	// Adresse IP du serveur
 	protected String adresseIPServeur = "127.0.0.1";
 	protected int port = 50000;
 	protected Socket socket;
 
-    protected Yoda() {
-    }
-
+	/**
+	 * TODO Affectation du port et des adresses IP
+	 */
+	protected Yoda() {
+	}
 
 	/**
 	 * Ouvre une socket pour le client
@@ -36,9 +42,13 @@ public class Yoda {
 		}
 	}
 
-	public void sendFile(String file) throws IOException {
+	/**
+	 * Envoie un fichier à travers une socket
+	 * TODO mettre variables en champs
+	 */
+	public void sendFile(String filePath) throws IOException {
 		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
-		FileInputStream fis = new FileInputStream(file);
+		FileInputStream fis = new FileInputStream(filePath);
 		byte[] buffer = new byte[4096];
 
 		while (fis.read(buffer) > 0) {
@@ -49,9 +59,12 @@ public class Yoda {
 		dos.close();
 	}
 
-	private void saveFile() throws IOException {
+	/**
+	 * Récupère un fichier envoyé par socket
+	 */
+	protected void saveFile(String filePath) throws IOException {
 		DataInputStream dis = new DataInputStream(socket.getInputStream());
-		FileOutputStream fos = new FileOutputStream("shared2/download.txt");
+		FileOutputStream fos = new FileOutputStream(filePath);
 		byte[] buffer = new byte[4096];
 
 		int filesize = 15123; // Send file size in separate msg
@@ -68,23 +81,24 @@ public class Yoda {
 		fos.close();
 		dis.close();
 	}
-	protected void receiveFile() {
-	}
 
+	/**
+	 * Lit un message (une ligne) envoyé par socket
+	 */
 	protected String lireMessage() throws IOException {
-		String str;
-		str = reader.readLine();
-		return str;
+		return reader.readLine();
 	}
 
+	/**
+	 * Envoie une message à travers une socket
+	 */
 	protected void envoyerMessage(String msg) {
-		System.out.println(msg);
 		writer.println(msg);
 	}
 
 	/**
 	 * Ferme la socket du client
-	 * Après que le client ait envoyé la commande QUIT
+	 * Libère les ressources
 	 */
 	protected void close() {
 		try {

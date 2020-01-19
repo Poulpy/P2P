@@ -22,42 +22,18 @@ import java.util.Scanner;
 
 public class P2PServer extends Yoda {
 
-	public final static int FILE_SIZE = 6022386;
-
 	// Identifiant de l'utilisateur
 	public String id = " ";
 	// Mot de passe
 	public String mdp = " ";
 	// Hash du mot de passe
 	public String hashMdp = " 12333";
-	//private BufferedOutputStream bos;
+	// Répertoire qui contient les descriptions des fichiers partagés par le serveur
 	private String repPartage = "shared2/";
 
 	public P2PServer() {
 	}
 
-	private void saveFile() throws IOException {
-		System.out.println("AVANT");
-		DataInputStream dis = new DataInputStream(socket.getInputStream());
-		FileOutputStream fos = new FileOutputStream(repPartage + "starwars");
-		byte[] buffer = new byte[4096];
-
-		int filesize = 15123; // Send file size in separate msg
-		int read = 0;
-		int totalRead = 0;
-		int remaining = filesize;
-		System.out.println("ATTENTION");
-		while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
-			totalRead += read;
-			remaining -= read;
-			fos.write(buffer, 0, read);
-			fos.flush();
-		}
-
-		fos.close();
-		dis.close();
-		System.out.println("read " + totalRead + " bytes.");
-	}
 	/**
 	 * Authentification
 	 */
@@ -86,16 +62,12 @@ public class P2PServer extends Yoda {
 			} while (!reponse.startsWith("2"));
 
 			System.out.println("Authentification réussie !");
-			saveFile();
+			//super.saveFile();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * Envoi d'une commande au serveur
-	 */
 
 	/**
 	 * String correspondant à la commande USER
@@ -139,15 +111,15 @@ public class P2PServer extends Yoda {
 	}
 
 	public static void main(String[] args) {
-		P2PServer s = new P2PServer();
-		s.open();
-		//s.login();
+		P2PServer client= new P2PServer();
+		client.open();
 		try {
-			s.saveFile();
+			client.saveFile("shared2/starwars");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		s.close();
+		client.quit();
+		client.close();
 	}
 }
