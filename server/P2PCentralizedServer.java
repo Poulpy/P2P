@@ -22,8 +22,6 @@ public class P2PCentralizedServer extends Yoda {
 	private String id;
 	private String mdp;
 	private FileInputStream fis;
-	//private BufferedInputStream bis;
-	//private OutputStream os;
 	// voir méthode gererMessage
 	private boolean nouvelUtilisateur = false;
 
@@ -245,6 +243,14 @@ public class P2PCentralizedServer extends Yoda {
 	public static void main(String[] args){
 		P2PCentralizedServer s = new P2PCentralizedServer();
 		s.open();
+		String msg = new String();
+		try {
+			msg = s.lireMessage();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(msg);
+		s.envoyerMessage("Bonsoir");
 
 			// le serveur écoute/reçoit ce qu'on lui envoie
 			/*while ((stream = reader.read(b)) != -1) {

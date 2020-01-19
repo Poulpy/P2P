@@ -140,7 +140,15 @@ public class P2PServer extends Yoda {
 
 	public static void main(String[] args) {
 		P2PServer s = new P2PServer();
+		String s2 ="";
 		s.open();
+		s.envoyerMessage("Bonjour");
+		try {
+			s2 = s.lireMessage();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println(s2);
 
 		s.close();
 	}
