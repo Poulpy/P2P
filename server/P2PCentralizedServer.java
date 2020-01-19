@@ -13,23 +13,23 @@ import java.util.Scanner;
 public class P2PCentralizedServer extends Yoda {
 
 	// Chemin du fichier contenant les utilisateurs connus du serveur
-	// identifiant,hash du mot de passe
+	// l'identifiant et le hash du mot de passe sont séparés par le
+	// séparateur sep
 	private String cheminUtilisateurs = "utilisateurs.csv";
+	private String sep = "    ";
 	// Répertoire des fichiers partagés
 	private String repPartage = "shared/";
 	private ServerSocket serverSocket;
-	private String sep = "    ";
+	// voir méthode gererMessage
 	private String id;
 	private String mdp;
-	private FileInputStream fis;
-	// voir méthode gererMessage
 	private boolean nouvelUtilisateur = false;
 
 	public P2PCentralizedServer() {
 	}
 
 	/**
-	 * TODO Gestion des commandes
+	 * Gestion des commandes
 	 * En fonction de la commande, le serveur fait une action
 	 * particulière;
 	 * Par exemple, "USER toto"
@@ -39,7 +39,7 @@ public class P2PCentralizedServer extends Yoda {
 	 * Le serveur vérifie que le mot de passe est correct en fonction
 	 * de l'identifiant précédemment envoyé
 	 */
-	public int gererMessage(String commande, String contenu) throws IOException {
+	public void gererMessage(String commande, String contenu) throws IOException {
 		switch (commande) {
 			case "USER":
 				id = contenu;
@@ -65,12 +65,8 @@ public class P2PCentralizedServer extends Yoda {
 					super.envoyerMessage("300 Mot de passe incorrect pour " + id);
 				}
 				break;
-			case "QUIT":
-				// TODO: fermer la socket du socket
-				return 0;
 			default:
 		}
-		return 1;
 	}
 
 	/**
@@ -109,7 +105,7 @@ public class P2PCentralizedServer extends Yoda {
 
 
 	/**
-	 * TODO: Vérifier qu'un utilisateur existe
+	 * Vérifier qu'un utilisateur existe
 	 * On regarde si son identifiant/nom est présent
 	 * dans le fichier utilisateurs.csv
 	 * Les utilisateurs sont stockés comme ça :
@@ -125,7 +121,7 @@ public class P2PCentralizedServer extends Yoda {
 
 			// Lecture de chaque ligne
 			while ((ligne = reader.readLine()) != null) {
-				idMdp = ligne.split(sep);// TODO: constante pour séparateur
+				idMdp = ligne.split(sep);
 
 				if (idMdp[0].compareTo(identifiant) == 0) {
 					return true;
@@ -141,7 +137,7 @@ public class P2PCentralizedServer extends Yoda {
 	}
 
 	/**
-	 * TODO: Vérifier qu'un mot de passe est correct pour
+	 * Vérifier qu'un mot de passe est correct pour
 	 * un utilisateur; On regarde dans le fichier
 	 * utilisateurs.csv
 	 */
@@ -171,12 +167,8 @@ public class P2PCentralizedServer extends Yoda {
 	}
 
 	/**
-	 * TODO Création d'un utilisateur dans le fichier csv/tsv
-	 * Est-ce qu'on donne l'identifiant ET le mot de passe ?
-	 * Ou on renseigne d'abord l'identifiant puis on complète plus
-	 * tard par le mot de passe ?
-	 * On suppose que l'utilisateur n'existe pas déjà
-	 * TODO : relire le code, le try est un peu bizare
+	 * Création d'un utilisateur dans le fichier csv/tsv
+	 * TODO relire le code, le try est un peu bizare
 	 */
 	public void EnregistrerUtilisateur(String s, String c) {
 		try (FileWriter fw = new FileWriter(cheminUtilisateurs, true);
@@ -189,24 +181,6 @@ public class P2PCentralizedServer extends Yoda {
 		}
 	}
 
-	/* Tests
-	 * TODO: mettre dans une classe à part */
-
-	public void testUtilisateurExiste() {
-		if (utilisateurExiste("toto")) System.out.println("toto existe");
-		if (utilisateurExiste("titi")) System.out.println("titi existe");
-		if (utilisateurExiste("truc")) System.out.println("truc existe");
-	}
-
-	public void testMdpCorrect() {
-		if (mdpCorrect("toto", "4cb9c8a8048fd02294477fcb1a41191a"))
-			System.out.println("toto 4cb9c8a8048fd02294477fcb1a41191a");
-		if (mdpCorrect("toto", "a"))
-			System.out.println("toto a");
-		if (mdpCorrect("titi", "21232f297a57a5a743894a0e4a801fc3"))
-			System.out.println("titi 21232f297a57a5a743894a0e4a801fc3");
-	}
-
 	/* Main */
 
 	public static void main(String[] args){
@@ -214,11 +188,6 @@ public class P2PCentralizedServer extends Yoda {
 		String msg;
 		int index;
 		s.open();
-		try {
-			s.sendFile("shared/starwars");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 
 		/*
 		try {
@@ -237,7 +206,7 @@ public class P2PCentralizedServer extends Yoda {
 				String type = msg.substring(0, index);
 				String text = msg.substring(index + 1, msg.length());
 
-				if (s.gererMessage(type, text) == 0) break;
+				s.gererMessage(type, text);
 			}
 
 		} catch (UnknownHostException e) {
@@ -249,6 +218,28 @@ public class P2PCentralizedServer extends Yoda {
 
 
 		s.close();
+	}
+
+
+
+
+	/* Tests
+	 * TODO: mettre dans une classe à part
+	 */
+
+	public void testUtilisateurExiste() {
+		if (utilisateurExiste("toto")) System.out.println("toto existe");
+		if (utilisateurExiste("titi")) System.out.println("titi existe");
+		if (utilisateurExiste("truc")) System.out.println("truc existe");
+	}
+
+	public void testMdpCorrect() {
+		if (mdpCorrect("toto", "4cb9c8a8048fd02294477fcb1a41191a"))
+			System.out.println("toto 4cb9c8a8048fd02294477fcb1a41191a");
+		if (mdpCorrect("toto", "a"))
+			System.out.println("toto a");
+		if (mdpCorrect("titi", "21232f297a57a5a743894a0e4a801fc3"))
+			System.out.println("titi 21232f297a57a5a743894a0e4a801fc3");
 	}
 }
 

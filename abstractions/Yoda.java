@@ -71,6 +71,7 @@ public class Yoda {
 		int read = 0;
 		int totalRead = 0;
 		int remaining = filesize;
+
 		while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
 			totalRead += read;
 			remaining -= read;

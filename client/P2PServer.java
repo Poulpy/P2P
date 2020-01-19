@@ -114,7 +114,7 @@ public class P2PServer extends Yoda {
 		P2PServer client= new P2PServer();
 		client.open();
 		try {
-			client.saveFile("shared2/starwars");
+			//client.saveFile("shared2/starwars");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
