@@ -59,17 +59,7 @@ public class P2PCentralizedServer extends Yoda {
 					super.envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
 				} else if (mdpCorrect(id, mdp)) {
 					super.envoyerMessage("200 Mot de passe correct");
-					//envoyerDescriptions();
-					try {
-						TimeUnit.SECONDS.sleep(2);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-					try {
-					sendFile(repPartage + "starwars");
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					//sendFile(repPartage + "starwars");
 				} else {
 					super.envoyerMessage("300 Mot de passe incorrect pour " + id);
 				}
@@ -242,19 +232,13 @@ public class P2PCentralizedServer extends Yoda {
 
 	public static void main(String[] args){
 		P2PCentralizedServer s = new P2PCentralizedServer();
+		String msg;
+		int index;
 		s.open();
-		String msg = new String();
-		try {
-			msg = s.lireMessage();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println(msg);
-		s.envoyerMessage("Bonsoir");
 
+		try {
 			// le serveur écoute/reçoit ce qu'on lui envoie
-			/*while ((stream = reader.read(b)) != -1) {
-				contenu = new String(b, 0, stream);
+			while ((msg = s.lireMessage()) != null) {
 
 				// Séparation de la commande et du texte. Exemple :
 				// USER toto
@@ -262,20 +246,21 @@ public class P2PCentralizedServer extends Yoda {
 				// On récupère l'indice où apparaît le le permier espace
 				// On ne peut utiliser split car le message peut contenir aussi des espaces
 
-				index = contenu.indexOf(' ');
-				String type = contenu.substring(0, index);
-				String text = contenu.substring(index + 1, contenu.length() - 1);
+				System.out.println(msg);
+				index = msg.indexOf(' ');
+				String type = msg.substring(0, index);
+				String text = msg.substring(index + 1, msg.length());
 				System.out.println("COMMAND " + type);
 				System.out.println("TEXT " + text);
-				text = text.substring(0, text.length() - 1);
+
 				if (s.gererMessage(type, text) == 0) break;
-			}*/
-		/*
+			}
+
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}*/
+		}
 
 
 		s.close();

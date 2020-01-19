@@ -38,13 +38,13 @@ public class Yoda {
 
 	protected String lireMessage() throws IOException {
 		String str;
-		str = reader.readLine();          // lecture du message
+		str = reader.readLine();
 		return str;
 	}
 
 	protected void envoyerMessage(String msg) {
-		writer.println(msg);          // envoi d'un message
-		writer.println("END");          // envoi d'un message
+		System.out.println(msg);
+		writer.println(msg);
 	}
 
 	/**

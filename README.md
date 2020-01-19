@@ -43,35 +43,26 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - créer un fichier main pour le client et les 2 serveurs
 - une classe Message, qui enverrait des messages à travers des sockets
 - renommer les classes, leur donner de jolis noms
-- une classe abstraite, qui aurait dans ses champs adresse ip et port. Les classes serveur et client hériteraient de cette classe pour éviter des redondances
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 
 
 ### Comment exécuter le projet ?
 
-Dans `client/` :
+Compilez les fichiers java comme suit, à la racine du projet :
 
-`javac P2PServer.java -cp ..`
+`javac client/P2PServer.java`
 
-Dans `server/` :
+`javac server/P2PCentralizedServer.java`
 
-`javac P2PCentralizedServer.java -cp ..`
+Ensuite, dans 2 terminaux, exécutez le serveur puis le client :
 
-D'abord faire :
+`java server.P2PCentralizedServer`
 
-`java P2PCentralizedServer`
 
-puis :
-
-`java P2PServer`
+`java client.P2PServer`
 
 ### Utilisateurs
 
-Les utilisateurs sont dans le fichier utilisateurs.csv
+Les utilisateurs sont dans le fichier utilisateurs.csv (à la racine du projet)
 
-identifiant : mot de passe
-
-toto : changeme
-
-titi : admin
 
