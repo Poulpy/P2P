@@ -31,7 +31,7 @@ public class P2PServer extends Yoda {
 	// Hash du mot de passe
 	public String hashMdp = " 12333";
 	//private BufferedOutputStream bos;
-	private String repPartage = "shared/";
+	private String repPartage = "shared2/";
 
 	public P2PServer() {
 	}
@@ -70,7 +70,6 @@ public class P2PServer extends Yoda {
 			do {
 				System.out.print("Identifiant : ");
 				id = scan.nextLine();
-				System.out.println(getUserCmd());
 				super.envoyerMessage(getUserCmd());
 				reponse = super.lireMessage();
 				System.out.println(reponse);
@@ -81,15 +80,13 @@ public class P2PServer extends Yoda {
 				System.out.print("Mot de passe : ");
 				mdp = scan.nextLine();
 				chiffreMdp();
-				System.out.println(getPassCmd());
 				super.envoyerMessage(getPassCmd());
 				reponse = super.lireMessage();
-				System.out.println("Hein");
 				System.out.println(reponse);
 			} while (!reponse.startsWith("2"));
 
-			//saveFile();
 			System.out.println("Authentification réussie !");
+			saveFile();
 
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -144,7 +141,12 @@ public class P2PServer extends Yoda {
 	public static void main(String[] args) {
 		P2PServer s = new P2PServer();
 		s.open();
-		s.login();
+		//s.login();
+		try {
+			s.saveFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		s.close();
 	}

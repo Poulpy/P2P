@@ -40,10 +40,12 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - le serveur centralisé partage les fichiers d'un client si le serveur est actif
 
 ## Todo Code
+- juste un serveur et un client ?
 - créer un fichier main pour le client et les 2 serveurs
 - une classe Message, qui enverrait des messages à travers des sockets
 - renommer les classes, leur donner de jolis noms
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
+- mettre les tests dans une classe à part
 
 
 ### Comment exécuter le projet ?

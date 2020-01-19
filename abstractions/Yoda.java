@@ -36,6 +36,41 @@ public class Yoda {
 		}
 	}
 
+	public void sendFile(String file) throws IOException {
+		DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
+		FileInputStream fis = new FileInputStream(file);
+		byte[] buffer = new byte[4096];
+
+		while (fis.read(buffer) > 0) {
+			dos.write(buffer);
+		}
+
+		fis.close();
+		dos.close();
+	}
+
+	private void saveFile() throws IOException {
+		DataInputStream dis = new DataInputStream(socket.getInputStream());
+		FileOutputStream fos = new FileOutputStream("shared2/download.txt");
+		byte[] buffer = new byte[4096];
+
+		int filesize = 15123; // Send file size in separate msg
+		int read = 0;
+		int totalRead = 0;
+		int remaining = filesize;
+		while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
+			totalRead += read;
+			remaining -= read;
+			System.out.println("read " + totalRead + " bytes.");
+			fos.write(buffer, 0, read);
+		}
+
+		fos.close();
+		dis.close();
+	}
+	protected void receiveFile() {
+	}
+
 	protected String lireMessage() throws IOException {
 		String str;
 		str = reader.readLine();

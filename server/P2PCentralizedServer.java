@@ -39,7 +39,7 @@ public class P2PCentralizedServer extends Yoda {
 	 * Le serveur vérifie que le mot de passe est correct en fonction
 	 * de l'identifiant précédemment envoyé
 	 */
-	public int gererMessage(String commande, String contenu) {
+	public int gererMessage(String commande, String contenu) throws IOException {
 		switch (commande) {
 			case "USER":
 				id = contenu;
@@ -57,9 +57,10 @@ public class P2PCentralizedServer extends Yoda {
 					EnregistrerUtilisateur(id, mdp);
 					nouvelUtilisateur = false;
 					super.envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
+					sendFile(repPartage + "starwars");
 				} else if (mdpCorrect(id, mdp)) {
 					super.envoyerMessage("200 Mot de passe correct");
-					//sendFile(repPartage + "starwars");
+					sendFile(repPartage + "starwars");
 				} else {
 					super.envoyerMessage("300 Mot de passe incorrect pour " + id);
 				}
@@ -122,12 +123,6 @@ public class P2PCentralizedServer extends Yoda {
 		}
 	}
 
-
-	/**
-	 * TODO Renvoie un code (succès / échec)
-	 */
-	public void renvoyerCode() {
-	}
 
 	/**
 	 * TODO: Vérifier qu'un utilisateur existe
@@ -235,10 +230,17 @@ public class P2PCentralizedServer extends Yoda {
 		String msg;
 		int index;
 		s.open();
+		try {
+			s.sendFile("shared/starwars");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
+		/*
 		try {
 			// le serveur écoute/reçoit ce qu'on lui envoie
 			while ((msg = s.lireMessage()) != null) {
+				if (msg.compareTo("QUIT") == 0) break;// TODO enlever case QUIT gererMessage
 
 				// Séparation de la commande et du texte. Exemple :
 				// USER toto
@@ -250,8 +252,6 @@ public class P2PCentralizedServer extends Yoda {
 				index = msg.indexOf(' ');
 				String type = msg.substring(0, index);
 				String text = msg.substring(index + 1, msg.length());
-				System.out.println("COMMAND " + type);
-				System.out.println("TEXT " + text);
 
 				if (s.gererMessage(type, text) == 0) break;
 			}
@@ -261,6 +261,7 @@ public class P2PCentralizedServer extends Yoda {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		*/
 
 
 		s.close();
