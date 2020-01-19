@@ -31,6 +31,10 @@ public class P2PServer extends Yoda {
 	// Répertoire qui contient les descriptions des fichiers partagés par le serveur
 	private String repPartage = "shared2/";
 
+	public String getRepPartage() {
+		return repPartage;
+	}
+
 	public P2PServer() {
 	}
 
@@ -89,10 +93,12 @@ public class P2PServer extends Yoda {
 		super.envoyerMessage("QUIT");
 	}
 
-	// Chiffrement du mot de passe
-	// Le mot de passe chiffré est dans les champs
-	// Je sais pas si c'est une bonne ou mauvaise idée
-
+	/**
+	 * Chiffrement du mot de passe
+	 * Le mot de passe chiffré est dans les champs
+	 * Je sais pas si c'est une bonne ou mauvaise idée
+	 * TODO voir String.hashCode()
+	 */
 	public void chiffreMdp() {
 		MessageDigest messageDigest;
 		try {
@@ -113,11 +119,7 @@ public class P2PServer extends Yoda {
 	public static void main(String[] args) {
 		P2PServer client= new P2PServer();
 		client.open();
-		try {
-			//client.saveFile("shared2/starwars");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		client.recevoirDescription(client.getRepPartage());
 
 		client.quit();
 		client.close();

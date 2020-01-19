@@ -3,6 +3,8 @@ package abstractions;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import outils.FTPCommand;
+
 
 public class Yoda {
 
@@ -23,6 +25,7 @@ public class Yoda {
 	 */
 	protected Yoda() {
 	}
+
 
 	/**
 	 * Ouvre une socket pour le client
@@ -82,6 +85,43 @@ public class Yoda {
 		fos.close();
 		dis.close();
 	}
+
+	/**
+	 * Envoie la description d'un fichier, avec le nom du fichier
+	 */
+	protected void envoyerDescription(String filePath) {
+		int index = filePath.lastIndexOf('/');
+		String fileName = filePath.substring(index + 1, filePath.length());
+		FTPCommand ftpCmd = new FTPCommand("FILE", fileName);
+
+		envoyerMessage("FILE " + fileName);
+		System.out.println(ftpCmd);
+
+		try {
+			sendFile(filePath);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void recevoirDescription(String dir) {
+		String msg;
+		FTPCommand ftpCmd;
+
+		try {
+			do {
+				msg = lireMessage();
+				ftpCmd = FTPCommand.parseCommand(msg);
+			} while (ftpCmd.command.compareTo("FILE") != 0);
+			System.out.println(msg);
+
+			saveFile(dir + ftpCmd.content);
+			System.out.println("Fichier sauvegardé");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 
 	/**
 	 * Lit un message (une ligne) envoyé par socket

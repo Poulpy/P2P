@@ -40,9 +40,12 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - le serveur centralisé partage les fichiers d'un client si le serveur est actif
 
 ## Todo Code
+
+- Revoir à quel niveau mettre les try/catch
+- Utiliser la classe FTPCommand
 - revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv
 - créer un fichier main pour le client et les 2 serveurs
-- une classe Message, qui enverrait des messages à travers des sockets
+- une classe Message, qui enverrait des messages à travers des sockets (xml, json)
 - renommer les classes, leur donner de jolis noms
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - mettre les tests dans une classe à part

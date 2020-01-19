@@ -189,11 +189,12 @@ public class P2PCentralizedServer extends Yoda {
 		int index;
 		s.open();
 
+			s.envoyerDescription("shared/starwars");
 		/*
 		try {
 			// le serveur écoute/reçoit ce qu'on lui envoie
 			while ((msg = s.lireMessage()) != null) {
-				if (msg.compareTo("QUIT") == 0) break;// TODO enlever case QUIT gererMessage
+				if (msg.compareTo("QUIT") == 0) break;
 
 				// Séparation de la commande et du texte. Exemple :
 				// USER toto
