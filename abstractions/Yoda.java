@@ -98,7 +98,7 @@ public class Yoda {
 		envoyerMessage(ftpCmd.toString());
 
 		try {
-			sendFile(filePath);
+			envoyerFichier(filePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -108,12 +108,8 @@ public class Yoda {
 	 * Réception de la description d'un fichier dans un répertoire dir
 	 */
 	protected void recevoirDescription(String dir) {
-		System.out.println("recevoirDescription");
-		String msg;
-		FTPCommand ftpCmd;
-
 		try {
-			saveFile(dir);
+			lireFichier(dir);
 			System.out.println("Fichier sauvegardé");
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -158,7 +154,7 @@ public class Yoda {
 	 */
 	protected void send(String filePath) throws IOException {
 		File file = new File(filePath);
-		int fileSize = 4096;
+		int fileSize = (int) file.length();
 		FileInputStream fis = new FileInputStream(file);
 		byte[] buffer = new byte[fileSize];
 

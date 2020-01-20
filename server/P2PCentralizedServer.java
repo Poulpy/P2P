@@ -83,10 +83,10 @@ public class P2PCentralizedServer extends Yoda {
 					EnregistrerUtilisateur(id, mdp);
 					nouvelUtilisateur = false;
 					super.envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
-					super.sendFile(repPartage + "starwars");
+					//super.sendFile(repPartage + "starwars");
 				} else if (mdpCorrect(id, mdp)) {
 					super.envoyerMessage("200 Mot de passe correct");
-					super.sendFile(repPartage + "starwars");
+					//super.sendFile(repPartage + "starwars");
 				} else {
 					super.envoyerMessage("300 Mot de passe incorrect pour " + id);
 				}
@@ -180,7 +180,7 @@ public class P2PCentralizedServer extends Yoda {
 		s.open();
 
 		try {
-			s.send(s.repPartage + "starwars");
+			s.send(s.repPartage + "yojinbo");
 			//s.envoyerFichier(s.repPartage + "yojinbo");
 		} catch (IOException e) {
 			e.printStackTrace();
