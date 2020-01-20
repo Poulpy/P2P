@@ -1,13 +1,15 @@
 package server;
 
 import abstractions.Yoda;
-import java.util.concurrent.TimeUnit;
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
 import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
+import outils.FTPCommand;
 
 
 public class P2PCentralizedServer extends Yoda {
@@ -19,7 +21,7 @@ public class P2PCentralizedServer extends Yoda {
 	private String sep = "    ";
 	// Répertoire des fichiers partagés
 	// TODO renommer, et le créer au lancement du serveur
-	private String repPartage = "shared/";
+	public String repPartage = "quigon/";
 	private ServerSocket serverSocket;
 	// voir méthode gererMessage
 	private String id;
@@ -61,6 +63,7 @@ public class P2PCentralizedServer extends Yoda {
 	 * "PASS fierhigmeruis"
 	 * Le serveur vérifie que le mot de passe est correct en fonction
 	 * de l'identifiant précédemment envoyé
+	 * TODO mettre FTPCommand en param
 	 */
 	public void gererMessage(String commande, String contenu) throws IOException {
 		switch (commande) {
@@ -173,45 +176,40 @@ public class P2PCentralizedServer extends Yoda {
 
 	public static void main(String[] args){
 		P2PCentralizedServer s = new P2PCentralizedServer();
-		String msg;
-		int index;
 		s.connect();
 		s.open();
 
-			s.envoyerDescription("shared/starwars");
-		/*
 		try {
-			// le serveur écoute/reçoit ce qu'on lui envoie
-			while ((msg = s.lireMessage()) != null) {
-				if (msg.compareTo("QUIT") == 0) break;
-
-				// Séparation de la commande et du texte. Exemple :
-				// USER toto
-				// PASS mot_de_passe
-				// On récupère l'indice où apparaît le le permier espace
-				// On ne peut utiliser split car le message peut contenir aussi des espaces
-
-				System.out.println(msg);
-				index = msg.indexOf(' ');
-				String type = msg.substring(0, index);
-				String text = msg.substring(index + 1, msg.length());
-
-				s.gererMessage(type, text);
-			}
-
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			s.send(s.repPartage + "starwars");
+			//s.envoyerFichier(s.repPartage + "yojinbo");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		*/
-
 
 		s.disconnect();
 		s.close();
 	}
 
 
+	public void listen() {
+		String msg;
+		FTPCommand ftpCmd;
+		try {
+			while ((msg = lireMessage()) != null) {
+				if (msg.compareTo("QUIT") == 0) break;
+
+				ftpCmd = FTPCommand.parseCommand(msg);
+				System.out.println(msg);
+
+				gererMessage(ftpCmd.command, ftpCmd.content);
+			}
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
 
 
 	/* Tests

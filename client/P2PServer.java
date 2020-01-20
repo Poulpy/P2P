@@ -30,7 +30,7 @@ public class P2PServer extends Yoda {
 	public String hashMdp = " 12333";
 	// Répertoire qui contient les descriptions des fichiers partagés par le serveur
 	// TODO renommer
-	private String repPartage = "shared2/";
+	public String repPartage = "macewindu/";
 
 	public String getRepPartage() {
 		return repPartage;
@@ -141,9 +141,13 @@ public class P2PServer extends Yoda {
 		P2PServer client= new P2PServer();
 		client.connect();
 		client.open();
-		client.recevoirDescription(client.getRepPartage());
+		try {
+			client.save(client.repPartage + "starwars", 23);
+			//client.lireFichier(client.repPartage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
-		client.quit();
 		client.disconnect();
 		client.close();
 	}

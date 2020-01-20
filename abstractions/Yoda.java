@@ -1,6 +1,10 @@
 package abstractions;
 
 import java.io.*;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import outils.FTPCommand;
@@ -40,8 +44,8 @@ public class Yoda {
 	 */
 	protected void open() {
 		try {
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF8"));
+			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8")), true);
 			dis = new DataInputStream(socket.getInputStream());
 			dos = new DataOutputStream(socket.getOutputStream());
 		} catch (UnknownHostException e) {
@@ -51,41 +55,34 @@ public class Yoda {
 		}
 	}
 
+
 	/**
-	 * Envoie un fichier à travers une socket
-	 * TODO mettre variables en champs
+	 * Envoie toutes les descriptions
 	 */
-	public void sendFile(String filePath) throws IOException {
-		FileInputStream fileWriter = new FileInputStream(filePath);
-		byte[] buffer = new byte[4096];
+	public void envoyerDescriptions(String dir) throws IOException {
+		File d = new File(dir);
 
-		while (fileWriter.read(buffer) > 0) {
-			dos.write(buffer);
+		// On liste les fichiers partagés
+		envoyerMessage("FILECOUNT " + d.list().length);
+
+		try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(dir))) {
+			for (Path path : stream) {
+				System.out.println("J'envoie " + path.toString());
+				envoyerDescription(path.toString());
+			}
 		}
-
-		fileWriter.close();
 	}
 
-	/**
-	 * Récupère un fichier envoyé par socket
-	 */
-	protected void saveFile(String filePath) throws IOException {
-		FileOutputStream fileReader = new FileOutputStream(filePath);
-		byte[] buffer = new byte[4096];
+	public void recevoirDescriptions(String dir) throws IOException {
+		String msg;
+		FTPCommand ftpCmd;
+		int fileCount;
 
-		int filesize = 15123; // Send file size in separate msg
-		int read = 0;
-		int totalRead = 0;
-		int remaining = filesize;
+		ftpCmd = FTPCommand.parseCommand(lireMessage());
+		fileCount = Integer.parseInt(ftpCmd.content);
 
-		while((read = dis.read(buffer, 0, Math.min(buffer.length, remaining))) > 0) {
-			totalRead += read;
-			remaining -= read;
-			System.out.println("read " + totalRead + " bytes.");
-			fileReader.write(buffer, 0, read);
-		}
-
-		fileReader.close();
+		for (int i = 0; i != fileCount; i++)
+			recevoirDescription(dir);
 	}
 
 	/**
@@ -96,8 +93,9 @@ public class Yoda {
 		String fileName = filePath.substring(index + 1, filePath.length());
 		FTPCommand ftpCmd = new FTPCommand("FILE", fileName);
 
+		//System.out.println(">>> " + ftpCmd.command.compareTo("FILE"));
+		//System.out.println(ftpCmd);
 		envoyerMessage(ftpCmd.toString());
-		System.out.println(ftpCmd);
 
 		try {
 			sendFile(filePath);
@@ -110,23 +108,17 @@ public class Yoda {
 	 * Réception de la description d'un fichier dans un répertoire dir
 	 */
 	protected void recevoirDescription(String dir) {
+		System.out.println("recevoirDescription");
 		String msg;
 		FTPCommand ftpCmd;
 
 		try {
-			do {
-				msg = lireMessage();
-				ftpCmd = FTPCommand.parseCommand(msg);
-			} while (ftpCmd.command.compareTo("FILE") != 0);
-			System.out.println(msg);
-
-			saveFile(dir + ftpCmd.content);
+			saveFile(dir);
 			System.out.println("Fichier sauvegardé");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-
 
 	/**
 	 * Lit un message (une ligne) envoyé par socket
@@ -139,6 +131,7 @@ public class Yoda {
 	 * Envoie une message à travers une socket
 	 */
 	protected void envoyerMessage(String msg) {
+		System.out.println("> " + msg);
 		writer.println(msg);
 	}
 
@@ -150,13 +143,77 @@ public class Yoda {
 		try {
 			reader.close();
 			writer.close();
-			dos.close();
 			dis.close();
+			dos.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+
+	/**
+	 * Envoie UN fichier par socket
+	 */
+	protected void send(String filePath) throws IOException {
+		File file = new File(filePath);
+		int fileSize = 4096;
+		FileInputStream fis = new FileInputStream(file);
+		byte[] buffer = new byte[fileSize];
+
+		while (fis.read(buffer) > 0) {
+			System.out.println("J'envoie...");
+			dos.write(buffer);
+		}
+
+		fis.close();
+	}
+
+	/**
+	 * Récupère UN fichier envoyé par socket
+	 */
+	protected void save(String filePath, int fileSize) throws IOException {
+		FileOutputStream fos = new FileOutputStream(filePath);
+		byte[] buffer = new byte[fileSize];
+
+		int read = 0;
+		int totalRead = 0;
+		int remaining = fileSize;
+
+		while (remaining > 0 &&
+			(read = dis.read(buffer, 0, (int) Math.min(buffer.length, remaining))) != -1) {
+			totalRead += read;
+			remaining -= read;
+			System.out.println("read " + totalRead + " bytes.");
+			fos.write(buffer, 0, read);
+		}
+
+		fos.close();
+	}
+
+	protected void envoyerFichier(String filePath) throws IOException {
+		String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+		File file = new File(filePath);
+		envoyerMessage("FILE " + fileName + " " + file.length());
+		send(filePath);
+	}
+	protected void lireFichier(String dir) throws IOException {
+		String msg;
+		FTPCommand ftpCmd;
+		String fileName;
+		int fileSize;
+		do {
+			msg = lireMessage();
+			System.out.println("> " + msg);
+			ftpCmd = FTPCommand.parseCommand(msg);
+		} while (ftpCmd.command.compareTo("FILE") != 0);
+		fileName = ftpCmd.content.split(" ")[0];
+		fileSize = Integer.parseInt(ftpCmd.content.split(" ")[1]);
+		System.out.println("fileName " + fileName);
+		System.out.println("dir " + dir + fileName);
+		System.out.println("fileSize " + fileSize);
+		save(dir + fileName, 4096);
 	}
 }
 
