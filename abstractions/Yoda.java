@@ -148,6 +148,7 @@ public class Yoda {
 
     /**
      * Envoie UN fichier par socket
+     * TODO renommer envoyerContenu (parce qu'on n'envoit que le contenu, pas le nom du fichier)
      */
     protected void send(String filePath) throws IOException {
         File file = new File(filePath);
@@ -156,10 +157,13 @@ public class Yoda {
         BufferedReader br = new BufferedReader(fr);
         String line;
 
+        // On envoie le fichier ligne par ligne
         while ((line = br.readLine()) != null) {
-            System.out.println("J'envoie : " + line);
             envoyerMessage(line);
         }
+
+        // L'étiquette END marque la fin du fichier
+        // Une alternative serait d'utiliser la taille du fichier, mais c'est trop compliqué
         envoyerMessage("END");
         fr.close();
 
@@ -167,15 +171,20 @@ public class Yoda {
 
     /**
      * Récupère UN fichier envoyé par socket
+     * TODO renommer enregistrerContenu (parce que là on récupère pas
+     * le nom du fichier, juste le contenu
+     *
+     * Ici on a un BufferedReader qu'on pourrait mettre en attribut
      */
-    protected void save(String filePath, int fileSize) throws IOException {
+    protected void save(String filePath/*, int fileSize*/) throws IOException {
         File file = new File(filePath);
         FileWriter fw = new FileWriter(file);
         BufferedWriter bw = new BufferedWriter(fw);
         String msg;
 
+        // Chaque ligne du fichier nous est envoyée
+        // L'étiquette END marque la fin de la transmission
         while ((msg = lireMessage()).compareTo("END") != 0) {
-            System.out.println("Je lis : " + msg);
             bw.write(msg + "\n");
         }
 
@@ -203,7 +212,7 @@ public class Yoda {
         System.out.println("fileName " + fileName);
         System.out.println("dir " + dir + fileName);
         System.out.println("fileSize " + fileSize);
-        save(dir + fileName, 4096);
+        save(dir + fileName);
     }
 }
 
