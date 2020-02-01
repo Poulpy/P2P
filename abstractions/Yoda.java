@@ -191,27 +191,46 @@ public class Yoda {
         bw.close();
     }
 
+    /**
+     * On envoie : le nom du fichier et sa taille (en octets)
+     * La taille n'est pas utile pour le moment, mais elle pourrait l'être plus tard !
+     * Ensuite on envoie le contenu
+     */
     protected void envoyerFichier(String filePath) throws IOException {
-        String fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
-        File file = new File(filePath);
+        String fileName;
+        File file;
+
+        file = new File(filePath);
+        fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+
         envoyerMessage("FILE " + fileName + " " + file.length());
         send(filePath);
     }
+
+
+    /**
+     * On récupère le nom de fichier et sa taille, ensuite le contenu du
+     * fichier
+     */
     protected void lireFichier(String dir) throws IOException {
         String msg;
         FTPCommand ftpCmd;
         String fileName;
         int fileSize;
+
         do {
             msg = lireMessage();
-            System.out.println("> " + msg);
+            //System.out.println("> " + msg);
             ftpCmd = FTPCommand.parseCommand(msg);
         } while (ftpCmd.command.compareTo("FILE") != 0);
+
         fileName = ftpCmd.content.split(" ")[0];
         fileSize = Integer.parseInt(ftpCmd.content.split(" ")[1]);
+
         System.out.println("fileName " + fileName);
         System.out.println("dir " + dir + fileName);
         System.out.println("fileSize " + fileSize);
+
         save(dir + fileName);
     }
 }

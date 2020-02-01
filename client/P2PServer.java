@@ -143,9 +143,8 @@ public class P2PServer extends Yoda {
         client.connect();
         client.open();
         try {
-            client.save(client.repPartage + "starwars");
-            System.out.println(client.lireMessage());
-            client.save(client.repPartage + "yojinbo");
+            client.lireFichier(client.repPartage);
+            client.lireFichier(client.repPartage);
         } catch (IOException e) {
             e.printStackTrace();
         }
