@@ -59,8 +59,10 @@ public class Yoda {
     /**
      * Envoie toutes les descriptions
      * Envoie d'abord le nombre de fichiers à envoyer
+     *
+     * descriptionsDir est le répertoire où sont les descriptions
      */
-    public void envoyerDescriptions(String descriptionsDir) throws IOException {
+    protected void envoyerDescriptions(String descriptionsDir) throws IOException {
         File d = new File(descriptionsDir);
 
         // On envoie d'abord le nombre de fichiers à envoyer
@@ -69,13 +71,15 @@ public class Yoda {
         // On liste les fichiers partagés
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(descriptionsDir))) {
             for (Path path : stream) {
-                System.out.println("J'envoie " + path.toString());
                 envoyerFichier(path.toString());
             }
         }
     }
 
-    public void recevoirDescriptions(String dir) throws IOException {
+    /**
+     * dir est le répertoire où sont les descriptions
+     */
+    protected void recevoirDescriptions(String dir) throws IOException {
         String msg;
         FTPCommand ftpCmd;
         int fileCount;
