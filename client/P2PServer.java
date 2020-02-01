@@ -110,7 +110,7 @@ public class P2PServer extends Yoda {
 		return "PASS " + hashMdp;
 	}
 
-	public void quit() {
+	public void quit() throws IOException {
 		super.envoyerMessage("QUIT");
 	}
 
@@ -138,12 +138,14 @@ public class P2PServer extends Yoda {
 	}
 
 	public static void main(String[] args) {
-		P2PServer client= new P2PServer();
+		P2PServer client = new P2PServer();
+		String msg;
 		client.connect();
 		client.open();
 		try {
-			client.save(client.repPartage + "yojinbo", 23);
-			//client.lireFichier(client.repPartage);
+			client.save(client.repPartage + "starwars", 23);
+			//client.save(client.repPartage + "yojinbo", 18);
+			//client.save(client.repPartage + "yojinbo", 18);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

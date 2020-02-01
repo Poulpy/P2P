@@ -180,7 +180,10 @@ public class P2PCentralizedServer extends Yoda {
 		s.open();
 
 		try {
-			s.send(s.repPartage + "yojinbo");
+			s.send(s.repPartage + "starwars");
+			//s.envoyerMessage("Après le fichier");
+			//s.send(s.repPartage + "yojinbo");
+			//s.send(s.repPartage + "yojinbo");
 			//s.envoyerFichier(s.repPartage + "yojinbo");
 		} catch (IOException e) {
 			e.printStackTrace();
