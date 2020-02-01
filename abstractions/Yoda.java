@@ -58,17 +58,19 @@ public class Yoda {
 
     /**
      * Envoie toutes les descriptions
+     * Envoie d'abord le nombre de fichiers à envoyer
      */
-    public void envoyerDescriptions(String dir) throws IOException {
-        File d = new File(dir);
+    public void envoyerDescriptions(String descriptionsDir) throws IOException {
+        File d = new File(descriptionsDir);
 
-        // On liste les fichiers partagés
+        // On envoie d'abord le nombre de fichiers à envoyer
         envoyerMessage("FILECOUNT " + d.list().length);
 
-        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(dir))) {
+        // On liste les fichiers partagés
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(descriptionsDir))) {
             for (Path path : stream) {
                 System.out.println("J'envoie " + path.toString());
-                envoyerDescription(path.toString());
+                envoyerFichier(path.toString());
             }
         }
     }
@@ -78,43 +80,21 @@ public class Yoda {
         FTPCommand ftpCmd;
         int fileCount;
 
-        ftpCmd = FTPCommand.parseCommand(lireMessage());
+        // On attend un message avec pour commande FILECOUNT
+        do {
+            msg = lireMessage();
+            ftpCmd = FTPCommand.parseCommand(msg);
+        } while (ftpCmd.command.compareTo("FILECOUNT") != 0);
+
+        // On récupère le nombre de fichiers à recevoir
         fileCount = Integer.parseInt(ftpCmd.content);
 
-        for (int i = 0; i != fileCount; i++)
-            recevoirDescription(dir);
-    }
-
-    /**
-     * Envoie la description d'un fichier, avec le nom du fichier
-     */
-    protected void envoyerDescription(String filePath) {
-        int index = filePath.lastIndexOf('/');
-        String fileName = filePath.substring(index + 1, filePath.length());
-        FTPCommand ftpCmd = new FTPCommand("FILE", fileName);
-
-        //System.out.println(">>> " + ftpCmd.command.compareTo("FILE"));
-        //System.out.println(ftpCmd);
-
-        try {
-            envoyerMessage(ftpCmd.toString());
-            envoyerFichier(filePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Réception de la description d'un fichier dans un répertoire dir
-     */
-    protected void recevoirDescription(String dir) {
-        try {
+        for (int i = 0; i != fileCount; i++) {
             lireFichier(dir);
-            System.out.println("Fichier sauvegardé");
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
+
+
 
     /**
      * Lit un message (une ligne) envoyé par socket
@@ -163,7 +143,9 @@ public class Yoda {
         }
 
         // L'étiquette END marque la fin du fichier
-        // Une alternative serait d'utiliser la taille du fichier, mais c'est trop compliqué
+        // TODO Une alternative serait d'utiliser la taille du fichier,
+        // mais c'est trop compliqué. Toutefois, qu'est-ce qu'il se passe
+        // si le fichier contient END ?
         envoyerMessage("END");
         fr.close();
 
@@ -176,7 +158,7 @@ public class Yoda {
      *
      * Ici on a un BufferedReader qu'on pourrait mettre en attribut
      */
-    protected void save(String filePath/*, int fileSize*/) throws IOException {
+    protected void save(String filePath) throws IOException {
         File file = new File(filePath);
         FileWriter fw = new FileWriter(file);
         BufferedWriter bw = new BufferedWriter(fw);
@@ -193,7 +175,8 @@ public class Yoda {
 
     /**
      * On envoie : le nom du fichier et sa taille (en octets)
-     * La taille n'est pas utile pour le moment, mais elle pourrait l'être plus tard !
+     * La taille n'est pas utile pour le moment, mais elle pourrait
+     * l'être plus tard ! (voir save() send())
      * Ensuite on envoie le contenu
      */
     protected void envoyerFichier(String filePath) throws IOException {

@@ -97,6 +97,8 @@ public class P2PServer extends Yoda {
     /**
      * String correspondant à la commande USER
      * Commande pour envoyer son identifiant
+     * TODO à renommer; 'get' est utilisé pour lire un attribut (ce n'est pas le cas ici)
+     * Cela peut prêter à confusion
      */
     public String getUserCmd() {
         return "USER " + id;
@@ -105,6 +107,9 @@ public class P2PServer extends Yoda {
     /**
      * String correspondant à la commande PASS
      * Commande pour envoyer le hash de son mot de passe
+     *
+     * TODO à renommer; 'get' est utilisé pour lire un attribut (ce n'est pas le cas ici)
+     * Cela peut prêter à confusion
      */
     public String getPassCmd() {
         return "PASS " + hashMdp;
@@ -143,8 +148,7 @@ public class P2PServer extends Yoda {
         client.connect();
         client.open();
         try {
-            client.lireFichier(client.repPartage);
-            client.lireFichier(client.repPartage);
+            client.recevoirDescriptions(client.repPartage);
         } catch (IOException e) {
             e.printStackTrace();
         }
