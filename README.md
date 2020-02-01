@@ -49,6 +49,7 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - renommer les classes et les variables, leur donner de jolis noms
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - mettre les tests dans une classe à part
+- revoir l'esthétique du code : mettre d'abord les déclarations (sans les mélanger à du code) => meilleur débug, + lisible
 
 
 ### Comment exécuter le projet ?
@@ -59,7 +60,7 @@ Compilez les fichiers java comme suit, à la racine du projet :
 
 `javac server/P2PCentralizedServer.java`
 
-Ensuite, dans 2 terminaux, exécutez le serveur puis le client :
+Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serveur, exécutez le client :
 
 `java server.P2PCentralizedServer`
 

@@ -203,6 +203,7 @@ public class Yoda {
         file = new File(filePath);
         fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
 
+        // L'étiquette FILE va indiquer qu'on envoie le nom et la taille
         envoyerMessage("FILE " + fileName + " " + file.length());
         send(filePath);
     }
@@ -218,18 +219,14 @@ public class Yoda {
         String fileName;
         int fileSize;
 
+        // On attend un message avec pour commande FILE
         do {
             msg = lireMessage();
-            //System.out.println("> " + msg);
             ftpCmd = FTPCommand.parseCommand(msg);
         } while (ftpCmd.command.compareTo("FILE") != 0);
 
         fileName = ftpCmd.content.split(" ")[0];
         fileSize = Integer.parseInt(ftpCmd.content.split(" ")[1]);
-
-        System.out.println("fileName " + fileName);
-        System.out.println("dir " + dir + fileName);
-        System.out.println("fileSize " + fileSize);
 
         save(dir + fileName);
     }
