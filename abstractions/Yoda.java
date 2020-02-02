@@ -1,12 +1,20 @@
 package abstractions;
 
-import java.io.*;
-import java.nio.file.DirectoryStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.Files;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import outils.FTPCommand;
 
 
@@ -21,8 +29,8 @@ public class Yoda {
     protected PrintWriter writer;
 
     // Fichier
-    protected DataOutputStream dos;
-    protected DataInputStream dis;
+    //protected DataOutputStream dos;
+    //protected DataInputStream dis;
 
     // Adresse IP de l'utilisateur
     protected String adresseIP = "127.0.0.1";
