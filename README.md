@@ -94,15 +94,37 @@ apt install junit4
 mkdir ~/junit
 ln -s /usr/share/java/junit4.jar ~/junit
 ```
-Ensuite, dans le `~/.bashrc` :
+(Partie qui marche pas pour l'instant) Ensuite, dans le `~/.bashrc` :
 
 ```
 export JUNIT_HOME=~/junit
 if [ ${#CLASSPATH} -eq 0 ]
 then
-    export CLASSPATH="$JUNIT_HOME/junit-4.jar"
+    export CLASSPATH="$JUNIT_HOME/junit4.jar:$JUNIT_HOME/hamcrest-core.jar"
 else
-    export CLASSPATH="$CLASSPATH:$JUNIT_HOME/junit-4.jar"
+    export CLASSPATH="$CLASSPATH:$JUNIT_HOME/junit4.jar:$JUNIT_HOME/hamcrest-core.jar"
 fi
+```
+
+Pour compiler les tests :
+```
+javac test/TestServer
+```
+
+Pour exécuter :
+```
+java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:. org.junit.runner.JUnitCore test.TestServer
+```
+
+
+## Ecrire des tests
+
+la méthode doit être systématiquement précédée d'une annotation @Test
+
+```
+    @Test
+    public void testUtilisateurExiste() throws Exception {
+        Assert.assertEquals(0, 0);
+    }
 ```
 
