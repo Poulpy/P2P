@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import outils.FTPCommand;
 
 
-public class P2PCentralizedServer extends Yoda {
+public class FSPServer extends Yoda {
 
     // Chemin du fichier contenant les utilisateurs connus du serveur
     // l'identifiant et le hash du mot de passe sont séparés par le
@@ -28,7 +28,7 @@ public class P2PCentralizedServer extends Yoda {
     private String mdp;
     private boolean nouvelUtilisateur = false;
 
-    public P2PCentralizedServer() {
+    public FSPServer() {
     }
 
     public void disconnect() {
@@ -175,7 +175,7 @@ public class P2PCentralizedServer extends Yoda {
     /* Main */
 
     public static void main(String[] args){
-        P2PCentralizedServer s = new P2PCentralizedServer();
+        FSPServer s = new FSPServer();
         s.connect();
         s.open();
 

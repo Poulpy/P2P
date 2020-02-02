@@ -1,4 +1,8 @@
-# P2P
+# FSP : File Sharing Protocol (nom provisoire)
+
+
+FSP est un protocol similaire à FTP, en plus simple.
+
 
 ## Comment un client communique avec un serveur TCP ?
 
@@ -56,16 +60,16 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 
 Compilez les fichiers java comme suit, à la racine du projet :
 
-`javac client/P2PServer.java`
+`javac client/FSPClient.java`
 
-`javac server/P2PCentralizedServer.java`
+`javac server/FSPServer.java`
 
 Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serveur, exécutez le client :
 
-`java server.P2PCentralizedServer`
+`java server.FSPServer`
 
 
-`java client.P2PServer`
+`java client.FSPClient`
 
 ### Utilisateurs
 

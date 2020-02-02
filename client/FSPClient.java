@@ -20,7 +20,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-public class P2PServer extends Yoda {
+public class FSPClient extends Yoda {
 
     // Identifiant de l'utilisateur
     public String id = " ";
@@ -36,7 +36,7 @@ public class P2PServer extends Yoda {
         return repPartage;
     }
 
-    public P2PServer() {
+    public FSPClient() {
     }
 
     public void disconnect() {
@@ -143,7 +143,7 @@ public class P2PServer extends Yoda {
     }
 
     public static void main(String[] args) {
-        P2PServer client = new P2PServer();
+        FSPClient client = new FSPClient();
         String msg;
         client.connect();
         client.open();
