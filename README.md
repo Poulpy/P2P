@@ -50,7 +50,6 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - Revoir à quel niveau mettre les try/catch
 - Utiliser la classe FTPCommand
 - revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv
-- créer un fichier main pour le client et les 2 serveurs
 - une classe Message, qui enverrait des messages à travers des sockets (xml, json)
 - renommer les classes et les variables, leur donner de jolis noms
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
@@ -62,16 +61,16 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 
 Compilez les fichiers java comme suit, à la racine du projet :
 
-`javac client/FSPClient.java`
+`javac client/Client.java`
 
-`javac server/FSPServer.java`
+`javac server/Server.java`
 
 Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serveur, exécutez le client :
 
-`java server.FSPServer`
+`java server.Server`
 
 
-`java client.FSPClient`
+`java client.Client`
 
 ## Pourquoi un utilisateur a besoin d'installer un client et en plus un serveur ?
 
