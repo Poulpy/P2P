@@ -73,6 +73,11 @@ Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serve
 
 `java client.FSPClient`
 
+## Pourquoi un utilisateur a besoin d'installer un client et en plus un serveur ?
+
+Le principe de cette application est de pouvoir partager des fichiers. Tant que le programme côté client est actif, on partage les fichiers contenus dans la machine côté client. S'il ne tourne pas, on arrête de partager les fichiers.
+Mais est-ce que l'utilisateur est tout le temps connecté au serveur ? Non pas forcément, c'est pour ça qu'on a besoin de 2 programmes côté client : un programme pour partager des fichiers, et un autre qui traitera les requêtes du client.
+
 ### Utilisateurs
 
 Les utilisateurs sont dans le fichier utilisateurs.csv (à la racine du projet)
