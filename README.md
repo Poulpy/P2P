@@ -83,4 +83,26 @@ Mais est-ce que l'utilisateur est tout le temps connecté au serveur ? Non pas f
 
 Les utilisateurs sont dans le fichier utilisateurs.csv (à la racine du projet)
 
+## Pour exécuter les tests
+
+### Unix
+
+Il faut installer JUnit 4 :
+
+```
+apt install junit4
+mkdir ~/junit
+ln -s /usr/share/java/junit4.jar ~/junit
+```
+Ensuite, dans le `~/.bashrc` :
+
+```
+export JUNIT_HOME=~/junit
+if [ ${#CLASSPATH} -eq 0 ]
+then
+    export CLASSPATH="$JUNIT_HOME/junit-4.jar"
+else
+    export CLASSPATH="$CLASSPATH:$JUNIT_HOME/junit-4.jar"
+fi
+```
 
