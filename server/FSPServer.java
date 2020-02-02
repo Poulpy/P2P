@@ -178,6 +178,38 @@ public class FSPServer extends Yoda {
     }
 
     /**
+     * Supprime un utilisateur du fichier des utilisateurs
+     * en fonction de son identifiant
+     */
+    public void enleverUtilisateur(String userID) throws IOException {
+        File fileBeforeRemove;
+        File fileAfterRemove;
+        String currentLine;
+        String someID;
+        BufferedWriter writer;
+        BufferedReader reader;
+
+        fileBeforeRemove = new File(cheminUtilisateurs);
+        fileAfterRemove = new File("users.csv");
+
+        writer = new BufferedWriter(new FileWriter(fileAfterRemove));
+        reader = new BufferedReader(new FileReader(fileBeforeRemove));
+
+        while ((currentLine = reader.readLine()) != null) {
+            someID = currentLine.split(sep)[0];
+
+            if (someID.equals(userID)) {
+                continue;
+            } else {
+                writer.write(currentLine);
+            }
+        }
+
+        reader.close();
+        writer.close();
+    }
+
+    /**
      * Création d'un utilisateur dans le fichier csv/tsv
      * TODO relire le code, le try est un peu bizare
      */

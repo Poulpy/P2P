@@ -49,12 +49,13 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 
 - Revoir à quel niveau mettre les try/catch
 - Utiliser la classe FTPCommand
-- revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv
+- revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv (voir le standard ISO, ou la structure d'un projet Maven)
 - une classe Message, qui enverrait des messages à travers des sockets (xml, json)
 - renommer les classes et les variables, leur donner de jolis noms
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - mettre les tests dans une classe à part
 - remplacer les compareTo par des .equals() => + compréhensible
+- `System.getProperty("line.separator");
 
 
 ### Comment exécuter le projet ?

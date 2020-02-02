@@ -110,6 +110,7 @@ public class FSPClient extends Yoda {
      */
     public void chiffreMdp() {
         MessageDigest messageDigest;
+
         try {
             messageDigest = MessageDigest.getInstance("MD5");
             messageDigest.update(this.mdp.getBytes());
