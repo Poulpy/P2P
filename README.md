@@ -55,7 +55,7 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - renommer les classes et les variables, leur donner de jolis noms
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - mettre les tests dans une classe à part
-- revoir l'esthétique du code : mettre d'abord les déclarations (sans les mélanger à du code) => meilleur débug, + lisible
+- remplacer les compareTo par des .equals() => + compréhensible
 
 
 ### Comment exécuter le projet ?

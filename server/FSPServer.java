@@ -68,6 +68,7 @@ public class FSPServer extends Yoda {
             e.printStackTrace();
         }
     }
+
     /**
      * Gestion des commandes
      * En fonction de la commande, le serveur fait une action
@@ -115,12 +116,14 @@ public class FSPServer extends Yoda {
      * On regarde si son identifiant/nom est présent
      * dans le fichier utilisateurs.csv
      * Les utilisateurs sont stockés comme ça :
-     * identifiant    hash_du_mot_de_passe
+     * identifiant,hash_du_mot_de_passe
      */
     public boolean utilisateurExiste(String identifiant) {
         BufferedReader reader;
-        String[] idMdp = new String[2];
+        String[] idMdp;
         String ligne;
+
+        idMdp = new String[2];
 
         try {
             reader = new BufferedReader(new FileReader(cheminUtilisateurs));
@@ -149,8 +152,10 @@ public class FSPServer extends Yoda {
      */
     public boolean mdpCorrect(String identifiant, String hashMdp) {
         BufferedReader reader;
-        String[] idMdp = new String[2];
+        String[] idMdp;
         String ligne;
+
+        idMdp = new String[2];
 
         try {
             reader = new BufferedReader(new FileReader(cheminUtilisateurs));
@@ -190,25 +195,31 @@ public class FSPServer extends Yoda {
     /* Main */
 
     public static void main(String[] args){
-        FSPServer s = new FSPServer("127.0.0.1", 50000);
-        new File(s.descriptionsFolder).mkdirs();
-        s.connect("127.0.0.1");
-        s.open();
+        FSPServer server;
+
+        server = new FSPServer("127.0.0.1", 50000);
+        // on créé le dossier s'il n'existe pas déjà
+        // TODO mettre dans une fonction, mais où ?
+        new File(server.descriptionsFolder).mkdirs();
+
+        server.connect("127.0.0.1");
+        server.open();
 
         try {
-            s.envoyerDescriptions(s.descriptionsFolder);
+            server.envoyerDescriptions(server.descriptionsFolder);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        s.disconnect();
-        s.close();
+        server.disconnect();
+        server.close();
     }
 
 
     public void listen() {
         String msg;
         FTPCommand ftpCmd;
+
         try {
             while ((msg = lireMessage()) != null) {
                 if (msg.compareTo("QUIT") == 0) break;

@@ -21,9 +21,13 @@ public class FTPCommand {
      * "USER toto" ou "PASS bidule"
      */
     public static FTPCommand parseCommand(String str) {
-        int index = str.indexOf(' ');
-        String type = str.substring(0, index);
-        String desc = str.substring(index + 1, str.length());
+        int index;
+        String type;
+        String desc;
+
+        index = str.indexOf(' ');
+        type = str.substring(0, index);
+        desc = str.substring(index + 1, str.length());
 
         return new FTPCommand(type, desc);
     }

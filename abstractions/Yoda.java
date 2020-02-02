@@ -72,10 +72,12 @@ public class Yoda {
      * descriptionsDir est le répertoire où sont les descriptions
      */
     protected void envoyerDescriptions(String descriptionsDir) throws IOException {
-        File d = new File(descriptionsDir);
+        File dir;
+
+        dir = new File(descriptionsDir);
 
         // On envoie d'abord le nombre de fichiers à envoyer
-        envoyerMessage("FILECOUNT " + d.list().length);
+        envoyerMessage("FILECOUNT " + dir.list().length);
 
         // On liste les fichiers partagés
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(descriptionsDir))) {
@@ -144,11 +146,16 @@ public class Yoda {
      * TODO renommer envoyerContenu (parce qu'on n'envoit que le contenu, pas le nom du fichier)
      */
     protected void send(String filePath) throws IOException {
-        File file = new File(filePath);
-        int fileSize = (int) file.length();// pas utilisée
-        FileReader fr = new FileReader(file);
-        BufferedReader br = new BufferedReader(fr);
+        BufferedReader br;
+        File file;
+        FileReader fr;
         String line;
+        int fileSize;
+
+        file = new File(filePath);
+        fileSize = (int) file.length();// pas utilisée
+        fr = new FileReader(file);
+        br = new BufferedReader(fr);
 
         // On envoie le fichier ligne par ligne
         while ((line = br.readLine()) != null) {
@@ -161,7 +168,6 @@ public class Yoda {
         // si le fichier contient END ?
         envoyerMessage("END");
         fr.close();
-
     }
 
     /**
@@ -172,10 +178,14 @@ public class Yoda {
      * Ici on a un BufferedReader qu'on pourrait mettre en attribut
      */
     protected void save(String filePath) throws IOException {
-        File file = new File(filePath);
-        FileWriter fw = new FileWriter(file);
-        BufferedWriter bw = new BufferedWriter(fw);
+        BufferedWriter bw;
+        File file;
+        FileWriter fw;
         String msg;
+
+        file = new File(filePath);
+        fw = new FileWriter(file);
+        bw = new BufferedWriter(fw);
 
         // Chaque ligne du fichier nous est envoyée
         // L'étiquette END marque la fin de la transmission

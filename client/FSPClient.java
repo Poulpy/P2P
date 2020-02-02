@@ -59,10 +59,13 @@ public class FSPClient extends Yoda {
 
     /**
      * Authentification
+     * TODO à modifier si on remplace l'interface en ligne de commande par une gui
      */
     public void login() {
-        Scanner scan = new Scanner(System.in);
+        Scanner scan;
         String reponse;
+
+        scan = new Scanner(System.in);
 
         try {
             // On entre et on envoie l'identifiant ...
@@ -85,13 +88,16 @@ public class FSPClient extends Yoda {
             } while (!reponse.startsWith("2"));
 
             System.out.println("Authentification réussie !");
-            //super.saveFile();
+            // recevoirDescriptions();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Méthode à appeler quand l'utilisateur veut quitter la session
+     */
     public void quit() throws IOException {
         super.envoyerMessage("QUIT");
     }
@@ -120,10 +126,13 @@ public class FSPClient extends Yoda {
     }
 
     public static void main(String[] args) {
-        FSPClient client = new FSPClient("127.0.0.1", 50000);
+        FSPClient client;
         String msg;
+
+        client = new FSPClient("127.0.0.1", 50000);
         client.connect();
         client.open();
+
         try {
             client.recevoirDescriptions(client.descriptionsFolder);
         } catch (IOException e) {
@@ -134,3 +143,4 @@ public class FSPClient extends Yoda {
         client.close();
     }
 }
+
