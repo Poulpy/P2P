@@ -69,7 +69,7 @@ public class FSPClient extends Yoda {
             do {
                 System.out.print("Identifiant : ");
                 id = scan.nextLine();
-                super.envoyerMessage(getUserCmd());
+                super.envoyerMessage("USER " + id);
                 reponse = super.lireMessage();
                 System.out.println(reponse);
             } while (!reponse.startsWith("2"));
@@ -79,7 +79,7 @@ public class FSPClient extends Yoda {
                 System.out.print("Mot de passe : ");
                 mdp = scan.nextLine();
                 chiffreMdp();
-                super.envoyerMessage(getPassCmd());
+                super.envoyerMessage("PASS " + hashMdp);
                 reponse = super.lireMessage();
                 System.out.println(reponse);
             } while (!reponse.startsWith("2"));
@@ -90,27 +90,6 @@ public class FSPClient extends Yoda {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * String correspondant à la commande USER
-     * Commande pour envoyer son identifiant
-     * TODO à renommer; 'get' est utilisé pour lire un attribut (ce n'est pas le cas ici)
-     * Cela peut prêter à confusion
-     */
-    public String getUserCmd() {
-        return "USER " + id;
-    }
-
-    /**
-     * String correspondant à la commande PASS
-     * Commande pour envoyer le hash de son mot de passe
-     *
-     * TODO à renommer; 'get' est utilisé pour lire un attribut (ce n'est pas le cas ici)
-     * Cela peut prêter à confusion
-     */
-    public String getPassCmd() {
-        return "PASS " + hashMdp;
     }
 
     public void quit() throws IOException {
