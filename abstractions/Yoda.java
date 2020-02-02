@@ -19,29 +19,27 @@ import outils.FTPCommand;
 
 
 public class Yoda {
-    // NOTE
-    // protected : champs ou fonction qui sera présent dans la classe fille
 
     // Message
     // Ecriture dans une socket
-    protected BufferedReader reader;
+    public BufferedReader reader;
     // Lecture dans une socket
-    protected PrintWriter writer;
+    public PrintWriter writer;
 
     // Fichier
-    //protected DataOutputStream dos;
-    //protected DataInputStream dis;
+    //public DataOutputStream dos;
+    //public DataInputStream dis;
 
     // Adresse IP de l'utilisateur
-    protected String adresseIP = "127.0.0.1";
+    public String adresseIP = "127.0.0.1";
     // Adresse IP du serveur
-    protected String adresseIPServeur = "127.0.0.1";
-    protected int port = 50000;
-    protected Socket socket;
+    public String adresseIPServeur = "127.0.0.1";
+    public int port = 50000;
+    public Socket socket;
 
     /**
      */
-    protected Yoda(String serverIP, int portNumber) {
+    public Yoda(String serverIP, int portNumber) {
         adresseIPServeur = serverIP;
         port = portNumber;
     }
@@ -53,7 +51,7 @@ public class Yoda {
      * pour le client ? Les sockets des clients seraient stockées dans un
      * tableau
      */
-    protected void open() {
+    public void open() {
         try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF8"));
             writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8")), true);
@@ -71,7 +69,7 @@ public class Yoda {
      *
      * descriptionsDir est le répertoire où sont les descriptions
      */
-    protected void envoyerDescriptions(String descriptionsDir) throws IOException {
+    public void envoyerDescriptions(String descriptionsDir) throws IOException {
         File dir;
 
         dir = new File(descriptionsDir);
@@ -90,7 +88,7 @@ public class Yoda {
     /**
      * dir est le répertoire où sont les descriptions
      */
-    protected void recevoirDescriptions(String dir) throws IOException {
+    public void recevoirDescriptions(String dir) throws IOException {
         String msg;
         FTPCommand ftpCmd;
         int fileCount;
@@ -114,14 +112,14 @@ public class Yoda {
     /**
      * Lit un message (une ligne) envoyé par socket
      */
-    protected String lireMessage() throws IOException {
+    public String lireMessage() throws IOException {
         return reader.readLine();
     }
 
     /**
      * Envoie une message à travers une socket
      */
-    protected void envoyerMessage(String msg) throws IOException {
+    public void envoyerMessage(String msg) throws IOException {
         System.out.println("> " + msg);
         writer.println(msg);
     }
@@ -129,7 +127,7 @@ public class Yoda {
     /**
      * Libère les ressources
      */
-    protected void close() {
+    public void close() {
         try {
             reader.close();
             writer.close();
@@ -145,7 +143,7 @@ public class Yoda {
      * Envoie UN fichier par socket
      * TODO renommer envoyerContenu (parce qu'on n'envoit que le contenu, pas le nom du fichier)
      */
-    protected void send(String filePath) throws IOException {
+    public void send(String filePath) throws IOException {
         BufferedReader br;
         File file;
         FileReader fr;
@@ -177,7 +175,7 @@ public class Yoda {
      *
      * Ici on a un BufferedReader qu'on pourrait mettre en attribut
      */
-    protected void save(String filePath) throws IOException {
+    public void save(String filePath) throws IOException {
         BufferedWriter bw;
         File file;
         FileWriter fw;
@@ -202,7 +200,7 @@ public class Yoda {
      * l'être plus tard ! (voir save() send())
      * Ensuite on envoie le contenu
      */
-    protected void envoyerFichier(String filePath) throws IOException {
+    public void envoyerFichier(String filePath) throws IOException {
         String fileName;
         File file;
 
@@ -219,7 +217,7 @@ public class Yoda {
      * On récupère le nom de fichier et sa taille, ensuite le contenu du
      * fichier
      */
-    protected void lireFichier(String dir) throws IOException {
+    public void lireFichier(String dir) throws IOException {
         String msg;
         FTPCommand ftpCmd;
         String fileName;
