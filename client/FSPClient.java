@@ -29,14 +29,11 @@ public class FSPClient extends Yoda {
     // Hash du mot de passe
     public String hashMdp = " 12333";
     // Répertoire qui contient les descriptions des fichiers partagés par le serveur
-    // TODO renommer
+    // TODO constante ?
     public String descriptionsFolder = "macewindu/";
 
-    public String getRepPartage() {
-        return descriptionsFolder;
-    }
-
-    public FSPClient() {
+    public FSPClient(String serverIP, int port) {
+        super(serverIP, port);
     }
 
     public void disconnect() {
@@ -59,6 +56,7 @@ public class FSPClient extends Yoda {
             e.printStackTrace();
         }
     }
+
     /**
      * Authentification
      */
@@ -143,7 +141,7 @@ public class FSPClient extends Yoda {
     }
 
     public static void main(String[] args) {
-        FSPClient client = new FSPClient();
+        FSPClient client = new FSPClient("127.0.0.1", 50000);
         String msg;
         client.connect();
         client.open();

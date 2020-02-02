@@ -42,7 +42,9 @@ public class Yoda {
     /**
      * TODO Affectation du port et des adresses IP
      */
-    protected Yoda() {
+    protected Yoda(String serverIP, int portNumber) {
+        adresseIPServeur = serverIP;
+        port = portNumber;
     }
 
 

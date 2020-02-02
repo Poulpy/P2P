@@ -31,8 +31,8 @@ public class FSPServer extends Yoda {
     // Chemin du fichier contenant les utilisateurs connus du serveur
     // l'identifiant et le hash du mot de passe sont séparés par le
     // séparateur sep
-    private String cheminUtilisateurs = "utilisateurs.csv";
-    private String sep = "    ";
+    private String cheminUtilisateurs = "server/utilisateurs.csv";
+    private String sep = ",";
     // Répertoire des fichiers partagés, créé au lancement du serveur
     // TODO en faire une constante ?
     public String descriptionsFolder = "quigon/";
@@ -42,8 +42,8 @@ public class FSPServer extends Yoda {
     private String mdp;
     private boolean nouvelUtilisateur = false;
 
-    public FSPServer() {
-        new File(descriptionsFolder).mkdirs();
+    public FSPServer(String serverIP, int port) {
+        super(serverIP, port);
     }
 
     public void disconnect() {
@@ -58,9 +58,9 @@ public class FSPServer extends Yoda {
     }
 
 
-    public void connect() {
+    public void connect(String clientIP) {
         try {
-            serverSocket = new ServerSocket(port, 10, InetAddress.getByName(adresseIP));
+            serverSocket = new ServerSocket(port, 10, InetAddress.getByName(clientIP));
             socket = serverSocket.accept();
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -190,8 +190,9 @@ public class FSPServer extends Yoda {
     /* Main */
 
     public static void main(String[] args){
-        FSPServer s = new FSPServer();
-        s.connect();
+        FSPServer s = new FSPServer("127.0.0.1", 50000);
+        new File(s.descriptionsFolder).mkdirs();
+        s.connect("127.0.0.1");
         s.open();
 
         try {
