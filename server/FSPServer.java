@@ -33,9 +33,9 @@ public class FSPServer extends Yoda {
     // séparateur sep
     private String cheminUtilisateurs = "utilisateurs.csv";
     private String sep = "    ";
-    // Répertoire des fichiers partagés
-    // TODO renommer, et le créer au lancement du serveur
-    public String repPartage = "quigon/";
+    // Répertoire des fichiers partagés, créé au lancement du serveur
+    // TODO en faire une constante ?
+    public String descriptionsFolder = "quigon/";
     private ServerSocket serverSocket;
     // voir méthode gererMessage
     private String id;
@@ -43,6 +43,7 @@ public class FSPServer extends Yoda {
     private boolean nouvelUtilisateur = false;
 
     public FSPServer() {
+        new File(descriptionsFolder).mkdirs();
     }
 
     public void disconnect() {
@@ -97,10 +98,10 @@ public class FSPServer extends Yoda {
                     EnregistrerUtilisateur(id, mdp);
                     nouvelUtilisateur = false;
                     super.envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
-                    //super.sendFile(repPartage + "starwars");
+                    //super.sendFile(descriptionsFolder + "starwars");
                 } else if (mdpCorrect(id, mdp)) {
                     super.envoyerMessage("200 Mot de passe correct");
-                    //super.sendFile(repPartage + "starwars");
+                    //super.sendFile(descriptionsFolder + "starwars");
                 } else {
                     super.envoyerMessage("300 Mot de passe incorrect pour " + id);
                 }
@@ -194,7 +195,7 @@ public class FSPServer extends Yoda {
         s.open();
 
         try {
-            s.envoyerDescriptions(s.repPartage);
+            s.envoyerDescriptions(s.descriptionsFolder);
         } catch (IOException e) {
             e.printStackTrace();
         }

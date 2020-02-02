@@ -30,10 +30,10 @@ public class FSPClient extends Yoda {
     public String hashMdp = " 12333";
     // Répertoire qui contient les descriptions des fichiers partagés par le serveur
     // TODO renommer
-    public String repPartage = "macewindu/";
+    public String descriptionsFolder = "macewindu/";
 
     public String getRepPartage() {
-        return repPartage;
+        return descriptionsFolder;
     }
 
     public FSPClient() {
@@ -148,7 +148,7 @@ public class FSPClient extends Yoda {
         client.connect();
         client.open();
         try {
-            client.recevoirDescriptions(client.repPartage);
+            client.recevoirDescriptions(client.descriptionsFolder);
         } catch (IOException e) {
             e.printStackTrace();
         }
