@@ -40,7 +40,6 @@ public class Yoda {
     protected Socket socket;
 
     /**
-     * TODO Affectation du port et des adresses IP
      */
     protected Yoda(String serverIP, int portNumber) {
         adresseIPServeur = serverIP;
