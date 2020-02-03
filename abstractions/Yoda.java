@@ -140,9 +140,8 @@ public class Yoda {
 
     /**
      * Envoie UN fichier par socket
-     * TODO renommer envoyerContenu (parce qu'on n'envoit que le contenu, pas le nom du fichier)
      */
-    public void send(String filePath) throws IOException {
+    public void envoyerContenu(String filePath) throws IOException {
         BufferedReader br;
         File file;
         FileReader fr;
@@ -169,12 +168,10 @@ public class Yoda {
 
     /**
      * Récupère UN fichier envoyé par socket
-     * TODO renommer enregistrerContenu (parce que là on récupère pas
-     * le nom du fichier, juste le contenu
      *
      * Ici on a un BufferedReader qu'on pourrait mettre en attribut
      */
-    public void save(String filePath) throws IOException {
+    public void enregistrerContenu(String filePath) throws IOException {
         BufferedWriter bw;
         File file;
         FileWriter fw;
@@ -196,7 +193,7 @@ public class Yoda {
     /**
      * On envoie : le nom du fichier et sa taille (en octets)
      * La taille n'est pas utile pour le moment, mais elle pourrait
-     * l'être plus tard ! (voir save() send())
+     * l'être plus tard ! (voir enregistrerContenu() envoyerContenu())
      * Ensuite on envoie le contenu
      */
     public void envoyerFichier(String filePath) throws IOException {
@@ -208,7 +205,7 @@ public class Yoda {
 
         // L'étiquette FILE va indiquer qu'on envoie le nom et la taille
         envoyerMessage("FILE " + fileName + " " + file.length());
-        send(filePath);
+        envoyerContenu(filePath);
     }
 
 
@@ -231,7 +228,7 @@ public class Yoda {
         fileName = ftpCmd.content.split(" ")[0];
         fileSize = Integer.parseInt(ftpCmd.content.split(" ")[1]);
 
-        save(dir + fileName);
+        enregistrerContenu(dir + fileName);
     }
 }
 
