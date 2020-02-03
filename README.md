@@ -175,3 +175,5 @@ Sera exécuté après le dernier test.
 
 find * -type f | xargs grep -n TODO
 
+TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tableau markdown
+
