@@ -86,6 +86,7 @@ public class FSPCentral extends Yoda {
             case "USER":
                 id = contenu;
                 if (utilisateurExiste(id)) {
+                    // TODO Mettre les codes d'erreur/de succès en constantes qqpart ?
                     super.envoyerMessage("200 Bon identifiant");
                 } else {
                     nouvelUtilisateur = true;

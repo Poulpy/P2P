@@ -16,7 +16,8 @@ Le client envoie le message suivant au serveur grâce à une socket :
 `USER toto`
 
 
-Si succès, le client envoie son mot de passe pour finaliser sa connexion :
+En fonction de la requête, la centrale peut renvoyer un code d'erreur ou de succès.
+Si c'est un code de succès, le client envoie son mot de passe pour finaliser sa connexion :
 
 `PASS password`
 
