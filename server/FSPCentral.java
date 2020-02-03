@@ -182,14 +182,23 @@ public class FSPCentral extends Yoda {
     /**
      * Supprime un utilisateur du fichier des utilisateurs
      * en fonction de son identifiant
+     *
+     * On créé un nouveau fichier. On lit l'ancien fichier, si l'id match, alors
+     * on n'écrit pas la ligne dans le nouveau fichier. A la fin, on renomme le nouveau fichier
+     *
+     * On booléen indique si on a bien supprimé un utilisateur. Si non, c'est que
+     * l'utilisateur n'existe pas
      */
-    public void enleverUtilisateur(String userID) throws IOException {
+    public boolean enleverUtilisateur(String userID) throws IOException {
         File fileBeforeRemove;
         File fileAfterRemove;
         String currentLine;
         String someID;
         BufferedWriter writer;
         BufferedReader reader;
+        boolean isUserRemoved;
+
+        isUserRemoved = false;
 
         fileBeforeRemove = new File(cheminUtilisateurs);
         fileAfterRemove = new File("users.csv");
@@ -201,6 +210,7 @@ public class FSPCentral extends Yoda {
             someID = currentLine.split(sep)[0];
 
             if (someID.equals(userID)) {
+                isUserRemoved = true;
                 continue;
             } else {
                 writer.write(currentLine + System.getProperty("line.separator"));
@@ -210,6 +220,8 @@ public class FSPCentral extends Yoda {
         reader.close();
         writer.close();
         fileAfterRemove.renameTo(fileBeforeRemove);
+
+        return isUserRemoved;
     }
 
     /**

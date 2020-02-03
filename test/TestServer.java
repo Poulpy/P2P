@@ -37,7 +37,7 @@ public class TestServer {
         central.EnregistrerUtilisateur("pouic", "hey");
         Assert.assertTrue(central.utilisateurExiste("pouic"));
         Assert.assertTrue(central.mdpCorrect("pouic", "hey"));
-        central.enleverUtilisateur("pouic");
+        Assert.assertTrue(central.enleverUtilisateur("pouic"));
         Assert.assertFalse(central.utilisateurExiste("pouic"));
     }
 }
