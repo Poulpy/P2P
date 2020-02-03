@@ -115,7 +115,7 @@ public class FSPClient extends Yoda {
 
         try {
             messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.update(this.mdp.getBytes());
+            messageDigest.update(str.getBytes());
             byte[] messageDigestMD5 = messageDigest.digest();
             StringBuffer stringBuffer = new StringBuffer();
             for (byte bytes : messageDigestMD5) {
