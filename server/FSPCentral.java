@@ -31,7 +31,7 @@ public class FSPCentral extends Yoda {
     // Chemin du fichier contenant les utilisateurs connus du serveur
     // l'identifiant et le hash du mot de passe sont séparés par le
     // séparateur sep
-    private String cheminUtilisateurs = "server/utilisateurs.csv";
+    public  String cheminUtilisateurs = "server/utilisateurs.csv";
     private String sep = ",";
     // Répertoire des fichiers partagés, créé au lancement du serveur
     // TODO en faire une constante ?
@@ -203,12 +203,13 @@ public class FSPCentral extends Yoda {
             if (someID.equals(userID)) {
                 continue;
             } else {
-                writer.write(currentLine);
+                writer.write(currentLine + System.getProperty("line.separator"));
             }
         }
 
         reader.close();
         writer.close();
+        fileAfterRemove.renameTo(fileBeforeRemove);
     }
 
     /**
