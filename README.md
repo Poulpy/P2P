@@ -2,7 +2,7 @@
 
 
 FSP est un protocol similaire à FTP, en plus simple.
-
+La documentation est disponible ![ici](https://poulpy.github.io/P2P/docs)
 
 ## Comment un client communique avec un serveur TCP ?
 
@@ -71,7 +71,6 @@ Central : le programme faisant office de serveur centralisé. Gère :
 - Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - `System.getProperty("line.separator");`
 - Ecrire des tests. Mieux : écrire des tests avant l'écriture du code ! (TDD)
-- Documentation. Hébergé par Github.
 
 
 ### Comment exécuter le projet ?
