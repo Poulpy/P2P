@@ -174,7 +174,7 @@ Sera exécuté après le dernier test.
 
 ## Je sais pas quoi faire
 
-find * -type f | xargs grep -n TODO
+`find * -type f | xargs grep -n TODO`
 
 TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tableau markdown
 

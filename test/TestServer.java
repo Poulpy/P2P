@@ -1,8 +1,10 @@
 package test;
 
-import org.junit.*;// TODO enlever wildcard
-import server.FSPCentral;
 import client.FSPClient;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import server.FSPCentral;
 
 public class TestServer {
 
