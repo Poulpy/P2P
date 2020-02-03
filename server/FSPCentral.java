@@ -1,6 +1,7 @@
 package server;
 
 import abstractions.Yoda;
+import java.util.ArrayList;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -22,9 +23,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 import outils.FTPCommand;
+import java.nio.file.DirectoryStream;
 
 public class FSPCentral extends Yoda {
 
@@ -237,6 +241,51 @@ public class FSPCentral extends Yoda {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Cherche un mot dans un fichier
+     *
+     * Retourne un booléen indiquant si le mot clef a été trouvé
+     */
+    public boolean searchByKeyword(String keyword, File fileToSearch) throws IOException {
+        BufferedReader reader;
+        String currentLine;
+        boolean match;
+
+        match = false;
+        reader = new BufferedReader(new FileReader(fileToSearch));
+
+        while ((currentLine = reader.readLine()) != null && !match) {
+            if (currentLine.contains(keyword)) {
+                match = true;
+            }
+        }
+
+        reader.close();
+
+        return match;
+    }
+
+    /**
+     * Cherche dans les fichiers d'un dossier un mot clef
+     *
+     * Retourne le chemin dess fichiers contenant le motif
+     */
+    public ArrayList<String> searchFolderByKeyword(String keyword, String folderToSearch) throws IOException {
+        File fileToSearch;
+        ArrayList<String> filesMatching = new ArrayList<String>();
+
+        try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(folderToSearch))) {
+            for (Path path : stream) {
+                fileToSearch = new File(path.toString());
+                if (searchByKeyword(keyword, fileToSearch)) {
+                    filesMatching.add(path.toString());
+                }
+            }
+        }
+
+        return filesMatching;
     }
 
 

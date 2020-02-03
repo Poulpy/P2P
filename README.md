@@ -50,14 +50,13 @@ Central : le programme faisant office de serveur centralisé. Gère :
 ## Todo
 
 
-- Chercher si un mot est dans un fichier
-- plusieurs clients peuvent se connecter au serveur (multi thread)
-- recherche entre le client et le serveur centralisé et téléchargement
-- le serveur notifie le serveur centralisé de son activité
-- le client garde la liste des fichiers téléchargés
-- le client met à jour les fichiers qu'il a téléchargé
-- le serveur centralisé partage les fichiers d'un client si le serveur est actif
-- créer une spécification. Puisqu'on ne fait pas exactement une implémentation du protocol FTP, il est bien de spécifier ce qu'implémente notre application !
+- Plusieurs clients peuvent se connecter au serveur (multi thread)
+- Recherche entre le client et le serveur centralisé et téléchargement
+- Le serveur notifie le serveur centralisé de son activité
+- Le client garde la liste des fichiers téléchargés
+- Le client met à jour les fichiers qu'il a téléchargé
+- Le serveur centralisé partage les fichiers d'un client si le serveur est actif
+- Créer une spécification. Puisqu'on ne fait pas exactement une implémentation du protocol FTP, il est bien de spécifier ce qu'implémente notre application !
 
 ## Todo Code
 
@@ -66,12 +65,13 @@ Central : le programme faisant office de serveur centralisé. Gère :
 - Un Client et un Serveur côté utilisateur. Pour l'instant les 2 sont dans une seule classe 'Client'
 - Revoir à quel niveau mettre les try/catch
 - Utiliser la classe FTPCommand
-- revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv (voir le standard ISO, ou la structure d'un projet Maven)
-- une classe Message, qui enverrait des messages à travers des sockets (xml, json)
-- renommer les classes et les variables, leur donner de jolis noms
-- refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
+- Revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv (voir le standard ISO, ou la structure d'un projet Maven)
+- Une classe Message, qui enverrait des messages à travers des sockets (xml, json)
+- Renommer les classes et les variables, leur donner de jolis noms
+- Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - `System.getProperty("line.separator");`
-- écrire des tests. Mieux : écrire des tests avant l'écriture du code ! (TDD)
+- Ecrire des tests. Mieux : écrire des tests avant l'écriture du code ! (TDD)
+- Documentation. Hébergé par Github.
 
 
 ### Comment exécuter le projet ?
