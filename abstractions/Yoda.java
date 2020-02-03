@@ -96,7 +96,7 @@ public class Yoda {
         do {
             msg = lireMessage();
             ftpCmd = FTPCommand.parseCommand(msg);
-        } while (ftpCmd.command.compareTo("FILECOUNT") != 0);
+        } while (!ftpCmd.command.equals("FILECOUNT"));
 
         // On récupère le nombre de fichiers à recevoir
         fileCount = Integer.parseInt(ftpCmd.content);
@@ -183,7 +183,7 @@ public class Yoda {
 
         // Chaque ligne du fichier nous est envoyée
         // L'étiquette END marque la fin de la transmission
-        while ((msg = lireMessage()).compareTo("END") != 0) {
+        while (!(msg = lireMessage()).equals("END")) {
             bw.write(msg + "\n");
         }
 
@@ -223,7 +223,7 @@ public class Yoda {
         do {
             msg = lireMessage();
             ftpCmd = FTPCommand.parseCommand(msg);
-        } while (ftpCmd.command.compareTo("FILE") != 0);
+        } while (!ftpCmd.command.equals("FILE"));
 
         fileName = ftpCmd.content.split(" ")[0];
         fileSize = Integer.parseInt(ftpCmd.content.split(" ")[1]);

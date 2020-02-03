@@ -134,7 +134,7 @@ public class FSPCentral extends Yoda {
             while ((ligne = reader.readLine()) != null) {
                 idMdp = ligne.split(sep);
 
-                if (idMdp[0].compareTo(identifiant) == 0) {
+                if (idMdp[0].equals(identifiant)) {
                     return true;
                 }
             }
@@ -166,7 +166,7 @@ public class FSPCentral extends Yoda {
             while ((ligne = reader.readLine()) != null) {
                 idMdp = ligne.split(sep);
 
-                if (idMdp[0].compareTo(identifiant) == 0 && idMdp[1].compareTo(hashMdp) == 0) {
+                if (idMdp[0].equals(identifiant) && idMdp[1].equals(hashMdp)) {
                     return true;
                 }
             }
@@ -233,7 +233,7 @@ public class FSPCentral extends Yoda {
 
         try {
             while ((msg = lireMessage()) != null) {
-                if (msg.compareTo("QUIT") == 0) break;
+                if (msg.equals("QUIT")) break;
 
                 ftpCmd = FTPCommand.parseCommand(msg);
                 System.out.println(msg);
