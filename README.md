@@ -171,3 +171,7 @@ Sera exécuté après le dernier test.
 
 
 
+## Je sais pas quoi faire
+
+find * -type f | xargs grep -n TODO
+
