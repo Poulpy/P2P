@@ -82,7 +82,7 @@ public class FSPClient extends Yoda {
             do {
                 System.out.print("Mot de passe : ");
                 mdp = scan.nextLine();
-                chiffreMdp();
+                this.hashMdp = chiffrage(this.mdp);
                 super.envoyerMessage("PASS " + hashMdp);
                 reponse = super.lireMessage();
                 System.out.println(reponse);
@@ -108,10 +108,9 @@ public class FSPClient extends Yoda {
      * Le mot de passe chiffré est dans les champs
      * Je sais pas si c'est une bonne ou mauvaise idée
      * TODO voir String.hashCode()
-     * TODO dans une autre classe ?
-     * TODO public String chiffre(String str) : mieux ?
      */
-    public void chiffreMdp() {
+    public String chiffrage(String str) {
+        String result = new String();
         MessageDigest messageDigest;
 
         try {
@@ -123,10 +122,12 @@ public class FSPClient extends Yoda {
                 stringBuffer.append(String.format("%02x", bytes & 0xff));
             }
 
-            this.hashMdp = stringBuffer.toString();
+            result = stringBuffer.toString();
         } catch (NoSuchAlgorithmException exception) {
             exception.printStackTrace();
         }
+
+        return result;
     }
 }
 

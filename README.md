@@ -70,7 +70,6 @@ Central : le programme faisant office de serveur centralisé. Gère :
 - une classe Message, qui enverrait des messages à travers des sockets (xml, json)
 - renommer les classes et les variables, leur donner de jolis noms
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
-- remplacer les compareTo par des .equals() => + compréhensible
 - `System.getProperty("line.separator");`
 - écrire des tests. Mieux : écrire des tests avant l'écriture du code ! (TDD)
 
