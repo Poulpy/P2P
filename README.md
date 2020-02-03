@@ -85,11 +85,11 @@ Compilez les fichiers java comme suit, à la racine du projet :
 
 `javac client/Client.java`
 
-`javac server/Server.java`
+`javac server/Central.java`
 
 Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serveur, exécutez le client :
 
-`java server.Server`
+`java server.Central`
 
 
 `java client.Client`
@@ -129,7 +129,7 @@ fi
 
 Pour compiler les tests :
 ```
-javac test/TestServer
+javac test/TestServer.java
 ```
 
 Pour exécuter :
