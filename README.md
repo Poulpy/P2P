@@ -52,11 +52,12 @@ Central : le programme faisant office de serveur centralisé. Gère :
 
 - Plusieurs clients peuvent se connecter au serveur (multi thread)
 - Recherche entre le client et le serveur centralisé et téléchargement
-- Le serveur notifie le serveur centralisé de son activité
+- Le serveur notifie le serveur centralisé de son activité. Création d'un chronomètre côté serveur : si le client n'envoie aucun message depuis x secondes, on le considère comme déconnecté. (Il faut alors envoyer un message qui incite le client à fermer la socket.)
 - Le client garde la liste des fichiers téléchargés
 - Le client met à jour les fichiers qu'il a téléchargé
 - Le serveur centralisé partage les fichiers d'un client si le serveur est actif
 - Créer une spécification. Puisqu'on ne fait pas exactement une implémentation du protocol FTP, il est bien de spécifier ce qu'implémente notre application !
+- Une interface graphique (javaFX)
 
 ## Todo Code
 
