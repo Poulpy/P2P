@@ -23,6 +23,18 @@ Si succès, le client envoie son mot de passe pour finaliser sa connexion :
 Si le mot de passe est correct, l'utilisateur est connecté au serveur et peut donc lui
 envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serveur par exemple).
 
+## Nomenclature
+
+Commande (ou commande FTP) : désigne une étiquette et un contenu. `USER toto`, `PASS password` : USER et PASS sont des étiquettes. En fonction de l'étiquette, l'action demandée n'est pas la même.
+
+Client : le programme exécuté par l'utilisateur. Envoie des requêtes auprès de la Centrale pour quérir l'adresse de fichiers recherchés.
+
+Serveur : le programme exécuté par l'utilisateur. Gère l'authentification et l'envoi des descriptions des fichiers partagés par l'utilisateur.
+
+Central : le programme faisant office de serveur centralisé. Gère :
+- l'authentification
+- la recherche de fichiers par mot-clef
+- le stockage des descriptions des fichiers partagés
 
 ## En cours / Fait
 
@@ -37,6 +49,7 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 ## Todo
 
 
+- Chercher si un mot est dans un fichier
 - plusieurs clients peuvent se connecter au serveur (multi thread)
 - recherche entre le client et le serveur centralisé et téléchargement
 - le serveur notifie le serveur centralisé de son activité
@@ -47,6 +60,9 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 
 ## Todo Code
 
+- Voir si toutes les ressources sont bien libérées quand on quitte l'application (`close()`).
+- Eviter l'anti-pattern GodClass : une classe qui a trop de responsabilités.
+- Un Client et un Serveur côté utilisateur. Pour l'instant les 2 sont dans une seule classe 'Client'
 - Revoir à quel niveau mettre les try/catch
 - Utiliser la classe FTPCommand
 - revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv (voir le standard ISO, ou la structure d'un projet Maven)
@@ -55,10 +71,15 @@ envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serve
 - refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - mettre les tests dans une classe à part
 - remplacer les compareTo par des .equals() => + compréhensible
-- `System.getProperty("line.separator");
+- `System.getProperty("line.separator");`
+- écrire des tests. Mieux : écrire des tests avant l'écriture du code ! (TDD)
 
 
 ### Comment exécuter le projet ?
+
+D'abord exécuter la commande suivante dans le terminal :
+
+`export CLASSPATH="."`
 
 Compilez les fichiers java comme suit, à la racine du projet :
 

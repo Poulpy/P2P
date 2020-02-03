@@ -60,6 +60,7 @@ public class FSPClient extends Yoda {
     /**
      * Authentification
      * TODO à modifier si on remplace l'interface en ligne de commande par une gui
+     * TODO Server
      */
     public void login() {
         Scanner scan;
@@ -107,6 +108,8 @@ public class FSPClient extends Yoda {
      * Le mot de passe chiffré est dans les champs
      * Je sais pas si c'est une bonne ou mauvaise idée
      * TODO voir String.hashCode()
+     * TODO dans une autre classe ?
+     * TODO public String chiffre(String str) : mieux ?
      */
     public void chiffreMdp() {
         MessageDigest messageDigest;

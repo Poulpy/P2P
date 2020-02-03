@@ -46,10 +46,7 @@ public class Yoda {
 
 
     /**
-     * Ouvre une socket pour le client
-     * TODO: gérer plusieurs clients, méthode pour ouvrir une socket seulement
-     * pour le client ? Les sockets des clients seraient stockées dans un
-     * tableau
+     * Ouvre des ressources pour écrire/lire dans des sockets
      */
     public void open() {
         try {
@@ -68,6 +65,7 @@ public class Yoda {
      * Envoie d'abord le nombre de fichiers à envoyer
      *
      * descriptionsDir est le répertoire où sont les descriptions
+     * TODO Server
      */
     public void envoyerDescriptions(String descriptionsDir) throws IOException {
         File dir;
@@ -87,6 +85,7 @@ public class Yoda {
 
     /**
      * dir est le répertoire où sont les descriptions
+     * TODO Centrale
      */
     public void recevoirDescriptions(String dir) throws IOException {
         String msg;
