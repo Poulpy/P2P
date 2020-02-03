@@ -239,6 +239,25 @@ public class FSPCentral extends Yoda {
         }
     }
 
+    public boolean searchByKeyword(String keyword, File fileToSearch) throws IOException {
+        BufferedReader reader;
+        String currentLine;
+        boolean match;
+
+        match = false;
+        reader = new BufferedReader(new FileReader(fileToSearch));
+
+        while ((currentLine = reader.readLine()) != null && !match) {
+            if (currentLine.contains(keyword)) {
+                match = true;
+            }
+        }
+
+        reader.close();
+
+        return match;
+    }
+
 
     public void listen() {
         String msg;

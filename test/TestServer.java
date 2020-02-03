@@ -1,6 +1,7 @@
 package test;
 
 import client.FSPClient;
+import java.io.File;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -39,6 +40,15 @@ public class TestServer {
         Assert.assertTrue(central.mdpCorrect("pouic", "hey"));
         Assert.assertTrue(central.enleverUtilisateur("pouic"));
         Assert.assertFalse(central.utilisateurExiste("pouic"));
+    }
+
+    @Test
+    public void testSearchByKeyword() throws Exception {
+        File fileToSearch = new File("quigon/yojinbo");
+        Assert.assertTrue(central.searchByKeyword("Le", fileToSearch));
+        Assert.assertTrue(central.searchByKeyword("garde", fileToSearch));
+        Assert.assertTrue(central.searchByKeyword("du", fileToSearch));
+        Assert.assertFalse(central.searchByKeyword("Truc", fileToSearch));
     }
 }
 
