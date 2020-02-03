@@ -140,12 +140,34 @@ java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:. org.juni
 
 ## Ecrire des tests
 
-la méthode doit être systématiquement précédée d'une annotation @Test
+### Annotations
 
-```
+#### Test
+
+Une méthode de test doit être systématiquement précédée d'une annotation @Test
+
+```java
     @Test
     public void testUtilisateurExiste() throws Exception {
         Assert.assertEquals(0, 0);
     }
 ```
+
+#### Before
+
+Sera exécuté avant chaque test.
+
+#### After
+
+Sera exécuté après chaque test.
+
+#### BeforeClass
+
+Sera exécuté avant le premier test.
+
+#### AfterClass
+
+Sera exécuté après le dernier test.
+
+
 
