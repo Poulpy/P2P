@@ -20,7 +20,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
-public class P2PServer extends Yoda {
+public class FSPClient extends Yoda {
 
     // Identifiant de l'utilisateur
     public String id = " ";
@@ -29,14 +29,11 @@ public class P2PServer extends Yoda {
     // Hash du mot de passe
     public String hashMdp = " 12333";
     // Répertoire qui contient les descriptions des fichiers partagés par le serveur
-    // TODO renommer
-    public String repPartage = "macewindu/";
+    // TODO constante ?
+    public String descriptionsFolder = "macewindu/";
 
-    public String getRepPartage() {
-        return repPartage;
-    }
-
-    public P2PServer() {
+    public FSPClient(String serverIP, int port) {
+        super(serverIP, port);
     }
 
     public void disconnect() {
@@ -59,19 +56,24 @@ public class P2PServer extends Yoda {
             e.printStackTrace();
         }
     }
+
     /**
      * Authentification
+     * TODO à modifier si on remplace l'interface en ligne de commande par une gui
+     * TODO Server
      */
     public void login() {
-        Scanner scan = new Scanner(System.in);
+        Scanner scan;
         String reponse;
+
+        scan = new Scanner(System.in);
 
         try {
             // On entre et on envoie l'identifiant ...
             do {
                 System.out.print("Identifiant : ");
                 id = scan.nextLine();
-                super.envoyerMessage(getUserCmd());
+                super.envoyerMessage("USER " + id);
                 reponse = super.lireMessage();
                 System.out.println(reponse);
             } while (!reponse.startsWith("2"));
@@ -80,14 +82,14 @@ public class P2PServer extends Yoda {
             do {
                 System.out.print("Mot de passe : ");
                 mdp = scan.nextLine();
-                chiffreMdp();
-                super.envoyerMessage(getPassCmd());
+                this.hashMdp = chiffrage(this.mdp);
+                super.envoyerMessage("PASS " + hashMdp);
                 reponse = super.lireMessage();
                 System.out.println(reponse);
             } while (!reponse.startsWith("2"));
 
             System.out.println("Authentification réussie !");
-            //super.saveFile();
+            // recevoirDescriptions();
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,26 +97,8 @@ public class P2PServer extends Yoda {
     }
 
     /**
-     * String correspondant à la commande USER
-     * Commande pour envoyer son identifiant
-     * TODO à renommer; 'get' est utilisé pour lire un attribut (ce n'est pas le cas ici)
-     * Cela peut prêter à confusion
+     * Méthode à appeler quand l'utilisateur veut quitter la session
      */
-    public String getUserCmd() {
-        return "USER " + id;
-    }
-
-    /**
-     * String correspondant à la commande PASS
-     * Commande pour envoyer le hash de son mot de passe
-     *
-     * TODO à renommer; 'get' est utilisé pour lire un attribut (ce n'est pas le cas ici)
-     * Cela peut prêter à confusion
-     */
-    public String getPassCmd() {
-        return "PASS " + hashMdp;
-    }
-
     public void quit() throws IOException {
         super.envoyerMessage("QUIT");
     }
@@ -125,8 +109,10 @@ public class P2PServer extends Yoda {
      * Je sais pas si c'est une bonne ou mauvaise idée
      * TODO voir String.hashCode()
      */
-    public void chiffreMdp() {
+    public String chiffrage(String str) {
+        String result = new String();
         MessageDigest messageDigest;
+
         try {
             messageDigest = MessageDigest.getInstance("MD5");
             messageDigest.update(this.mdp.getBytes());
@@ -136,24 +122,12 @@ public class P2PServer extends Yoda {
                 stringBuffer.append(String.format("%02x", bytes & 0xff));
             }
 
-            this.hashMdp = stringBuffer.toString();
+            result = stringBuffer.toString();
         } catch (NoSuchAlgorithmException exception) {
             exception.printStackTrace();
         }
-    }
 
-    public static void main(String[] args) {
-        P2PServer client = new P2PServer();
-        String msg;
-        client.connect();
-        client.open();
-        try {
-            client.recevoirDescriptions(client.repPartage);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        client.disconnect();
-        client.close();
+        return result;
     }
 }
+
