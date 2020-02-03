@@ -175,3 +175,9 @@ Sera exécuté après le dernier test.
 
 TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tableau markdown
 
+### Générer la documentation
+
+A la racine du projet :
+
+`javadoc -d docs/ */*.java`
+
