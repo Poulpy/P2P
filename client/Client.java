@@ -17,7 +17,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.geometry.Orientation;
 import java.util.ArrayList;
 
 public class Client extends Application {
@@ -53,6 +55,7 @@ public class Client extends Application {
         Button downloadButton;
         Button searchButton;
         Group root;
+        GridPane grid = new GridPane();
         HBox hbox;
         ListView<String> list;
         Scene scene;
@@ -60,8 +63,10 @@ public class Client extends Application {
 
         filesMatching = new ArrayList<String>();
         primaryStage = stage;
+        primaryStage.setMinWidth(400);
+        primaryStage.setMinHeight(400);
         root = new Group();
-        scene = new Scene(root, 500, 500, Color.WHITE);
+        scene = new Scene(root, 400, 400, Color.WHITE);
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setTitle("File Sharing");
@@ -91,11 +96,16 @@ public class Client extends Application {
         // Liste affichant les fichiers qui correspondent à la recherche
         list = new ListView<String>();
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        hbox = new HBox(list);
+        list.setPrefHeight(200);
+        list.setPrefWidth(150);
+        list.setOrientation(Orientation.VERTICAL);
+        //hbox = new HBox(list);
+        /*
         hbox.setLayoutY(100);
         hbox.setLayoutX(10);
         hbox.setPrefHeight(200);
         hbox.setPrefWidth(150);
+        */
 
         // Bouton de téléchargement des fichiers
         downloadButton = new Button("Télécharger");
@@ -103,8 +113,21 @@ public class Client extends Application {
         downloadButton.setPrefHeight(35);
         downloadButton.getStyleClass().add("searchButton");
         downloadButton.getStyleClass().add("removeLightGlow");
+        /*
         downloadButton.setLayoutX(250);
         downloadButton.setLayoutY(200);
+        */
+
+
+        grid.add(searchField, 0, 0, 1, 1);
+        grid.add(searchButton, 1, 0, 1, 1);
+        grid.add(list, 0, 2, 1, 1);
+        grid.add(downloadButton, 1, 2, 1, 1);
+
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setLayoutX(10);
+        grid.setLayoutY(10);
 
         // événements
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -156,10 +179,13 @@ public class Client extends Application {
         });
 
         // On affiche les éléments dans la fenêtre
+        root.getChildren().add(grid);
+        /*
         root.getChildren().add(hbox);
         root.getChildren().add(searchField);
         root.getChildren().add(downloadButton);
         root.getChildren().add(searchButton);
+        */
     }
 
     public ArrayList<String> samples() {
