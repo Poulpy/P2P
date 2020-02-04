@@ -2,6 +2,7 @@ package client;
 
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.animation.FadeTransition;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
 import javafx.geometry.Orientation;
 import java.util.ArrayList;
+import javafx.util.Duration;
 
 public class Client extends Application {
 
@@ -153,6 +155,13 @@ public class Client extends Application {
                     for (Integer index : indices) {
                         System.out.println("GET " + filesMatching.get(index));
                         downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
+                        FadeTransition ft = new FadeTransition(Duration.millis(2000), downloadLabel);
+                        ft.setFromValue(0.0);
+                        ft.setToValue(1.0);
+                        ft.setCycleCount(2);
+                        ft.setAutoReverse(true);
+                        ft.playFromStart();
+
                     }
 
                 }
