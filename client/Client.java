@@ -46,9 +46,10 @@ public class Client extends Application {
         */
     }
 
+    public ArrayList<String> filesMatching;
+
     @Override
     public void start(Stage stage) {
-        ArrayList<String> filesMatching;
         Button downloadButton;
         Button searchButton;
         Group root;
@@ -57,6 +58,7 @@ public class Client extends Application {
         Scene scene;
         TextField searchField;
 
+        filesMatching = new ArrayList<String>();
         primaryStage = stage;
         root = new Group();
         scene = new Scene(root, 500, 500, Color.WHITE);
@@ -82,35 +84,18 @@ public class Client extends Application {
         searchField.setLayoutX(30);
         searchField.setLayoutY(10);
 
-        searchButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
-                System.out.println("SEARCH " + searchField.getText());
-            }
-        });
-        searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent ke) {
-                if (ke.getCode().equals(KeyCode.ENTER)) {
-                    //action !
-                    System.out.println("I pressed Enter and something should be happening !");
-                }
-            }
-        });
 
 
+        // Liste affichant les fichiers qui correspondent à la recherche
         list = new ListView<String>();
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        filesMatching = samples();
-        for (int i = 0; i != filesMatching.size(); i++) {
-            list.getItems().add(filesMatching.get(i));
-        }
         hbox = new HBox(list);
         hbox.setLayoutY(100);
         hbox.setLayoutX(10);
         hbox.setPrefHeight(200);
         hbox.setPrefWidth(150);
 
+        // Bouton de téléchargement des fichiers
         downloadButton = new Button("Télécharger");
         downloadButton.setPrefWidth(120);
         downloadButton.setPrefHeight(35);
@@ -119,6 +104,24 @@ public class Client extends Application {
         downloadButton.setLayoutX(250);
         downloadButton.setLayoutY(200);
 
+        searchButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                System.out.println("SEARCH " + searchField.getText());
+                    filesMatching = samples();
+                    updateListView(list, filesMatching);
+            }
+        });
+        searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ENTER)) {
+                    System.out.println("SEARCH " + searchField.getText());
+                    filesMatching = samples();
+                    updateListView(list, filesMatching);
+                }
+            }
+        });
         list.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent ke) {
@@ -140,10 +143,11 @@ public class Client extends Application {
                     ObservableList<Integer> indices = list.getSelectionModel().getSelectedIndices();
 
                     for (Integer index : indices) {
-                        System.out.println("Item selected : " + filesMatching.get(index));
+                        System.out.println("GET " + filesMatching.get(index));
                     }
             }
         });
+
         root.getChildren().add(hbox);
         root.getChildren().add(searchField);
         root.getChildren().add(downloadButton);
@@ -157,6 +161,12 @@ public class Client extends Application {
         a.add("zeus/RAPPORT.pdf");
 
         return a;
+    }
+
+    public void updateListView(ListView<String> list, ArrayList<String> filesMatching) {
+        for (int i = 0; i != filesMatching.size(); i++) {
+            list.getItems().add(filesMatching.get(i));
+        }
     }
 }
 
