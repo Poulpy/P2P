@@ -2,6 +2,7 @@ package client;
 
 import java.io.IOException;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -107,6 +108,12 @@ public class Client extends Application {
                 if (ke.getCode().equals(KeyCode.ENTER)) {
                     //action !
                     System.out.println("I pressed Enter and something should be downloading !");
+                    ObservableList<Integer> indices = list.getSelectionModel().getSelectedIndices();
+
+                    for (Integer index : indices) {
+                        System.out.println("Index selected : " + filesMatching.get(index));
+                    }
+
                 }
             }
         });
