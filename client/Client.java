@@ -47,14 +47,15 @@ public class Client extends Application {
 
         scene.getStylesheets().add("ss.css");
         Button searchButton = new Button("Rechercher");
-        searchButton.setPrefWidth(100);
-        searchButton.setPrefHeight(40);
+        searchButton.setPrefWidth(120);
+        searchButton.setPrefHeight(35);
         searchButton.getStyleClass().add("searchButton");
         searchButton.setLayoutX(30);
         searchButton.setLayoutY(30);
         //searchButton.setArcWidth(30);
         //searchButton.setArcHeight(30);
-        System.out.println(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
+        //System.out.println(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
+        //System.out.println(javafx.scene.text.Font.getFamilies());
         /*
         searchButton.setFill(
             new LinearGradient(0f, 0f, 0f, 1f, true, CycleMethod.NO_CYCLE,
