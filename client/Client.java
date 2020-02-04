@@ -88,12 +88,22 @@ public class Client extends Application {
         HBox hbox = new HBox(list);
         hbox.setLayoutY(100);
         hbox.setLayoutX(10);
+        hbox.setPrefHeight(200);
+        hbox.setPrefWidth(150);
 
+        Button downloadButton = new Button("Télécharger");
+        downloadButton.setPrefWidth(120);
+        downloadButton.setPrefHeight(35);
+        downloadButton.getStyleClass().add("searchButton");
+        downloadButton.getStyleClass().add("removeLightGlow");
+        downloadButton.setLayoutX(250);
+        downloadButton.setLayoutY(200);
 
 
 
         root.getChildren().add(hbox);
         root.getChildren().add(searchField);
+        root.getChildren().add(downloadButton);
         root.getChildren().add(searchButton);
     }
 
