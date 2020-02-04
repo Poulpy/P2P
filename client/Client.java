@@ -65,8 +65,9 @@ public class Client extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setTitle("File Sharing");
+        scene.getStylesheets().add("client/stylesheet.css");
 
-        scene.getStylesheets().add("ss.css");
+        // Bouton de recherche
         searchButton = new Button("Rechercher");
         searchButton.setPrefWidth(120);
         searchButton.setPrefHeight(35);
@@ -76,6 +77,7 @@ public class Client extends Application {
         searchButton.setLayoutY(50);
 
 
+        // Champ de recherche
         searchField = new TextField();
         searchField.getStyleClass().add("removeLightGlow");
         searchField.getStyleClass().add("searchField");
@@ -104,6 +106,7 @@ public class Client extends Application {
         downloadButton.setLayoutX(250);
         downloadButton.setLayoutY(200);
 
+        // événements
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
@@ -148,6 +151,7 @@ public class Client extends Application {
             }
         });
 
+        // On affiche les éléments dans la fenêtre
         root.getChildren().add(hbox);
         root.getChildren().add(searchField);
         root.getChildren().add(downloadButton);
@@ -163,7 +167,13 @@ public class Client extends Application {
         return a;
     }
 
+    /**
+     * Met à jour la liste de fichiers dans la vue
+     * Supprime les éléments qui étaient déjà dans la liste
+     */
     public void updateListView(ListView<String> list, ArrayList<String> filesMatching) {
+        list.getItems().clear();
+
         for (int i = 0; i != filesMatching.size(); i++) {
             list.getItems().add(filesMatching.get(i));
         }
