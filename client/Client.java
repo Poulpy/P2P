@@ -154,14 +154,11 @@ public class Client extends Application {
 
                     for (Integer index : indices) {
                         System.out.println("GET " + filesMatching.get(index));
-                        downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
-                        FadeTransition ft = new FadeTransition(Duration.millis(2000), downloadLabel);
-                        ft.setFromValue(0.0);
-                        ft.setToValue(1.0);
-                        ft.setCycleCount(2);
-                        ft.setAutoReverse(true);
-                        ft.playFromStart();
+                    }
 
+                    if (indices.size() > 0) {
+                        downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
+                        fadeAnimation(downloadLabel);
                     }
 
                 }
@@ -172,12 +169,16 @@ public class Client extends Application {
         downloadButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                    ObservableList<Integer> indices = list.getSelectionModel().getSelectedIndices();
+                ObservableList<Integer> indices = list.getSelectionModel().getSelectedIndices();
 
-                    for (Integer index : indices) {
-                        System.out.println("GET " + filesMatching.get(index));
-                        downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
-                    }
+                for (Integer index : indices) {
+                    System.out.println("GET " + filesMatching.get(index));
+                }
+
+                if (indices.size() > 0) {
+                    downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
+                    fadeAnimation(downloadLabel);
+                }
             }
         });
 
@@ -204,6 +205,18 @@ public class Client extends Application {
         for (int i = 0; i != filesMatching.size(); i++) {
             list.getItems().add(filesMatching.get(i));
         }
+    }
+
+    /**
+     * Animation sur un label : fait apparaître puis disparaître le text
+     */
+    public void fadeAnimation(Label text) {
+        FadeTransition ft = new FadeTransition(Duration.millis(2000), text);
+        ft.setFromValue(0.0);
+        ft.setToValue(1.0);
+        ft.setCycleCount(2);
+        ft.setAutoReverse(true);
+        ft.playFromStart();
     }
 }
 

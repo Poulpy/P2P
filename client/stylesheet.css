@@ -1,18 +1,18 @@
 .root {
     -fx-font-family: "Cantarell";
 }
+
 .searchButton {
     -fx-font-size: 1.2em;
     -fx-font-weight: bold;
-    border-radius: 4px;
     -fx-background-color: #ece7e7;
 }
+
 .searchButton:hover {
-    border-radius: 4px;
     -fx-background-color: #dddddd;
 }
+
 .searchButton:pressed {
-    -fx-border-radius: 10px;
     -fx-background-color: #e1e1e1;
 }
 
@@ -26,6 +26,6 @@
 }
 
 .greenFont {
-    -fx-text-inner-color: green;
     -fx-text-fill: green;
 }
+
