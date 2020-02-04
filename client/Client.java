@@ -47,15 +47,24 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) {
+        ArrayList<String> filesMatching;
+        Button downloadButton;
+        Button searchButton;
+        Group root;
+        HBox hbox;
+        ListView<String> list;
+        Scene scene;
+        TextField searchField;
+
         primaryStage = stage;
-        Group root = new Group();
-        Scene scene = new Scene(root, 500, 500, Color.WHITE);
+        root = new Group();
+        scene = new Scene(root, 500, 500, Color.WHITE);
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setTitle("File Sharing");
 
         scene.getStylesheets().add("ss.css");
-        Button searchButton = new Button("Rechercher");
+        searchButton = new Button("Rechercher");
         searchButton.setPrefWidth(120);
         searchButton.setPrefHeight(35);
         searchButton.getStyleClass().add("searchButton");
@@ -63,7 +72,7 @@ public class Client extends Application {
         searchButton.setLayoutX(30);
         searchButton.setLayoutY(50);
 
-        TextField searchField = new TextField();
+        searchField = new TextField();
         searchField.getStyleClass().add("removeLightGlow");
         searchField.getStyleClass().add("searchField");
         searchField.setPrefWidth(150);
@@ -82,19 +91,19 @@ public class Client extends Application {
         });
 
 
-        ListView<String> list = new ListView<String>();
+        list = new ListView<String>();
         list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        ArrayList<String> filesMatching = samples();
+        filesMatching = samples();
         for (int i = 0; i != filesMatching.size(); i++) {
             list.getItems().add(filesMatching.get(i));
         }
-        HBox hbox = new HBox(list);
+        hbox = new HBox(list);
         hbox.setLayoutY(100);
         hbox.setLayoutX(10);
         hbox.setPrefHeight(200);
         hbox.setPrefWidth(150);
 
-        Button downloadButton = new Button("Télécharger");
+        downloadButton = new Button("Télécharger");
         downloadButton.setPrefWidth(120);
         downloadButton.setPrefHeight(35);
         downloadButton.getStyleClass().add("searchButton");
@@ -106,12 +115,10 @@ public class Client extends Application {
             @Override
             public void handle(KeyEvent ke) {
                 if (ke.getCode().equals(KeyCode.ENTER)) {
-                    //action !
-                    System.out.println("I pressed Enter and something should be downloading !");
                     ObservableList<Integer> indices = list.getSelectionModel().getSelectedIndices();
 
                     for (Integer index : indices) {
-                        System.out.println("Index selected : " + filesMatching.get(index));
+                        System.out.println("Item selected : " + filesMatching.get(index));
                     }
 
                 }
