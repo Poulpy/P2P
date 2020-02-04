@@ -21,7 +21,11 @@
     -fx-faint-focus-color: transparent;
 }
 
-.searchField/*, .searchField:pressed, .searchField:hover*/ {
+.searchField {
     -fx-focus-color: rgba(100, 100, 100, 0.2);
 }
 
+.greenFont {
+    -fx-text-inner-color: green;
+    -fx-text-fill: green;
+}

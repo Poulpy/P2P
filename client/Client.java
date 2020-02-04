@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
@@ -55,7 +56,6 @@ public class Client extends Application {
         Button searchButton;
         Group root;
         GridPane grid = new GridPane();
-        HBox hbox;
         ListView<String> list;
         Scene scene;
         TextField searchField;
@@ -106,10 +106,15 @@ public class Client extends Application {
         downloadButton.getStyleClass().add("searchButton");
         downloadButton.getStyleClass().add("removeLightGlow");
 
+        Label downloadLabel;
+        downloadLabel = new Label();
+        downloadLabel.getStyleClass().add("greenFont");
+
         grid.add(searchField, 0, 0, 1, 1);
         grid.add(searchButton, 1, 0, 1, 1);
-        grid.add(list, 0, 2, 1, 1);
+        grid.add(list, 0, 2, 1, 2);
         grid.add(downloadButton, 1, 2, 1, 1);
+        grid.add(downloadLabel, 1, 3, 1, 1);
 
         grid.setHgap(10);
         grid.setVgap(10);
@@ -146,7 +151,8 @@ public class Client extends Application {
                     ObservableList<Integer> indices = list.getSelectionModel().getSelectedIndices();
 
                     for (Integer index : indices) {
-                        System.out.println("Item selected : " + filesMatching.get(index));
+                        System.out.println("GET " + filesMatching.get(index));
+                        downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
                     }
 
                 }
@@ -161,6 +167,7 @@ public class Client extends Application {
 
                     for (Integer index : indices) {
                         System.out.println("GET " + filesMatching.get(index));
+                        downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
                     }
             }
         });
