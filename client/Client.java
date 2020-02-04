@@ -3,6 +3,7 @@ package client;
 import java.io.IOException;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -72,6 +73,7 @@ public class Client extends Application {
         searchButton.setLayoutX(30);
         searchButton.setLayoutY(50);
 
+
         searchField = new TextField();
         searchField.getStyleClass().add("removeLightGlow");
         searchField.getStyleClass().add("searchField");
@@ -80,6 +82,12 @@ public class Client extends Application {
         searchField.setLayoutX(30);
         searchField.setLayoutY(10);
 
+        searchButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                System.out.println("SEARCH " + searchField.getText());
+            }
+        });
         searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent ke) {
