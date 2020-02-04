@@ -52,11 +52,15 @@ Central : le programme faisant office de serveur centralisé. Gère :
 
 - Plusieurs clients peuvent se connecter au serveur (multi thread)
 - Recherche entre le client et le serveur centralisé et téléchargement
-- Le serveur notifie le serveur centralisé de son activité. Création d'un chronomètre côté serveur : si le client n'envoie aucun message depuis x secondes, on le considère comme déconnecté. (Il faut alors envoyer un message qui incite le client à fermer la socket.)
+- Le serveur notifie le serveur centralisé de son activité.
+Création d'un chronomètre côté serveur :
+si le client n'envoie aucun message depuis x secondes, on le considère comme déconnecté. (Il faut alors envoyer un message qui incite le client à fermer la socket.)
 - Le client garde la liste des fichiers téléchargés
 - Le client met à jour les fichiers qu'il a téléchargé
 - Le serveur centralisé partage les fichiers d'un client si le serveur est actif
-- Créer une spécification. Puisqu'on ne fait pas exactement une implémentation du protocol FTP, il est bien de spécifier ce qu'implémente notre application !
+- Créer une spécification.
+Puisqu'on ne fait pas exactement une implémentation du protocol FTP,
+il est bien de spécifier ce qu'implémente notre application !
 - Une interface graphique (javaFX) + dark/light mode
 - rajouter l'énoncé dans le projet
 
@@ -78,11 +82,19 @@ Central : le programme faisant office de serveur centralisé. Gère :
 
 ### Comment exécuter le projet ?
 
-D'abord exécuter la commande suivante dans le terminal :
 
-`export CLASSPATH="."`
+D'abord, écrire dans le `~/.bashrc` les lignes suivantes :
 
-Compilez les fichiers java comme suit, à la racine du projet :
+```
+if [ ${#CLASSPATH} -eq 0 ]
+then
+    export CLASSPATH="/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:."
+else
+    export CLASSPATH="$CLASSPATH:/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:."
+fi
+```
+
+Ouvrez un nouveau terminal. Compilez les fichiers java comme suit, à la racine du projet :
 
 `javac client/Client.java`
 
@@ -97,13 +109,16 @@ Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serve
 
 ## Pourquoi un utilisateur a besoin d'installer un client et en plus un serveur ?
 
-Le principe de cette application est de pouvoir partager des fichiers. Tant que le programme côté client est actif, on partage les fichiers contenus dans la machine côté client.
+Le principe de cette application est de pouvoir partager des fichiers.
+Tant que le programme côté client est actif, on partage les fichiers contenus dans la machine côté client.
 S'il ne tourne pas, on arrête de partager les fichiers.
-Mais est-ce que l'utilisateur est tout le temps connecté au serveur ? Non pas forcément, c'est pour ça qu'on a besoin de 2 programmes côté client : un programme pour partager des fichiers auprès d'autres clients, et un autre qui traitera les requêtes du client.
+Mais est-ce que l'utilisateur est tout le temps connecté au serveur ?
+Non pas forcément, c'est pour ça qu'on a besoin de 2 programmes côté client :
+un programme pour partager des fichiers auprès d'autres clients, et un autre qui traitera les requêtes du client.
 
 ### Utilisateurs
 
-Les utilisateurs sont dans le fichier utilisateurs.csv (à la racine du projet)
+Les utilisateurs sont dans le fichier `server/utilisateurs.csv`
 
 ## Pour exécuter les tests
 
@@ -113,20 +128,8 @@ Il faut installer JUnit 4 :
 
 ```
 apt install junit4
-mkdir ~/junit
-ln -s /usr/share/java/junit4.jar ~/junit
 ```
-(Partie qui marche pas pour l'instant) Ensuite, dans le `~/.bashrc` :
 
-```
-export JUNIT_HOME=~/junit
-if [ ${#CLASSPATH} -eq 0 ]
-then
-    export CLASSPATH="$JUNIT_HOME/junit4.jar:$JUNIT_HOME/hamcrest-core.jar"
-else
-    export CLASSPATH="$CLASSPATH:$JUNIT_HOME/junit4.jar:$JUNIT_HOME/hamcrest-core.jar"
-fi
-```
 
 Pour compiler les tests :
 ```
@@ -134,6 +137,10 @@ javac test/TestServer.java
 ```
 
 Pour exécuter :
+```
+java -cp org.junit.runner.JUnitCore test.TestServer
+```
+Si ça marche pas, essayez : 
 ```
 java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:. org.junit.runner.JUnitCore test.TestServer
 ```
@@ -183,4 +190,13 @@ TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tab
 A la racine du projet :
 
 `javadoc -d docs/ */*.java`
+
+### Dépendances
+
+Java 1.8
+
+JavaFX 8
+
+JUnit 4
+
 
