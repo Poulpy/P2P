@@ -110,18 +110,22 @@ public class Client extends Application {
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                System.out.println("SEARCH " + searchField.getText());
+                if (!searchField.getText().equals("")) {
+                    System.out.println("SEARCH " + searchField.getText());
                     filesMatching = samples();
                     updateListView(list, filesMatching);
+                }
             }
         });
         searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent ke) {
                 if (ke.getCode().equals(KeyCode.ENTER)) {
-                    System.out.println("SEARCH " + searchField.getText());
-                    filesMatching = samples();
-                    updateListView(list, filesMatching);
+                    if (!searchField.getText().equals("")) {
+                        System.out.println("SEARCH " + searchField.getText());
+                        filesMatching = samples();
+                        updateListView(list, filesMatching);
+                    }
                 }
             }
         });
