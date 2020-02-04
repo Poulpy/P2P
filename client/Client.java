@@ -134,6 +134,16 @@ public class Client extends Application {
         });
 
 
+        downloadButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                    ObservableList<Integer> indices = list.getSelectionModel().getSelectedIndices();
+
+                    for (Integer index : indices) {
+                        System.out.println("Item selected : " + filesMatching.get(index));
+                    }
+            }
+        });
         root.getChildren().add(hbox);
         root.getChildren().add(searchField);
         root.getChildren().add(downloadButton);
