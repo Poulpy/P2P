@@ -57,7 +57,8 @@ Central : le programme faisant office de serveur centralisé. Gère :
 - Le client met à jour les fichiers qu'il a téléchargé
 - Le serveur centralisé partage les fichiers d'un client si le serveur est actif
 - Créer une spécification. Puisqu'on ne fait pas exactement une implémentation du protocol FTP, il est bien de spécifier ce qu'implémente notre application !
-- Une interface graphique (javaFX)
+- Une interface graphique (javaFX) + dark/light mode
+- rajouter l'énoncé dans le projet
 
 ## Todo Code
 

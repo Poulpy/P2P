@@ -50,6 +50,8 @@ public class Client extends Application {
         searchButton.setPrefWidth(100);
         searchButton.setPrefHeight(40);
         searchButton.getStyleClass().add("searchButton");
+        searchButton.setLayoutX(30);
+        searchButton.setLayoutY(30);
         //searchButton.setArcWidth(30);
         //searchButton.setArcHeight(30);
         System.out.println(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
