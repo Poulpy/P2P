@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.SelectionMode;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.paint.Color;
@@ -50,7 +51,7 @@ public class Client extends Application {
         Scene scene = new Scene(root, 500, 500, Color.WHITE);
         primaryStage.setScene(scene);
         primaryStage.show();
-        primaryStage.setTitle("Hello World");
+        primaryStage.setTitle("File Sharing");
 
         scene.getStylesheets().add("ss.css");
         Button searchButton = new Button("Rechercher");
@@ -81,6 +82,7 @@ public class Client extends Application {
 
 
         ListView<String> list = new ListView<String>();
+        list.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         ArrayList<String> filesMatching = samples();
         for (int i = 0; i != filesMatching.size(); i++) {
             list.getItems().add(filesMatching.get(i));
@@ -99,6 +101,15 @@ public class Client extends Application {
         downloadButton.setLayoutX(250);
         downloadButton.setLayoutY(200);
 
+        list.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ENTER)) {
+                    //action !
+                    System.out.println("I pressed Enter and something should be downloading !");
+                }
+            }
+        });
 
 
         root.getChildren().add(hbox);
