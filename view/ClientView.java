@@ -1,46 +1,67 @@
 package view;
 
+import controler.ClientControler;
 import java.io.IOException;
-import javafx.application.Application;
+import java.util.ArrayList;
 import javafx.animation.FadeTransition;
+import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Orientation;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
-import javafx.scene.layout.GridPane;
-import javafx.geometry.Orientation;
-import java.util.ArrayList;
 import javafx.util.Duration;
-import controler.ClientControler;
 
 public class ClientView extends Group {
 
-    public ArrayList<String> filesMatching;
-
+    /**
+     * Button used to query the server.
+     * A keyword is sent, and the server tries to find files that matches the keyword.
+     */
     public Button downloadButton;
+
+    /**
+     * Button to query the server.
+     */
     public Button searchButton;
+
+    /**
+     * List showing the results/files sent by the server.
+     */
     public ListView<String> fileList;
+
+    /**
+     * Receives the keyword to be sent to the server.
+     */
     public TextField searchField;
+
+    /**
+     * The class that manages all events.
+     */
     public ClientControler controler;
+
+    /**
+     * Pops when a user downloaded successfully.
+     */
     public Label downloadLabel;
 
     public ClientView() {
         //controler = new ClientControler(this);
         GridPane grid = new GridPane();
 
-        filesMatching = new ArrayList<String>();
         getStylesheets().add("client/stylesheet.css");
 
         // Bouton de recherche

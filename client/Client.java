@@ -54,9 +54,13 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) {
-        ClientView view = new ClientView();
-        Scene scene = new Scene(view, 400, 400, Color.WHITE);
-        ClientControler controler = new ClientControler(view);
+        ClientView view;
+        Scene scene;
+        ClientControler controler;
+
+        view = new ClientView();
+        scene = new Scene(view, 400, 400, Color.WHITE);
+        controler = new ClientControler(view);
 
         primaryStage = stage;
         primaryStage.setMinWidth(400);

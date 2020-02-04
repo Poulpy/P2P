@@ -27,7 +27,11 @@ import view.ClientView;
 
 public class ClientControler {
 
+    /**
+     * Files matching the search
+     */
     public ArrayList<String> filesMatching;
+
     public ClientView scene;
 
     public ClientControler(ClientView view) {

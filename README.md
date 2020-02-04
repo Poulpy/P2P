@@ -61,8 +61,8 @@ si le client n'envoie aucun message depuis x secondes, on le considère comme d�
 - Créer une spécification.
 Puisqu'on ne fait pas exactement une implémentation du protocol FTP,
 il est bien de spécifier ce qu'implémente notre application !
-- Une interface graphique (javaFX) + dark/light mode
-- rajouter l'énoncé dans le projet
+- Dark mode
+- Interface graphique : ajouter un fichier dans le répertoire des fichiers partagés
 
 ## Todo Code
 
@@ -75,7 +75,6 @@ il est bien de spécifier ce qu'implémente notre application !
 - Une classe Message, qui enverrait des messages à travers des sockets (xml, json)
 - Renommer les classes et les variables, leur donner de jolis noms
 - Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
-- `System.getProperty("line.separator");`
 - Ecrire des tests. Mieux : écrire des tests avant l'écriture du code ! (TDD)
 - Plus de documentation (plus de tag : param, return, etc.)
 
@@ -190,6 +189,8 @@ TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tab
 A la racine du projet :
 
 `javadoc -d docs/ */*.java`
+
+Pour mettre à jour la documentation hébergée par Github, il faut faire un commit dans la branche `gh-pages`.
 
 ### Dépendances
 
