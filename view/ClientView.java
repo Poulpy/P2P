@@ -96,15 +96,6 @@ public class ClientView extends Group {
         this.getChildren().add(grid);
     }
 
-    public ArrayList<String> samples() {
-        ArrayList<String> a = new ArrayList<String>();
-        a.add("localhost/truc.txt");
-        a.add("poseidon/yojinbo");
-        a.add("zeus/RAPPORT.pdf");
-
-        return a;
-    }
-
     /**
      * Met à jour la liste de fichiers dans la vue
      * Supprime les éléments qui étaient déjà dans la liste

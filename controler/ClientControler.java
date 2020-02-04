@@ -92,6 +92,9 @@ public class ClientControler {
         });
     }
 
+    /**
+     * Gives some file samples for the list view
+     */
     public ArrayList<String> samples() {
         ArrayList<String> a = new ArrayList<String>();
         a.add("localhost/truc.txt");

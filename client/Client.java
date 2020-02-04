@@ -54,8 +54,6 @@ public class Client extends Application {
 
     @Override
     public void start(Stage stage) {
-        //Group root;
-        //root = new Group();
         ClientView view = new ClientView();
         Scene scene = new Scene(view, 400, 400, Color.WHITE);
         ClientControler controler = new ClientControler(view);
@@ -66,18 +64,6 @@ public class Client extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
         primaryStage.setTitle("File Sharing");
-
-        // On affiche les éléments dans la fenêtre
-        //view.root.getChildren().add(view.grid);
-    }
-
-    public ArrayList<String> samples() {
-        ArrayList<String> a = new ArrayList<String>();
-        a.add("localhost/truc.txt");
-        a.add("poseidon/yojinbo");
-        a.add("zeus/RAPPORT.pdf");
-
-        return a;
     }
 }
 
