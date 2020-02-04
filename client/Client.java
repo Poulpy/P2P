@@ -18,7 +18,6 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.geometry.Orientation;
 import java.util.ArrayList;
 
@@ -99,13 +98,6 @@ public class Client extends Application {
         list.setPrefHeight(200);
         list.setPrefWidth(150);
         list.setOrientation(Orientation.VERTICAL);
-        //hbox = new HBox(list);
-        /*
-        hbox.setLayoutY(100);
-        hbox.setLayoutX(10);
-        hbox.setPrefHeight(200);
-        hbox.setPrefWidth(150);
-        */
 
         // Bouton de téléchargement des fichiers
         downloadButton = new Button("Télécharger");
@@ -113,11 +105,6 @@ public class Client extends Application {
         downloadButton.setPrefHeight(35);
         downloadButton.getStyleClass().add("searchButton");
         downloadButton.getStyleClass().add("removeLightGlow");
-        /*
-        downloadButton.setLayoutX(250);
-        downloadButton.setLayoutY(200);
-        */
-
 
         grid.add(searchField, 0, 0, 1, 1);
         grid.add(searchButton, 1, 0, 1, 1);
@@ -180,12 +167,6 @@ public class Client extends Application {
 
         // On affiche les éléments dans la fenêtre
         root.getChildren().add(grid);
-        /*
-        root.getChildren().add(hbox);
-        root.getChildren().add(searchField);
-        root.getChildren().add(downloadButton);
-        root.getChildren().add(searchButton);
-        */
     }
 
     public ArrayList<String> samples() {
