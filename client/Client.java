@@ -9,6 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
+import javafx.event.EventHandler;
 
 public class Client extends Application {
 
@@ -50,22 +54,30 @@ public class Client extends Application {
         searchButton.setPrefWidth(120);
         searchButton.setPrefHeight(35);
         searchButton.getStyleClass().add("searchButton");
+        searchButton.getStyleClass().add("removeLightGlow");
         searchButton.setLayoutX(30);
-        searchButton.setLayoutY(30);
-        //searchButton.setArcWidth(30);
-        //searchButton.setArcHeight(30);
-        //System.out.println(com.sun.javafx.runtime.VersionInfo.getRuntimeVersion());
-        //System.out.println(javafx.scene.text.Font.getFamilies());
-        /*
-        searchButton.setFill(
-            new LinearGradient(0f, 0f, 0f, 1f, true, CycleMethod.NO_CYCLE,
-                new Stop[] {
-                    new Stop(0, Color.web("#333333")),
-                    new Stop(1, Color.web("#000000"))
+        searchButton.setLayoutY(50);
+
+        TextField searchField = new TextField();
+        searchField.getStyleClass().add("removeLightGlow");
+        searchField.getStyleClass().add("searchField");
+        searchField.setPrefWidth(150);
+        searchField.setPrefHeight(35);
+        searchField.setLayoutX(30);
+        searchField.setLayoutY(10);
+
+        searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ENTER)) {
+                    //action !
+                    System.out.println("I pressed Enter and something should be happening !");
                 }
-            )
-        );
-        */
+            }
+        });
+
+        root.getChildren().add(searchField);
+
         root.getChildren().add(searchButton);
     }
 }
