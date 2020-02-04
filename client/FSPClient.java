@@ -30,7 +30,7 @@ public class FSPClient extends Yoda {
     public String hashMdp = " 12333";
     // Répertoire qui contient les descriptions des fichiers partagés par le serveur
     // TODO constante ?
-    public String descriptionsFolder = "macewindu/";
+    public String descriptionsFolder = "client/descriptions/";
 
     public FSPClient(String serverIP, int port) {
         super(serverIP, port);

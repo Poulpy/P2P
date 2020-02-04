@@ -39,7 +39,7 @@ public class FSPCentral extends Yoda {
     private String sep = ",";
     // Répertoire des fichiers partagés, créé au lancement du serveur
     // TODO en faire une constante ?
-    public String descriptionsFolder = "quigon/";
+    public String descriptionsFolder = "server/descriptions/";
     private ServerSocket serverSocket;
     // voir méthode gererMessage
     private String id;
