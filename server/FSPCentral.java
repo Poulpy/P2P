@@ -293,6 +293,13 @@ public class FSPCentral extends Yoda {
         return filesMatching;
     }
 
+    /**
+     * Retourne le nom d'hôte et le chemin du fichier, fichier qui correspond
+     * au mot clef donné en argument.
+     * Plusieurs fichiers peuvent être renvoyés (on retourne un tableau)
+     * Si le mot clef se trouve dans un fichier 'yojinbo' de l'utilisateur 'dinfo' :
+     * Renvoie 'dinfo/yojinbo'
+     */
     public ArrayList<String> searchUsersFoldersByKeyword(String keyword) throws IOException {
         String path;
         ArrayList<String> files;
@@ -303,13 +310,13 @@ public class FSPCentral extends Yoda {
 
         for (String userConnected : usersConnected) {
             path = descriptionsFolder + userConnected + "/";
-            System.out.println("PATH " + path);
 
             files = searchFolderByKeyword(keyword, path);
 
-            files.forEach(file -> {
-                System.out.println(userConnected + "/" + file);
-            });
+            for (int j = 0; j != files.size(); j++) {
+                int i = files.get(j).indexOf(userConnected);
+                files.set(j, files.get(j).substring(i));
+            }
 
             allMatchingFiles.addAll(files);
         }

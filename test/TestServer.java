@@ -90,18 +90,12 @@ public class TestServer {
         ArrayList<String> files = new ArrayList<String>();
 
         files = central.searchUsersFoldersByKeyword("Le");
-        System.out.println("Fichiers trouvés : " + files.size());
         // Pas d'utilisateurs : size() == 0
-        for (String file : files) {
-            System.out.println(file);
-        }
+        Assert.assertEquals(files.size(), 0);
         central.usersConnected.add("dinfo");
         // size() == 1
         files = central.searchUsersFoldersByKeyword("étoiles");
-        System.out.println("Fichiers trouvés : " + files.size());
-        for (String file : files) {
-            System.out.println(file);
-        }
+        Assert.assertEquals(files.size(), 1);
     }
 }
 
