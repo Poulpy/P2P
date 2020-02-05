@@ -137,7 +137,7 @@ javac test/TestServer.java
 
 Pour exécuter :
 ```
-java -cp org.junit.runner.JUnitCore test.TestServer
+java org.junit.runner.JUnitCore test.TestServer
 ```
 Si ça marche pas, essayez : 
 ```

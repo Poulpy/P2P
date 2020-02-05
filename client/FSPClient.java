@@ -1,6 +1,7 @@
 package client;
 
 import abstractions.Yoda;
+import util.Checksum;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.BufferedOutputStream;
@@ -15,9 +16,6 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.DigestException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
 public class FSPClient extends Yoda {
@@ -82,7 +80,7 @@ public class FSPClient extends Yoda {
             do {
                 System.out.print("Mot de passe : ");
                 mdp = scan.nextLine();
-                this.hashMdp = chiffrage(this.mdp);
+                this.hashMdp = Checksum.getMD5Hash(this.mdp);
                 super.envoyerMessage("PASS " + hashMdp);
                 reponse = super.lireMessage();
                 System.out.println(reponse);
@@ -101,33 +99,6 @@ public class FSPClient extends Yoda {
      */
     public void quit() throws IOException {
         super.envoyerMessage("QUIT");
-    }
-
-    /**
-     * Chiffrement du mot de passe
-     * Le mot de passe chiffré est dans les champs
-     * Je sais pas si c'est une bonne ou mauvaise idée
-     * TODO voir String.hashCode()
-     */
-    public String chiffrage(String str) {
-        String result = new String();
-        MessageDigest messageDigest;
-
-        try {
-            messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.update(str.getBytes());
-            byte[] messageDigestMD5 = messageDigest.digest();
-            StringBuffer stringBuffer = new StringBuffer();
-            for (byte bytes : messageDigestMD5) {
-                stringBuffer.append(String.format("%02x", bytes & 0xff));
-            }
-
-            result = stringBuffer.toString();
-        } catch (NoSuchAlgorithmException exception) {
-            exception.printStackTrace();
-        }
-
-        return result;
     }
 }
 
