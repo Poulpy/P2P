@@ -35,6 +35,7 @@ public class FSPClient extends Yoda {
 
     public FSPClient(String serverIP, int port) {
         super(serverIP, port);
+        new File(descriptionsFolder).mkdirs();
 
         try {
             hostname = InetAddress.getLocalHost().getHostName();

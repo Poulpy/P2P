@@ -9,9 +9,6 @@ public class Central {
         FSPCentral server;
 
         server = new FSPCentral("127.0.0.1", 50000);
-        // on créé le dossier s'il n'existe pas déjà
-        // TODO mettre dans une fonction, mais où ?
-        new File(server.descriptionsFolder).mkdirs();
 
         server.connect("127.0.0.1");
         server.open();

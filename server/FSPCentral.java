@@ -59,9 +59,14 @@ public class FSPCentral extends Yoda {
 
     public String hostname = "dinfo";
 
+    /**
+     * Crée le répertoire contenant les descriptions des fichiers partagés,
+     * s'il n'est pas déjà créé
+     */
     public FSPCentral(String serverIP, int port) {
         super(serverIP, port);
         usersConnected = new ArrayList<String>();
+        new File(descriptionsFolder).mkdirs();
     }
 
     public void disconnect() {
