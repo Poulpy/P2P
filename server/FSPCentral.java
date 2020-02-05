@@ -59,6 +59,8 @@ public class FSPCentral extends Yoda {
 
     public String hostname = "dinfo";
 
+    public String userDescriptionFolder;
+
     /**
      * Crée le répertoire contenant les descriptions des fichiers partagés,
      * s'il n'est pas déjà créé
@@ -123,11 +125,15 @@ public class FSPCentral extends Yoda {
                     nouvelUtilisateur = false;
                     super.envoyerMessage("24 Utilisateur créé : " + id + ", " + mdp);
                     usersConnected.add(hostname);
-                    recevoirDescriptions(descriptionsFolder);
+                    userDescriptionFolder = descriptionsFolder + hostname + "/";
+                    new File(userDescriptionFolder).mkdirs();
+                    recevoirDescriptions(userDescriptionFolder);
                 } else if (mdpCorrect(id, mdp)) {
                     super.envoyerMessage("23 Mot de passe correct");
                     usersConnected.add(hostname);
-                    recevoirDescriptions(descriptionsFolder);
+                    userDescriptionFolder = descriptionsFolder + hostname + "/";
+                    new File(userDescriptionFolder).mkdirs();
+                    recevoirDescriptions(userDescriptionFolder);
                 } else {
                     super.envoyerMessage("31 Mot de passe incorrect pour " + id);
                 }
