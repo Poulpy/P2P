@@ -20,21 +20,24 @@ import util.FTPCommand;
 
 public class Yoda {
 
-    // Message
-    // Ecriture dans une socket
+    /** Ecriture dans une socket */
     public BufferedReader reader;
-    // Lecture dans une socket
+
+    /** Lecture dans une socket */
     public PrintWriter writer;
 
     // Fichier
     //public DataOutputStream dos;
     //public DataInputStream dis;
 
-    // Adresse IP de l'utilisateur
+    /** Adresse IP de l'utilisateur */
     public String adresseIP = "127.0.0.1";
-    // Adresse IP du serveur
+
+    /** Adresse IP du serveur */
     public String adresseIPServeur = "127.0.0.1";
+
     public int port = 50000;
+
     public Socket socket;
 
     /**
@@ -65,7 +68,7 @@ public class Yoda {
      * Envoie d'abord le nombre de fichiers à envoyer
      *
      * descriptionsDir est le répertoire où sont les descriptions
-     * TODO Server
+     * @Server
      */
     public void envoyerDescriptions(String descriptionsDir) throws IOException {
         File dir;
@@ -85,7 +88,7 @@ public class Yoda {
 
     /**
      * dir est le répertoire où sont les descriptions
-     * TODO Centrale
+     * @Central
      */
     public void recevoirDescriptions(String dir) throws IOException {
         String msg;
@@ -162,6 +165,8 @@ public class Yoda {
         // TODO Une alternative serait d'utiliser la taille du fichier,
         // mais c'est trop compliqué. Toutefois, qu'est-ce qu'il se passe
         // si le fichier contient END ?
+        // Ou bien le nombre de lignes, mais obtenir une méthode efficace
+        // qui compte le nombre de lignes, c'est pas facile
         envoyerMessage("END");
         fr.close();
     }

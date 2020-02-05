@@ -10,6 +10,7 @@ public class Central {
 
         server = new FSPCentral("127.0.0.1", 50000);
 
+        /*
         server.connect("127.0.0.1");
         server.open();
 
@@ -21,6 +22,7 @@ public class Central {
 
         server.disconnect();
         server.close();
+        */
     }
 
 }
