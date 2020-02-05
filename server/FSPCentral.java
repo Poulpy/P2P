@@ -55,7 +55,7 @@ public class FSPCentral extends Yoda {
 
     public void disconnect() {
         try {
-            socket.close();
+            socket.close();// @Thread
             serverSocket.close();
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -68,7 +68,7 @@ public class FSPCentral extends Yoda {
     public void connect(String clientIP) {
         try {
             serverSocket = new ServerSocket(port, 10, InetAddress.getByName(clientIP));
-            socket = serverSocket.accept();
+            socket = serverSocket.accept();// @Thread
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -86,17 +86,17 @@ public class FSPCentral extends Yoda {
      * "PASS fierhigmeruis"
      * Le serveur vérifie que le mot de passe est correct en fonction
      * de l'identifiant précédemment envoyé
-     * TODO mettre FTPCommand en param
      */
-    public void gererMessage(String commande, String contenu) throws IOException {
-        switch (commande) {
+    public void gererMessage(FTPCommand ftpCmd) throws IOException {
+        String contenu = ftpCmd.content;
+        switch (ftpCmd.command) {
             case "USER":
                 id = contenu;
                 if (utilisateurExiste(id)) {
-                    super.envoyerMessage("200 Bon identifiant");
+                    super.envoyerMessage("21 Bon identifiant");
                 } else {
                     nouvelUtilisateur = true;
-                    super.envoyerMessage("201 Identifiant inconnu");
+                    super.envoyerMessage("22 Identifiant inconnu");
                 }
                 break;
             case "PASS":
@@ -105,15 +105,15 @@ public class FSPCentral extends Yoda {
                 if (nouvelUtilisateur) {
                     EnregistrerUtilisateur(id, mdp);
                     nouvelUtilisateur = false;
-                    super.envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
+                    super.envoyerMessage("24 Utilisateur créé : " + id + ", " + mdp);
                     usersConnected.add(hostname);
                     //recevoirDescriptions
                 } else if (mdpCorrect(id, mdp)) {
-                    super.envoyerMessage("200 Mot de passe correct");
+                    super.envoyerMessage("23 Mot de passe correct");
                     usersConnected.add(hostname);
                     //recevoirDescriptions
                 } else {
-                    super.envoyerMessage("300 Mot de passe incorrect pour " + id);
+                    super.envoyerMessage("31 Mot de passe incorrect pour " + id);
                 }
                 break;
             default:
@@ -326,6 +326,9 @@ public class FSPCentral extends Yoda {
     }
 
 
+    /**
+     * @Thread
+     */
     public void listen() {
         String msg;
         FTPCommand ftpCmd;
@@ -337,7 +340,7 @@ public class FSPCentral extends Yoda {
                 ftpCmd = FTPCommand.parseCommand(msg);
                 System.out.println(msg);
 
-                gererMessage(ftpCmd.command, ftpCmd.content);
+                gererMessage(ftpCmd);
             }
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -345,6 +348,7 @@ public class FSPCentral extends Yoda {
             e.printStackTrace();
         }
 
+        // deconnexion
         usersConnected.remove(hostname);
     }
 }
