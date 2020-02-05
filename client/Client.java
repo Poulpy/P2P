@@ -40,12 +40,11 @@ public class Client extends Application {
         Application.launch(Client.class);
         try {
             client.connect();
-            //client.open();
-            //client.envoyerMessage("Un petit message");
+            client.open();
 
-            //client.login();
+            client.login();
 
-            //client.close();
+            client.close();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -61,8 +60,6 @@ public class Client extends Application {
                 }
             }
         }
-
-        System.out.println("I'm quitting ?");
     }
 
     @Override

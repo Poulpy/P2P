@@ -13,12 +13,11 @@ public class Central {
 
         try {
             server.connect("127.0.0.1");
-            //server.open();
-            //System.out.println(server.lireMessage());
-            //server.listen();
+            server.open();
+            server.listen();
 
             server.disconnect();
-            //server.close();
+            server.close();
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {
