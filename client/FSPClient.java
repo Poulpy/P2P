@@ -17,9 +17,11 @@ import java.io.BufferedWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+import java.net.InetAddress;
 
 public class FSPClient extends Yoda {
 
+    public String hostname;
     // Identifiant de l'utilisateur
     public String id = " ";
     // Mot de passe
@@ -32,6 +34,12 @@ public class FSPClient extends Yoda {
 
     public FSPClient(String serverIP, int port) {
         super(serverIP, port);
+
+        try {
+            hostname = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     public void disconnect() {

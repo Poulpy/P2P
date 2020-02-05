@@ -45,6 +45,7 @@ public class FSPCentral extends Yoda {
     private String id;
     private String mdp;
     private boolean nouvelUtilisateur = false;
+    public ArrayList<String> usersConnected;
 
     public FSPCentral(String serverIP, int port) {
         super(serverIP, port);
