@@ -27,7 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import outils.FTPCommand;
+import util.FTPCommand;
 import java.nio.file.DirectoryStream;
 
 public class FSPCentral extends Yoda {
