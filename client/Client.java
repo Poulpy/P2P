@@ -44,6 +44,7 @@ public class Client extends Application {
 
             client.login();
 
+            client.quit();
             client.close();
         } catch (UnknownHostException e) {
             e.printStackTrace();
