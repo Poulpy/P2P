@@ -231,12 +231,14 @@ public class FSPCentral extends Yoda {
 
     /**
      * Création d'un utilisateur dans le fichier csv/tsv
-     * TODO relire le code, le try est un peu bizare
      */
     public void EnregistrerUtilisateur(String s, String c) {
-        try (FileWriter fw = new FileWriter(cheminUtilisateurs, true);
+        // try with resource : les objets sont automatiquement fermés
+        try (
+            FileWriter fw = new FileWriter(cheminUtilisateurs, true);
             BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter out = new PrintWriter(bw))
+            PrintWriter out = new PrintWriter(bw)
+        )
         {
             out.println(s + sep + c);
         } catch (IOException e) {
@@ -287,6 +289,9 @@ public class FSPCentral extends Yoda {
         }
 
         return filesMatching;
+    }
+
+    public ArrayList<String> searchUsersFoldersByKeyword(String keyword) throws IOException {
     }
 
 

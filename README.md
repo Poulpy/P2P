@@ -58,26 +58,36 @@ si le client n'envoie aucun message depuis x secondes, on le considère comme d�
 - Le client garde la liste des fichiers téléchargés
 - Le client met à jour les fichiers qu'il a téléchargé
 - Le serveur centralisé partage les fichiers d'un client si le serveur est actif
+- Un Client et un Serveur côté utilisateur. Pour l'instant les 2 sont dans une seule classe 'Client'
+
+## Todo Code
+
+- Voir si toutes les ressources sont bien libérées quand on quitte l'application (`close()`) => try with resource.
+- Eviter l'anti-pattern GodClass : une classe qui a trop de responsabilités.
+- Revoir à quel niveau mettre les try/catch
+- Utiliser la classe FTPCommand
+- Renommer les classes et les variables, leur donner de jolis noms
+- Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
+- Ecrire des tests.
+- Plus de documentation (plus de tag : param, return, etc.)
+- Gérer les exceptions
+- Une classe de test pour tester une suite de tests
+
+
+## Idées
+
 - Créer une spécification.
 Puisqu'on ne fait pas exactement une implémentation du protocol FTP,
 il est bien de spécifier ce qu'implémente notre application !
 - Dark mode
 - Interface graphique : ajouter un fichier dans le répertoire des fichiers partagés
-
-## Todo Code
-
-- Voir si toutes les ressources sont bien libérées quand on quitte l'application (`close()`).
-- Eviter l'anti-pattern GodClass : une classe qui a trop de responsabilités.
-- Un Client et un Serveur côté utilisateur. Pour l'instant les 2 sont dans une seule classe 'Client'
-- Revoir à quel niveau mettre les try/catch
-- Utiliser la classe FTPCommand
+- Un checksum du contenu du message
 - Revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv (voir le standard ISO, ou la structure d'un projet Maven)
-- Une classe Message, qui enverrait des messages à travers des sockets (xml, json)
-- Renommer les classes et les variables, leur donner de jolis noms
-- Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
-- Ecrire des tests. Mieux : écrire des tests avant l'écriture du code ! (TDD)
-- Plus de documentation (plus de tag : param, return, etc.)
-
+- Un parseur pour analyser les messages (on en revient à une classe Message);
+ça permettrait d'avoir un protocole plus extensible. Pour l'instant le contenu est séparé par des espaces :
+`FILE truc.txt 23`. Ce serait bien de pouvoir stocker dans un `HashMap<String, Object>` les valeurs. On pourrait avoir des valeurs optionnelles.
+Par ailleurs, on pourrait envoyer les données sous forme de texte brut, ou bien en xml, ou bien en json.
+Mieux, on pourrait juxtaposer les données d'un paquet. Actullement, les données sont séparées par des espaces.
 
 ### Comment exécuter le projet ?
 
@@ -180,7 +190,7 @@ Sera exécuté après le dernier test.
 
 ## Je sais pas quoi faire
 
-`find * -type f | xargs grep -n TODO`
+`find * -name *.java -type f | xargs grep -n TODO`
 
 TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tableau markdown
 
