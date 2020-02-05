@@ -10,19 +10,12 @@ public class Central {
 
         server = new FSPCentral("127.0.0.1", 50000);
 
-        /*
         server.connect("127.0.0.1");
         server.open();
-
-        try {
-            server.envoyerDescriptions(server.descriptionsFolder);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        server.listen();
 
         server.disconnect();
         server.close();
-        */
     }
 
 }

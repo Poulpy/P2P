@@ -95,7 +95,7 @@ public class FSPClient extends Yoda {
             } while (!reponse.startsWith("2"));
 
             System.out.println("Authentification réussie !");
-            // recevoirDescriptions();
+            envoyerDescriptions(descriptionsFolder);
 
         } catch (IOException e) {
             e.printStackTrace();

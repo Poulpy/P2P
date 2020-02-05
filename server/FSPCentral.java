@@ -123,11 +123,11 @@ public class FSPCentral extends Yoda {
                     nouvelUtilisateur = false;
                     super.envoyerMessage("24 Utilisateur créé : " + id + ", " + mdp);
                     usersConnected.add(hostname);
-                    //recevoirDescriptions
+                    recevoirDescriptions(descriptionsFolder);
                 } else if (mdpCorrect(id, mdp)) {
                     super.envoyerMessage("23 Mot de passe correct");
                     usersConnected.add(hostname);
-                    //recevoirDescriptions
+                    recevoirDescriptions(descriptionsFolder);
                 } else {
                     super.envoyerMessage("31 Mot de passe incorrect pour " + id);
                 }

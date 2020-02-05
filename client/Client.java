@@ -36,20 +36,22 @@ public class Client extends Application {
 
         client = new FSPClient("127.0.0.1", 50000);
 
-        Application.launch(Client.class);
-        /*
+        //Application.launch(Client.class);
         client.connect();
         client.open();
 
+        client.login();
+
+
         try {
-            client.recevoirDescriptions(client.descriptionsFolder);
+            client.quit();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         client.disconnect();
         client.close();
-        */
+        System.out.println("I'm quitting ?");
     }
 
     @Override
