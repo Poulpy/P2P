@@ -50,6 +50,7 @@ Central : le programme faisant office de serveur centralisé. Gère :
 ## Todo
 
 
+- Envoyer et récupérer le nom d'hôte
 - Plusieurs clients peuvent se connecter au serveur (multi thread)
 - Recherche entre le client et le serveur centralisé et téléchargement
 - Le serveur notifie le serveur centralisé de son activité.
@@ -64,7 +65,6 @@ si le client n'envoie aucun message depuis x secondes, on le considère comme d�
 
 - Voir si toutes les ressources sont bien libérées quand on quitte l'application (`close()`) => try with resource.
 - Eviter l'anti-pattern GodClass : une classe qui a trop de responsabilités.
-- Revoir à quel niveau mettre les try/catch
 - Utiliser la classe FTPCommand
 - Renommer les classes et les variables, leur donner de jolis noms
 - Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
@@ -152,6 +152,11 @@ java org.junit.runner.JUnitCore test.TestServer
 Si ça marche pas, essayez : 
 ```
 java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:. org.junit.runner.JUnitCore test.TestServer
+```
+
+Pour sauvegarder les traces d'erreurs, ajoutez `> error_tests.txt`:
+```
+java org.junit.runner.JUnitCore test.TestServer > error_tests.txt
 ```
 
 

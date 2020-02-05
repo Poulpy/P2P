@@ -20,6 +20,7 @@ public class TestServer {
     public void setUp() throws Exception {
         central = new FSPCentral("127.0.0.1", 50000);
         central.cheminUtilisateurs = "test/utilisateurs.csv";
+        central.descriptionsFolder = "test/descriptions/";
     }
 
     @Test
@@ -48,7 +49,7 @@ public class TestServer {
 
     @Test
     public void testSearchByKeyword() throws Exception {
-        File fileToSearch = new File("quigon/yojinbo");
+        File fileToSearch = new File(central.descriptionsFolder + "dinfo/yojinbo");
         Assert.assertTrue(central.searchByKeyword("Le", fileToSearch));
         Assert.assertTrue(central.searchByKeyword("garde", fileToSearch));
         Assert.assertTrue(central.searchByKeyword("du", fileToSearch));
@@ -57,7 +58,7 @@ public class TestServer {
 
     @Test
     public void testSearchFolderByKeyword() throws Exception {
-        String folderToSearch = "quigon/";
+        String folderToSearch = central.descriptionsFolder + "dinfo/";
         ArrayList<String> emp = new ArrayList<String>();
         Map<String, Boolean> keywords = new HashMap<String, Boolean>();
         ArrayList<String> matches = new ArrayList<String>();
@@ -80,6 +81,26 @@ public class TestServer {
             } else {
                 Assert.assertEquals(matches.size(), 0);
             }
+        }
+    }
+
+    @Test
+    public void testSearchUsersFoldersByKeyword() throws Exception {
+        ArrayList<String> connected = new ArrayList<String>();
+        ArrayList<String> files = new ArrayList<String>();
+
+        files = central.searchUsersFoldersByKeyword("Le");
+        System.out.println("Fichiers trouvés : " + files.size());
+        // Pas d'utilisateurs : size() == 0
+        for (String file : files) {
+            System.out.println(file);
+        }
+        central.usersConnected.add("dinfo");
+        // size() == 1
+        files = central.searchUsersFoldersByKeyword("étoiles");
+        System.out.println("Fichiers trouvés : " + files.size());
+        for (String file : files) {
+            System.out.println(file);
         }
     }
 }

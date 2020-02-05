@@ -45,10 +45,12 @@ public class FSPCentral extends Yoda {
     private String id;
     private String mdp;
     private boolean nouvelUtilisateur = false;
+    public String hostname = "dinfo";
     public ArrayList<String> usersConnected;
 
     public FSPCentral(String serverIP, int port) {
         super(serverIP, port);
+        usersConnected = new ArrayList<String>();
     }
 
     public void disconnect() {
@@ -91,7 +93,6 @@ public class FSPCentral extends Yoda {
             case "USER":
                 id = contenu;
                 if (utilisateurExiste(id)) {
-                    // TODO Mettre les codes d'erreur/de succès en constantes qqpart ?
                     super.envoyerMessage("200 Bon identifiant");
                 } else {
                     nouvelUtilisateur = true;
@@ -105,10 +106,12 @@ public class FSPCentral extends Yoda {
                     EnregistrerUtilisateur(id, mdp);
                     nouvelUtilisateur = false;
                     super.envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
-                    //super.sendFile(descriptionsFolder + "starwars");
+                    usersConnected.add(hostname);
+                    //recevoirDescriptions
                 } else if (mdpCorrect(id, mdp)) {
                     super.envoyerMessage("200 Mot de passe correct");
-                    //super.sendFile(descriptionsFolder + "starwars");
+                    usersConnected.add(hostname);
+                    //recevoirDescriptions
                 } else {
                     super.envoyerMessage("300 Mot de passe incorrect pour " + id);
                 }
@@ -123,7 +126,6 @@ public class FSPCentral extends Yoda {
      * dans le fichier utilisateurs.csv
      * Les utilisateurs sont stockés comme ça :
      * identifiant,hash_du_mot_de_passe
-     * TODO autre classe ?
      */
     public boolean utilisateurExiste(String identifiant) {
         BufferedReader reader;
@@ -292,6 +294,28 @@ public class FSPCentral extends Yoda {
     }
 
     public ArrayList<String> searchUsersFoldersByKeyword(String keyword) throws IOException {
+        String path;
+        ArrayList<String> files;
+        ArrayList<String> allMatchingFiles;
+
+        files = new ArrayList<String>();
+        allMatchingFiles = new ArrayList<String>();
+
+        for (String userConnected : usersConnected) {
+            path = descriptionsFolder + userConnected + "/";
+            System.out.println("PATH " + path);
+
+            files = searchFolderByKeyword(keyword, path);
+
+            files.forEach(file -> {
+                System.out.println(userConnected + "/" + file);
+            });
+
+            allMatchingFiles.addAll(files);
+        }
+
+
+        return allMatchingFiles;
     }
 
 
@@ -314,7 +338,7 @@ public class FSPCentral extends Yoda {
             e.printStackTrace();
         }
 
+        usersConnected.remove(hostname);
     }
-
 }
 
