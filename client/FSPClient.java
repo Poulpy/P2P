@@ -21,16 +21,17 @@ import java.net.InetAddress;
 
 public class FSPClient extends Yoda {
 
+    /** Nom d'hôte de l'utilisateur */
     public String hostname;
-    // Identifiant de l'utilisateur
+
+    /** Identifiant de l'utilisateur */
     public String id = " ";
-    // Mot de passe
+
+    /** Mot de passe */
     public String mdp = " ";
-    // Hash du mot de passe
-    public String hashMdp = " 12333";
-    // Répertoire qui contient les descriptions des fichiers partagés par le serveur
-    // TODO constante ?
-    public String descriptionsFolder = "client/descriptions/";
+
+    /** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
+    public final String descriptionsFolder = "client/descriptions/";
 
     public FSPClient(String serverIP, int port) {
         super(serverIP, port);
@@ -65,8 +66,7 @@ public class FSPClient extends Yoda {
 
     /**
      * Authentification
-     * TODO à modifier si on remplace l'interface en ligne de commande par une gui
-     * TODO Server
+     * @Server
      */
     public void login() {
         Scanner scan;
@@ -88,8 +88,7 @@ public class FSPClient extends Yoda {
             do {
                 System.out.print("Mot de passe : ");
                 mdp = scan.nextLine();
-                this.hashMdp = Checksum.getMD5Hash(this.mdp);
-                super.envoyerMessage("PASS " + hashMdp);
+                super.envoyerMessage("PASS " + Checksum.getMD5Hash(this.mdp));
                 reponse = super.lireMessage();
                 System.out.println(reponse);
             } while (!reponse.startsWith("2"));

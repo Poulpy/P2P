@@ -32,21 +32,32 @@ import java.nio.file.DirectoryStream;
 
 public class FSPCentral extends Yoda {
 
-    // Chemin du fichier contenant les utilisateurs connus du serveur
-    // l'identifiant et le hash du mot de passe sont séparés par le
-    // séparateur sep
-    public  String cheminUtilisateurs = "server/utilisateurs.csv";
+    /**
+     * Chemin du fichier contenant les utilisateurs connus du serveur
+     * l'identifiant et le hash du mot de passe sont séparés par le
+     * séparateur sep
+     */
+    public final String cheminUtilisateurs = "server/utilisateurs.csv";
+
     private String sep = ",";
-    // Répertoire des fichiers partagés, créé au lancement du serveur
-    // TODO en faire une constante ?
-    public String descriptionsFolder = "server/descriptions/";
+
+    /** Répertoire des fichiers partagés, créé au lancement du serveur */
+    public final String descriptionsFolder = "server/descriptions/";
+
     private ServerSocket serverSocket;
-    // voir méthode gererMessage
-    private String id;
-    private String mdp;
-    private boolean nouvelUtilisateur = false;
-    public String hostname = "dinfo";
+
+    /** Liste des utilisateurs connectés */
     public ArrayList<String> usersConnected;
+
+    // Attributs propre à un client :
+    // @Thread
+    private String id;
+
+    private String mdp;
+
+    private boolean nouvelUtilisateur = false;
+
+    public String hostname = "dinfo";
 
     public FSPCentral(String serverIP, int port) {
         super(serverIP, port);
