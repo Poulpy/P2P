@@ -55,14 +55,8 @@ public class FSPClient extends Yoda {
     }
 
 
-    public void connect() {
-        try {
-            socket = new Socket(adresseIPServeur, port);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void connect() throws UnknownHostException, IOException {
+        socket = new Socket(adresseIPServeur, port);
     }
 
     /**
@@ -104,6 +98,7 @@ public class FSPClient extends Yoda {
 
     /**
      * Méthode à appeler quand l'utilisateur veut quitter la session
+     * Doit recevoir un accusé réception
      */
     public void quit() throws IOException {
         super.envoyerMessage("QUIT");

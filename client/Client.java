@@ -2,6 +2,7 @@ package client;
 
 import controler.ClientControler;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
@@ -36,21 +37,31 @@ public class Client extends Application {
 
         client = new FSPClient("127.0.0.1", 50000);
 
-        //Application.launch(Client.class);
-        client.connect();
-        client.open();
-
-        client.login();
-
-
+        Application.launch(Client.class);
         try {
-            client.quit();
+            client.connect();
+            //client.open();
+            //client.envoyerMessage("Un petit message");
+
+            //client.login();
+
+            //client.close();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (client.socket != null) {
+                try {
+                    client.socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    client.socket = null;
+                }
+            }
         }
 
-        client.disconnect();
-        client.close();
         System.out.println("I'm quitting ?");
     }
 

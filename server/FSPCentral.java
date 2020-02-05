@@ -83,15 +83,9 @@ public class FSPCentral extends Yoda {
     }
 
 
-    public void connect(String clientIP) {
-        try {
-            serverSocket = new ServerSocket(port, 10, InetAddress.getByName(clientIP));
-            socket = serverSocket.accept();// @Thread
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void connect(String clientIP) throws IOException, UnknownHostException {
+        serverSocket = new ServerSocket(port, 10, InetAddress.getByName(clientIP));
+        socket = serverSocket.accept();// @Thread
     }
 
     /**

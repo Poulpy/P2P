@@ -2,6 +2,7 @@ package server;
 
 import java.io.IOException;
 import java.io.File;
+import java.net.UnknownHostException;
 
 public class Central {
 
@@ -10,13 +11,19 @@ public class Central {
 
         server = new FSPCentral("127.0.0.1", 50000);
 
-        server.connect("127.0.0.1");
-        server.open();
-        server.listen();
+        try {
+            server.connect("127.0.0.1");
+            //server.open();
+            //System.out.println(server.lireMessage());
+            //server.listen();
 
-        server.disconnect();
-        server.close();
+            server.disconnect();
+            //server.close();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-
 }
 
