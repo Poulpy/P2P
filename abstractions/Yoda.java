@@ -89,6 +89,7 @@ public class Yoda {
     /**
      * dir est le répertoire où sont les descriptions
      * @Central
+     * @deprecated
      */
     public void recevoirDescriptions(String dir) throws IOException {
         String msg;
@@ -109,7 +110,15 @@ public class Yoda {
         }
     }
 
-
+    /**
+     * dir est le répertoire où sont les descriptions
+     * @Central
+     */
+    public void saveDescriptions(String dir, int fileCount) throws IOException {
+        for (int i = 0; i != fileCount; i++) {
+            lireFichier(dir);
+        }
+    }
 
     /**
      * Lit un message (une ligne) envoyé par socket

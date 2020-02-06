@@ -107,6 +107,7 @@ public class FSPCentral extends Yoda {
 
         contenu = ftpCmd.content;
         files = new ArrayList<String>();
+
         switch (ftpCmd.command) {
             case "USER":
                 id = contenu;
@@ -117,6 +118,7 @@ public class FSPCentral extends Yoda {
                     super.envoyerMessage("22 Identifiant inconnu");
                 }
                 break;
+
             case "PASS":
                 mdp = contenu;
 
@@ -124,20 +126,13 @@ public class FSPCentral extends Yoda {
                     EnregistrerUtilisateur(id, mdp);
                     nouvelUtilisateur = false;
                     super.envoyerMessage("24 Utilisateur créé : " + id + ", " + mdp);
-                    usersConnected.add(hostname);
-                    userDescriptionFolder = descriptionsFolder + hostname + "/";
-                    new File(userDescriptionFolder).mkdirs();
-                    recevoirDescriptions(userDescriptionFolder);
                 } else if (mdpCorrect(id, mdp)) {
                     super.envoyerMessage("23 Mot de passe correct");
-                    usersConnected.add(hostname);
-                    userDescriptionFolder = descriptionsFolder + hostname + "/";
-                    new File(userDescriptionFolder).mkdirs();
-                    recevoirDescriptions(userDescriptionFolder);
                 } else {
                     super.envoyerMessage("31 Mot de passe incorrect pour " + id);
                 }
                 break;
+
             case "SEARCH":
                 files = searchUsersFoldersByKeyword(contenu);
                 if (files.isEmpty()) {
@@ -146,6 +141,18 @@ public class FSPCentral extends Yoda {
                     found(files);
                 }
                 break;
+
+            case "HOSTNAME":
+                hostname = contenu;
+                usersConnected.add(hostname);
+                userDescriptionFolder = descriptionsFolder + hostname + "/";
+                new File(userDescriptionFolder).mkdirs();
+                break;
+
+            case "FILECOUNT":
+                saveDescriptions(userDescriptionFolder, Integer.parseInt(contenu));
+                break;
+
             default:
         }
     }

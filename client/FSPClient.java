@@ -89,11 +89,16 @@ public class FSPClient extends Yoda {
             } while (!reponse.startsWith("2"));
 
             System.out.println("Authentification réussie !");
+            hostname();
             envoyerDescriptions(descriptionsFolder);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void hostname() throws IOException {
+        envoyerMessage("HOSTNAME " + hostname);
     }
 
     public void queryCentral() {
