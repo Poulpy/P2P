@@ -1,6 +1,6 @@
-package test;
+package fr.uvsq.fsp.test;
 
-import client.FSPClient;
+import fr.uvsq.fsp.client.FSPClient;
 import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import server.FSPCentral;
+import fr.uvsq.fsp.server.FSPCentral;
 
 public class TestServer {
 

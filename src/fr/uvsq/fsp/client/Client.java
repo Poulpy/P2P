@@ -1,6 +1,6 @@
-package client;
+package fr.uvsq.fsp.client;
 
-import controler.ClientControler;
+import fr.uvsq.fsp.controler.ClientControler;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import view.ClientView;
+import fr.uvsq.fsp.view.ClientView;
 
 public class Client extends Application {
 

@@ -1,7 +1,7 @@
-package client;
+package fr.uvsq.fsp.client;
 
-import abstractions.Yoda;
-import util.Checksum;
+import fr.uvsq.fsp.abstractions.Yoda;
+import fr.uvsq.fsp.util.Checksum;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.BufferedOutputStream;

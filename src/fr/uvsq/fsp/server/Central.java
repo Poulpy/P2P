@@ -1,4 +1,4 @@
-package server;
+package fr.uvsq.fsp.server;
 
 import java.io.IOException;
 import java.io.File;

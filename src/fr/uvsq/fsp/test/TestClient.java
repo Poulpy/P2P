@@ -1,6 +1,6 @@
-package test;
+package fr.uvsq.fsp.test;
 
-import client.FSPClient;
+import fr.uvsq.fsp.client.FSPClient;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
