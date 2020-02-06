@@ -96,6 +96,34 @@ public class FSPClient extends Yoda {
         }
     }
 
+    public void queryCentral() {
+        Scanner scan;
+        String reponse;
+        String query;
+        boolean loop = true;
+
+        scan = new Scanner(System.in);
+
+        try {
+            while (loop) {
+                System.out.print("> ");
+                query = scan.nextLine();
+                if (query.equals("QUIT")) {
+                    loop = false;
+                } else if (!query.isEmpty()) {
+                    search(query);
+                    System.out.println(lireMessage());
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void search(String keyword) throws IOException {
+        super.envoyerMessage("SEARCH " + keyword);
+    }
+
     /**
      * Méthode à appeler quand l'utilisateur veut quitter la session
      * Doit recevoir un accusé réception

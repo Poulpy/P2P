@@ -100,7 +100,11 @@ public class FSPCentral extends Yoda {
      * de l'identifiant précédemment envoyé
      */
     public void gererMessage(FTPCommand ftpCmd) throws IOException {
-        String contenu = ftpCmd.content;
+        ArrayList<String> files;
+        String contenu;
+
+        contenu = ftpCmd.content;
+        files = new ArrayList<String>();
         switch (ftpCmd.command) {
             case "USER":
                 id = contenu;
@@ -132,8 +136,24 @@ public class FSPCentral extends Yoda {
                     super.envoyerMessage("31 Mot de passe incorrect pour " + id);
                 }
                 break;
+            case "SEARCH":
+                files = searchUsersFoldersByKeyword(contenu);
+                found(files);
+                break;
             default:
         }
+    }
+
+    public void found(ArrayList<String> files) throws IOException {
+        String content;
+
+        content = new String();
+
+        for (String file : files) {
+            content += file + " ";
+        }
+
+        envoyerMessage("FOUND " + content);
     }
 
     /**

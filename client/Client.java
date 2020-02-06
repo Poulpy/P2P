@@ -43,6 +43,7 @@ public class Client extends Application {
             client.open();
 
             client.login();
+            client.queryCentral();
 
             client.quit();
             client.close();
