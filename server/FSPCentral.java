@@ -37,12 +37,12 @@ public class FSPCentral extends Yoda {
      * l'identifiant et le hash du mot de passe sont séparés par le
      * séparateur sep
      */
-    public final String cheminUtilisateurs = "server/utilisateurs.csv";
+    public final String cheminUtilisateurs;
 
     private String sep = ",";
 
     /** Répertoire des fichiers partagés, créé au lancement du serveur */
-    public final String descriptionsFolder = "server/descriptions/";
+    public final String descriptionsFolder;
 
     private ServerSocket serverSocket;
 
@@ -65,9 +65,11 @@ public class FSPCentral extends Yoda {
      * Crée le répertoire contenant les descriptions des fichiers partagés,
      * s'il n'est pas déjà créé
      */
-    public FSPCentral(String serverIP, int port) {
+    public FSPCentral(String serverIP, int port, String usersFile, String descFolder) {
         super(serverIP, port);
         usersConnected = new ArrayList<String>();
+        cheminUtilisateurs = usersFile;
+        descriptionsFolder = descFolder;
         new File(descriptionsFolder).mkdirs();
     }
 
@@ -138,13 +140,22 @@ public class FSPCentral extends Yoda {
                 break;
             case "SEARCH":
                 files = searchUsersFoldersByKeyword(contenu);
-                found(files);
+                if (files.isEmpty()) {
+                    notFound();
+                } else {
+                    found(files);
+                }
                 break;
             default:
         }
     }
 
+    public void notFound() throws IOException {
+        super.envoyerMessage("NOTFOUND");
+    }
+
     public void found(ArrayList<String> files) throws IOException {
+        System.out.println(files);
         String content;
 
         content = new String();

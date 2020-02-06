@@ -9,7 +9,7 @@ public class Central {
     public static void main(String[] args){
         FSPCentral server;
 
-        server = new FSPCentral("127.0.0.1", 50000);
+        server = new FSPCentral("127.0.0.1", 50000, "server/utilisateurs.csv", "server/descriptions/");
 
         try {
             server.connect("127.0.0.1");
