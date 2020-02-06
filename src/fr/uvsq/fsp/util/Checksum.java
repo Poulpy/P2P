@@ -1,4 +1,4 @@
-package util;
+package fr.uvsq.fsp.util;
 
 import java.security.DigestException;
 import java.security.MessageDigest;

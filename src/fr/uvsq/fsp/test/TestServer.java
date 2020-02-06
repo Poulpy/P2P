@@ -18,7 +18,7 @@ public class TestServer {
 
     @Before
     public void setUp() throws Exception {
-        central = new FSPCentral("127.0.0.1", 50000, "test/utilisateurs.csv", "test/descriptions/");
+        central = new FSPCentral("127.0.0.1", 50000, "src/fr/uvsq/fsp/test/utilisateurs.csv", "src/fr/uvsq/fsp/test/descriptions/");
     }
 
     @Test

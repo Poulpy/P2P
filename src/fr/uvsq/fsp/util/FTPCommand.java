@@ -1,4 +1,4 @@
-package util;
+package fr.uvsq.fsp.util;
 
 public class FTPCommand {
 
