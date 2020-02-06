@@ -116,6 +116,30 @@ Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serve
 
 `java client.Client`
 
+
+## Faire marcher le projet sur Eclipse
+
+Importez un projet
+
+>Projects from Git (with smart import)
+>Clone URI
+
+Après avoir cloné le projet, ajoutez la librairie JUnit4 dans le BuildPath: 
+Clic droit sur le projet>BuildPath>Configure>Library>Add library>JUnit4
+
+Après, clic droit sur les répertoires client/ et server/, et ajoutez les au BuildPath.
+
+Ensuite vérifiez que le projet a bien une icone J (pour java).
+
+Dans Window>Preferences>General>Workspace, en bas, changez l'encodage en UTF-8.
+
+Enfin, pour exécuter le projet : 
+- clic droit sur Central.java, Run As>Java Application
+- clic droit sur Client.java, Run As>Java Application
+
+Et ça maaaarche !
+
+
 ## Pourquoi un utilisateur a besoin d'installer un client et en plus un serveur ?
 
 Le principe de cette application est de pouvoir partager des fichiers.
