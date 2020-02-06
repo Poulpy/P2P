@@ -97,37 +97,37 @@ D'abord, écrire dans le `~/.bashrc` les lignes suivantes :
 ```
 if [ ${#CLASSPATH} -eq 0 ]
 then
-    export CLASSPATH="/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:."
+    export CLASSPATH="/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src/"
 else
-    export CLASSPATH="$CLASSPATH:/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:."
+    export CLASSPATH="$CLASSPATH:/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src/"
 fi
 ```
 
 Ouvrez un nouveau terminal. Compilez les fichiers java comme suit, à la racine du projet :
 
-`javac client/Client.java`
-
-`javac server/Central.java`
+```
+javac src/fr/uvsq/fsp/client/Client.java
+javac src/fr/uvsq/fsp/server/Central.java
+```
 
 Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serveur, exécutez le client :
 
-`java server.Central`
-
-
-`java client.Client`
+```
+java fr.uvsq.fsp.client.Client
+java fr.uvsq.fsp.server.Central
+```
 
 
 ## Faire marcher le projet sur Eclipse
 
 Importez un projet
 
->Projects from Git (with smart import)
->Clone URI
+Projects from Git (with smart import)>Clone URI
 
 Après avoir cloné le projet, ajoutez la librairie JUnit4 dans le BuildPath: 
 Clic droit sur le projet>BuildPath>Configure>Library>Add library>JUnit4
 
-Après, clic droit sur les répertoires client/ et server/, et ajoutez les au BuildPath.
+Après, clic droit sur le répertoire src/, et ajoutez le au BuildPath.
 
 Ensuite vérifiez que le projet a bien une icone J (pour java).
 
