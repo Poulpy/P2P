@@ -27,32 +27,55 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import outils.FTPCommand;
+import util.FTPCommand;
 import java.nio.file.DirectoryStream;
 
 public class FSPCentral extends Yoda {
 
-    // Chemin du fichier contenant les utilisateurs connus du serveur
-    // l'identifiant et le hash du mot de passe sont séparés par le
-    // séparateur sep
-    public  String cheminUtilisateurs = "server/utilisateurs.csv";
+    /**
+     * Chemin du fichier contenant les utilisateurs connus du serveur
+     * l'identifiant et le hash du mot de passe sont séparés par le
+     * séparateur sep
+     */
+    public final String cheminUtilisateurs;
+
     private String sep = ",";
-    // Répertoire des fichiers partagés, créé au lancement du serveur
-    // TODO en faire une constante ?
-    public String descriptionsFolder = "quigon/";
+
+    /** Répertoire des fichiers partagés, créé au lancement du serveur */
+    public final String descriptionsFolder;
+
     private ServerSocket serverSocket;
-    // voir méthode gererMessage
+
+    /** Liste des utilisateurs connectés */
+    public ArrayList<String> usersConnected;
+
+    // Attributs propre à un client :
+    // @Thread
     private String id;
+
     private String mdp;
+
     private boolean nouvelUtilisateur = false;
 
-    public FSPCentral(String serverIP, int port) {
+    public String hostname = "dinfo";
+
+    public String userDescriptionFolder;
+
+    /**
+     * Crée le répertoire contenant les descriptions des fichiers partagés,
+     * s'il n'est pas déjà créé
+     */
+    public FSPCentral(String serverIP, int port, String usersFile, String descFolder) {
         super(serverIP, port);
+        usersConnected = new ArrayList<String>();
+        cheminUtilisateurs = usersFile;
+        descriptionsFolder = descFolder;
+        new File(descriptionsFolder).mkdirs();
     }
 
     public void disconnect() {
         try {
-            socket.close();
+            socket.close();// @Thread
             serverSocket.close();
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -62,15 +85,9 @@ public class FSPCentral extends Yoda {
     }
 
 
-    public void connect(String clientIP) {
-        try {
-            serverSocket = new ServerSocket(port, 10, InetAddress.getByName(clientIP));
-            socket = serverSocket.accept();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void connect(String clientIP) throws IOException, UnknownHostException {
+        serverSocket = new ServerSocket(port, 10, InetAddress.getByName(clientIP));
+        socket = serverSocket.accept();// @Thread
     }
 
     /**
@@ -83,37 +100,92 @@ public class FSPCentral extends Yoda {
      * "PASS fierhigmeruis"
      * Le serveur vérifie que le mot de passe est correct en fonction
      * de l'identifiant précédemment envoyé
-     * TODO mettre FTPCommand en param
      */
-    public void gererMessage(String commande, String contenu) throws IOException {
-        switch (commande) {
+    public void gererMessage(FTPCommand ftpCmd) throws IOException {
+        ArrayList<String> files;
+        String contenu;
+
+        contenu = ftpCmd.content;
+        files = new ArrayList<String>();
+
+        switch (ftpCmd.command) {
             case "USER":
                 id = contenu;
                 if (utilisateurExiste(id)) {
-                    // TODO Mettre les codes d'erreur/de succès en constantes qqpart ?
-                    super.envoyerMessage("200 Bon identifiant");
+                    super.envoyerMessage("21 Bon identifiant");
                 } else {
                     nouvelUtilisateur = true;
-                    super.envoyerMessage("201 Identifiant inconnu");
+                    super.envoyerMessage("22 Identifiant inconnu");
                 }
                 break;
+
             case "PASS":
                 mdp = contenu;
 
                 if (nouvelUtilisateur) {
                     EnregistrerUtilisateur(id, mdp);
                     nouvelUtilisateur = false;
-                    super.envoyerMessage("202 Utilisateur créé : " + id + ", " + mdp);
-                    //super.sendFile(descriptionsFolder + "starwars");
+                    super.envoyerMessage("24 Utilisateur créé : " + id + ", " + mdp);
                 } else if (mdpCorrect(id, mdp)) {
-                    super.envoyerMessage("200 Mot de passe correct");
-                    //super.sendFile(descriptionsFolder + "starwars");
+                    super.envoyerMessage("23 Mot de passe correct");
                 } else {
-                    super.envoyerMessage("300 Mot de passe incorrect pour " + id);
+                    super.envoyerMessage("31 Mot de passe incorrect pour " + id);
                 }
                 break;
+
+            case "SEARCH":
+                files = searchUsersFoldersByKeyword(contenu);
+                if (files.isEmpty()) {
+                    notFound();
+                } else {
+                    found(files);
+                }
+                break;
+
+            case "HOSTNAME":
+                hostname = contenu;
+                usersConnected.add(hostname);
+                userDescriptionFolder = descriptionsFolder + hostname + "/";
+                new File(userDescriptionFolder).mkdirs();
+                break;
+
+            case "FILECOUNT":
+                saveDescriptions(userDescriptionFolder, Integer.parseInt(contenu));
+                break;
+
             default:
         }
+    }
+
+    /**
+     * Le serveur envoie ce message quand il n'a pas trouvé
+     * de fichiers correspondant au mot clef donné par un
+     * client
+     *
+     * NOTFOUND
+     */
+    public void notFound() throws IOException {
+        super.envoyerMessage("NOTFOUND");
+    }
+
+    /**
+     * Le serveur envoie les résultats correspondant au mot
+     * clef donné par le client. Il peut y avoir plusieurs
+     * fichiers
+     *
+     * FOUND dinfo/f1.txt dinfo/truc.txt
+     */
+    public void found(ArrayList<String> files) throws IOException {
+        System.out.println(files);
+        String content;
+
+        content = new String();
+
+        for (String file : files) {
+            content += file + " ";
+        }
+
+        envoyerMessage("FOUND " + content);
     }
 
     /**
@@ -122,7 +194,6 @@ public class FSPCentral extends Yoda {
      * dans le fichier utilisateurs.csv
      * Les utilisateurs sont stockés comme ça :
      * identifiant,hash_du_mot_de_passe
-     * TODO autre classe ?
      */
     public boolean utilisateurExiste(String identifiant) {
         BufferedReader reader;
@@ -230,12 +301,14 @@ public class FSPCentral extends Yoda {
 
     /**
      * Création d'un utilisateur dans le fichier csv/tsv
-     * TODO relire le code, le try est un peu bizare
      */
     public void EnregistrerUtilisateur(String s, String c) {
-        try (FileWriter fw = new FileWriter(cheminUtilisateurs, true);
+        // try with resource : les objets sont automatiquement fermés
+        try (
+            FileWriter fw = new FileWriter(cheminUtilisateurs, true);
             BufferedWriter bw = new BufferedWriter(fw);
-            PrintWriter out = new PrintWriter(bw))
+            PrintWriter out = new PrintWriter(bw)
+        )
         {
             out.println(s + sep + c);
         } catch (IOException e) {
@@ -288,7 +361,42 @@ public class FSPCentral extends Yoda {
         return filesMatching;
     }
 
+    /**
+     * Retourne le nom d'hôte et le chemin du fichier, fichier qui correspond
+     * au mot clef donné en argument.
+     * Plusieurs fichiers peuvent être renvoyés (on retourne un tableau)
+     * Si le mot clef se trouve dans un fichier 'yojinbo' de l'utilisateur 'dinfo' :
+     * Renvoie 'dinfo/yojinbo'
+     */
+    public ArrayList<String> searchUsersFoldersByKeyword(String keyword) throws IOException {
+        String path;
+        ArrayList<String> files;
+        ArrayList<String> allMatchingFiles;
 
+        files = new ArrayList<String>();
+        allMatchingFiles = new ArrayList<String>();
+
+        for (String userConnected : usersConnected) {
+            path = descriptionsFolder + userConnected + "/";
+
+            files = searchFolderByKeyword(keyword, path);
+
+            for (int j = 0; j != files.size(); j++) {
+                int i = files.get(j).indexOf(userConnected);
+                files.set(j, files.get(j).substring(i));
+            }
+
+            allMatchingFiles.addAll(files);
+        }
+
+
+        return allMatchingFiles;
+    }
+
+
+    /**
+     * @Thread
+     */
     public void listen() {
         String msg;
         FTPCommand ftpCmd;
@@ -300,7 +408,7 @@ public class FSPCentral extends Yoda {
                 ftpCmd = FTPCommand.parseCommand(msg);
                 System.out.println(msg);
 
-                gererMessage(ftpCmd.command, ftpCmd.content);
+                gererMessage(ftpCmd);
             }
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -308,7 +416,8 @@ public class FSPCentral extends Yoda {
             e.printStackTrace();
         }
 
+        // deconnexion
+        usersConnected.remove(hostname);
     }
-
 }
 

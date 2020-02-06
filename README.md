@@ -50,38 +50,60 @@ Central : le programme faisant office de serveur centralisé. Gère :
 ## Todo
 
 
+- Envoyer et récupérer le nom d'hôte
 - Plusieurs clients peuvent se connecter au serveur (multi thread)
 - Recherche entre le client et le serveur centralisé et téléchargement
-- Le serveur notifie le serveur centralisé de son activité. Création d'un chronomètre côté serveur : si le client n'envoie aucun message depuis x secondes, on le considère comme déconnecté. (Il faut alors envoyer un message qui incite le client à fermer la socket.)
+- Le serveur notifie le serveur centralisé de son activité.
+Création d'un chronomètre côté serveur :
+si le client n'envoie aucun message depuis x secondes, on le considère comme déconnecté. (Il faut alors envoyer un message qui incite le client à fermer la socket.)
 - Le client garde la liste des fichiers téléchargés
 - Le client met à jour les fichiers qu'il a téléchargé
 - Le serveur centralisé partage les fichiers d'un client si le serveur est actif
-- Créer une spécification. Puisqu'on ne fait pas exactement une implémentation du protocol FTP, il est bien de spécifier ce qu'implémente notre application !
-- Une interface graphique (javaFX)
+- Un Client et un Serveur côté utilisateur. Pour l'instant les 2 sont dans une seule classe 'Client'
 
 ## Todo Code
 
-- Voir si toutes les ressources sont bien libérées quand on quitte l'application (`close()`).
+- Voir si toutes les ressources sont bien libérées quand on quitte l'application (`close()`) => try with resource.
 - Eviter l'anti-pattern GodClass : une classe qui a trop de responsabilités.
-- Un Client et un Serveur côté utilisateur. Pour l'instant les 2 sont dans une seule classe 'Client'
-- Revoir à quel niveau mettre les try/catch
 - Utiliser la classe FTPCommand
-- Revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv (voir le standard ISO, ou la structure d'un projet Maven)
-- Une classe Message, qui enverrait des messages à travers des sockets (xml, json)
 - Renommer les classes et les variables, leur donner de jolis noms
 - Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
-- `System.getProperty("line.separator");`
-- Ecrire des tests. Mieux : écrire des tests avant l'écriture du code ! (TDD)
+- Ecrire des tests.
 - Plus de documentation (plus de tag : param, return, etc.)
+- Gérer les exceptions
+- Une classe de test pour tester une suite de tests
 
+
+## Idées
+
+- Créer une spécification.
+Puisqu'on ne fait pas exactement une implémentation du protocol FTP,
+il est bien de spécifier ce qu'implémente notre application !
+- Dark mode
+- Interface graphique : ajouter un fichier dans le répertoire des fichiers partagés
+- Un checksum du contenu du message
+- Revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv (voir le standard ISO, ou la structure d'un projet Maven)
+- Un parseur pour analyser les messages (on en revient à une classe Message);
+ça permettrait d'avoir un protocole plus extensible. Pour l'instant le contenu est séparé par des espaces :
+`FILE truc.txt 23`. Ce serait bien de pouvoir stocker dans un `HashMap<String, Object>` les valeurs. On pourrait avoir des valeurs optionnelles.
+Par ailleurs, on pourrait envoyer les données sous forme de texte brut, ou bien en xml, ou bien en json.
+Mieux, on pourrait juxtaposer les données d'un paquet. Actullement, les données sont séparées par des espaces.
 
 ### Comment exécuter le projet ?
 
-D'abord exécuter la commande suivante dans le terminal :
 
-`export CLASSPATH="."`
+D'abord, écrire dans le `~/.bashrc` les lignes suivantes :
 
-Compilez les fichiers java comme suit, à la racine du projet :
+```
+if [ ${#CLASSPATH} -eq 0 ]
+then
+    export CLASSPATH="/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:."
+else
+    export CLASSPATH="$CLASSPATH:/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:."
+fi
+```
+
+Ouvrez un nouveau terminal. Compilez les fichiers java comme suit, à la racine du projet :
 
 `javac client/Client.java`
 
@@ -96,13 +118,16 @@ Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serve
 
 ## Pourquoi un utilisateur a besoin d'installer un client et en plus un serveur ?
 
-Le principe de cette application est de pouvoir partager des fichiers. Tant que le programme côté client est actif, on partage les fichiers contenus dans la machine côté client.
+Le principe de cette application est de pouvoir partager des fichiers.
+Tant que le programme côté client est actif, on partage les fichiers contenus dans la machine côté client.
 S'il ne tourne pas, on arrête de partager les fichiers.
-Mais est-ce que l'utilisateur est tout le temps connecté au serveur ? Non pas forcément, c'est pour ça qu'on a besoin de 2 programmes côté client : un programme pour partager des fichiers auprès d'autres clients, et un autre qui traitera les requêtes du client.
+Mais est-ce que l'utilisateur est tout le temps connecté au serveur ?
+Non pas forcément, c'est pour ça qu'on a besoin de 2 programmes côté client :
+un programme pour partager des fichiers auprès d'autres clients, et un autre qui traitera les requêtes du client.
 
 ### Utilisateurs
 
-Les utilisateurs sont dans le fichier utilisateurs.csv (à la racine du projet)
+Les utilisateurs sont dans le fichier `server/utilisateurs.csv`
 
 ## Pour exécuter les tests
 
@@ -112,20 +137,8 @@ Il faut installer JUnit 4 :
 
 ```
 apt install junit4
-mkdir ~/junit
-ln -s /usr/share/java/junit4.jar ~/junit
 ```
-(Partie qui marche pas pour l'instant) Ensuite, dans le `~/.bashrc` :
 
-```
-export JUNIT_HOME=~/junit
-if [ ${#CLASSPATH} -eq 0 ]
-then
-    export CLASSPATH="$JUNIT_HOME/junit4.jar:$JUNIT_HOME/hamcrest-core.jar"
-else
-    export CLASSPATH="$CLASSPATH:$JUNIT_HOME/junit4.jar:$JUNIT_HOME/hamcrest-core.jar"
-fi
-```
 
 Pour compiler les tests :
 ```
@@ -134,7 +147,16 @@ javac test/TestServer.java
 
 Pour exécuter :
 ```
+java org.junit.runner.JUnitCore test.TestServer
+```
+Si ça marche pas, essayez : 
+```
 java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:. org.junit.runner.JUnitCore test.TestServer
+```
+
+Pour sauvegarder les traces d'erreurs, ajoutez `> error_tests.txt`:
+```
+java org.junit.runner.JUnitCore test.TestServer > error_tests.txt
 ```
 
 
@@ -173,7 +195,7 @@ Sera exécuté après le dernier test.
 
 ## Je sais pas quoi faire
 
-`find * -type f | xargs grep -n TODO`
+`find * -name *.java -type f | xargs grep -n TODO`
 
 TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tableau markdown
 
@@ -182,4 +204,15 @@ TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tab
 A la racine du projet :
 
 `javadoc -d docs/ */*.java`
+
+Pour mettre à jour la documentation hébergée par Github, il faut faire un commit dans la branche `gh-pages`.
+
+### Dépendances
+
+Java 1.8
+
+JavaFX 8
+
+JUnit 4
+
 

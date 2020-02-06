@@ -18,8 +18,7 @@ public class TestServer {
 
     @Before
     public void setUp() throws Exception {
-        central = new FSPCentral("127.0.0.1", 50000);
-        central.cheminUtilisateurs = "test/utilisateurs.csv";
+        central = new FSPCentral("127.0.0.1", 50000, "test/utilisateurs.csv", "test/descriptions/");
     }
 
     @Test
@@ -48,7 +47,7 @@ public class TestServer {
 
     @Test
     public void testSearchByKeyword() throws Exception {
-        File fileToSearch = new File("quigon/yojinbo");
+        File fileToSearch = new File(central.descriptionsFolder + "dinfo/yojinbo");
         Assert.assertTrue(central.searchByKeyword("Le", fileToSearch));
         Assert.assertTrue(central.searchByKeyword("garde", fileToSearch));
         Assert.assertTrue(central.searchByKeyword("du", fileToSearch));
@@ -57,7 +56,7 @@ public class TestServer {
 
     @Test
     public void testSearchFolderByKeyword() throws Exception {
-        String folderToSearch = "quigon/";
+        String folderToSearch = central.descriptionsFolder + "dinfo/";
         ArrayList<String> emp = new ArrayList<String>();
         Map<String, Boolean> keywords = new HashMap<String, Boolean>();
         ArrayList<String> matches = new ArrayList<String>();
@@ -65,6 +64,7 @@ public class TestServer {
         keywords.put("Le", true);
         keywords.put("garde", true);
         keywords.put("du", true);
+        keywords.put("film", true);
         keywords.put("Truc", false);
 
         for (Map.Entry<String, Boolean> keyword : keywords.entrySet()) {
@@ -76,11 +76,30 @@ public class TestServer {
                 */
 
             if (keyword.getValue()) {
-                Assert.assertNotEquals(matches.size(), 0);
+                //System.out.println(matches);
+                Assert.assertTrue(matches.size() > 0);
             } else {
                 Assert.assertEquals(matches.size(), 0);
             }
         }
+    }
+
+    @Test
+    public void testSearchUsersFoldersByKeyword() throws Exception {
+        ArrayList<String> connected = new ArrayList<String>();
+        ArrayList<String> files = new ArrayList<String>();
+
+        files = central.searchUsersFoldersByKeyword("Le");
+        // Pas d'utilisateurs : size() == 0
+        Assert.assertEquals(files.size(), 0);
+        central.usersConnected.add("dinfo");
+        // size() == 1
+        files = central.searchUsersFoldersByKeyword("étoiles");
+        Assert.assertEquals(files.size(), 1);
+
+        files = central.searchUsersFoldersByKeyword("film");
+        //System.out.println(files);
+        Assert.assertEquals(files.size(), 2);
     }
 }
 

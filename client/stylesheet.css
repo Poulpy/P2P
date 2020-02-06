@@ -1,0 +1,31 @@
+.root {
+    -fx-font-family: "Cantarell";
+}
+
+.searchButton {
+    -fx-font-size: 1.2em;
+    -fx-font-weight: bold;
+    -fx-background-color: #ece7e7;
+}
+
+.searchButton:hover {
+    -fx-background-color: #dddddd;
+}
+
+.searchButton:pressed {
+    -fx-background-color: #e1e1e1;
+}
+
+.removeLightGlow {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.searchField {
+    -fx-focus-color: rgba(100, 100, 100, 0.2);
+}
+
+.greenFont {
+    -fx-text-fill: green;
+}
+

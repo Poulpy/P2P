@@ -1,6 +1,7 @@
 package client;
 
 import abstractions.Yoda;
+import util.Checksum;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.BufferedOutputStream;
@@ -15,25 +16,32 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.security.DigestException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
+import java.net.InetAddress;
 
 public class FSPClient extends Yoda {
 
-    // Identifiant de l'utilisateur
+    /** Nom d'hôte de l'utilisateur */
+    public String hostname;
+
+    /** Identifiant de l'utilisateur */
     public String id = " ";
-    // Mot de passe
+
+    /** Mot de passe */
     public String mdp = " ";
-    // Hash du mot de passe
-    public String hashMdp = " 12333";
-    // Répertoire qui contient les descriptions des fichiers partagés par le serveur
-    // TODO constante ?
-    public String descriptionsFolder = "macewindu/";
+
+    /** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
+    public final String descriptionsFolder = "client/descriptions/";
 
     public FSPClient(String serverIP, int port) {
         super(serverIP, port);
+        new File(descriptionsFolder).mkdirs();
+
+        try {
+            hostname = InetAddress.getLocalHost().getHostName();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
     }
 
     public void disconnect() {
@@ -47,20 +55,13 @@ public class FSPClient extends Yoda {
     }
 
 
-    public void connect() {
-        try {
-            socket = new Socket(adresseIPServeur, port);
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void connect() throws UnknownHostException, IOException {
+        socket = new Socket(adresseIPServeur, port);
     }
 
     /**
      * Authentification
-     * TODO à modifier si on remplace l'interface en ligne de commande par une gui
-     * TODO Server
+     * @Server
      */
     public void login() {
         Scanner scan;
@@ -82,14 +83,14 @@ public class FSPClient extends Yoda {
             do {
                 System.out.print("Mot de passe : ");
                 mdp = scan.nextLine();
-                this.hashMdp = chiffrage(this.mdp);
-                super.envoyerMessage("PASS " + hashMdp);
+                super.envoyerMessage("PASS " + Checksum.getMD5Hash(this.mdp));
                 reponse = super.lireMessage();
                 System.out.println(reponse);
             } while (!reponse.startsWith("2"));
 
             System.out.println("Authentification réussie !");
-            // recevoirDescriptions();
+            hostname();
+            envoyerDescriptions(descriptionsFolder);
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,37 +98,58 @@ public class FSPClient extends Yoda {
     }
 
     /**
-     * Méthode à appeler quand l'utilisateur veut quitter la session
+     * Envoie le nom d'hôte de l'utilisateur
      */
-    public void quit() throws IOException {
-        super.envoyerMessage("QUIT");
+    public void hostname() throws IOException {
+        envoyerMessage("HOSTNAME " + hostname);
     }
 
     /**
-     * Chiffrement du mot de passe
-     * Le mot de passe chiffré est dans les champs
-     * Je sais pas si c'est une bonne ou mauvaise idée
-     * TODO voir String.hashCode()
+     * Laisse l'utilisateur interroger le serveur centralisé
+     * si l'utilisateur n'a rien entré, rien n'est envoyé
+     * si l'utilisateur tape QUIT, on quitte la méthode
      */
-    public String chiffrage(String str) {
-        String result = new String();
-        MessageDigest messageDigest;
+    public void queryCentral() {
+        Scanner scan;
+        String reponse;
+        String query;
+        boolean loop = true;
+
+        System.out.println("Interrogez le serveur. Tapez QUIT pour quitter le programme.");
+        scan = new Scanner(System.in);
 
         try {
-            messageDigest = MessageDigest.getInstance("MD5");
-            messageDigest.update(str.getBytes());
-            byte[] messageDigestMD5 = messageDigest.digest();
-            StringBuffer stringBuffer = new StringBuffer();
-            for (byte bytes : messageDigestMD5) {
-                stringBuffer.append(String.format("%02x", bytes & 0xff));
+            while (loop) {
+                System.out.print("> ");
+                query = scan.nextLine();
+
+                if (query.equals("QUIT")) {
+                    loop = false;
+                } else if (!query.isEmpty()) {
+                    search(query);
+                    System.out.println(lireMessage());
+                }
             }
-
-            result = stringBuffer.toString();
-        } catch (NoSuchAlgorithmException exception) {
-            exception.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
 
-        return result;
+    /**
+     * Interroge le serveur : est-ce qu'un fichier contient ce mot-clef ?
+     *
+     * SEARCH film
+     */
+    public void search(String keyword) throws IOException {
+        super.envoyerMessage("SEARCH " + keyword);
+    }
+
+    /**
+     * Méthode à appeler quand l'utilisateur veut quitter la session
+     * Doit recevoir un accusé réception
+     */
+    public void quit() throws IOException {
+        super.envoyerMessage("QUIT");
     }
 }
 
