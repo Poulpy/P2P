@@ -157,10 +157,24 @@ public class FSPCentral extends Yoda {
         }
     }
 
+    /**
+     * Le serveur envoie ce message quand il n'a pas trouvé
+     * de fichiers correspondant au mot clef donné par un
+     * client
+     *
+     * NOTFOUND
+     */
     public void notFound() throws IOException {
         super.envoyerMessage("NOTFOUND");
     }
 
+    /**
+     * Le serveur envoie les résultats correspondant au mot
+     * clef donné par le client. Il peut y avoir plusieurs
+     * fichiers
+     *
+     * FOUND dinfo/f1.txt dinfo/truc.txt
+     */
     public void found(ArrayList<String> files) throws IOException {
         System.out.println(files);
         String content;

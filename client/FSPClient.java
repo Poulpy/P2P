@@ -97,22 +97,32 @@ public class FSPClient extends Yoda {
         }
     }
 
+    /**
+     * Envoie le nom d'hôte de l'utilisateur
+     */
     public void hostname() throws IOException {
         envoyerMessage("HOSTNAME " + hostname);
     }
 
+    /**
+     * Laisse l'utilisateur interroger le serveur centralisé
+     * si l'utilisateur n'a rien entré, rien n'est envoyé
+     * si l'utilisateur tape QUIT, on quitte la méthode
+     */
     public void queryCentral() {
         Scanner scan;
         String reponse;
         String query;
         boolean loop = true;
 
+        System.out.println("Interrogez le serveur. Tapez QUIT pour quitter le programme.");
         scan = new Scanner(System.in);
 
         try {
             while (loop) {
                 System.out.print("> ");
                 query = scan.nextLine();
+
                 if (query.equals("QUIT")) {
                     loop = false;
                 } else if (!query.isEmpty()) {
@@ -125,6 +135,11 @@ public class FSPClient extends Yoda {
         }
     }
 
+    /**
+     * Interroge le serveur : est-ce qu'un fichier contient ce mot-clef ?
+     *
+     * SEARCH film
+     */
     public void search(String keyword) throws IOException {
         super.envoyerMessage("SEARCH " + keyword);
     }
