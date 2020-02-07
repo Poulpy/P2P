@@ -1,7 +1,7 @@
-package client;
+package fr.uvsq.fsp.client;
 
-import abstractions.Yoda;
-import util.Checksum;
+import fr.uvsq.fsp.abstractions.Yoda;
+import fr.uvsq.fsp.util.Checksum;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
 import java.io.BufferedOutputStream;
@@ -31,7 +31,7 @@ public class FSPClient extends Yoda {
     public String mdp = " ";
 
     /** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
-    public final String descriptionsFolder = "client/descriptions/";
+    public final String descriptionsFolder = "src/fr/uvsq/fsp/client/descriptions/";
 
     public FSPClient(String serverIP, int port) {
         super(serverIP, port);

@@ -1,4 +1,4 @@
-package util;
+package fr.uvsq.fsp.util;
 
 /**
  * Classe stockant les codes de succès et d'erreur.

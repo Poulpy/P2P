@@ -1,6 +1,6 @@
-package view;
+package fr.uvsq.fsp.view;
 
-import controler.ClientControler;
+import fr.uvsq.fsp.controler.ClientControler;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.animation.FadeTransition;
@@ -62,7 +62,7 @@ public class ClientView extends Group {
         //controler = new ClientControler(this);
         GridPane grid = new GridPane();
 
-        getStylesheets().add("client/stylesheet.css");
+        getStylesheets().add("fr/uvsq/fsp/client/stylesheet.css");
 
         // Bouton de recherche
         searchButton = new Button("Rechercher");

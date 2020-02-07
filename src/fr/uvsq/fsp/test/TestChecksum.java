@@ -1,6 +1,6 @@
-package test;
+package fr.uvsq.fsp.test;
 
-import util.Checksum;
+import fr.uvsq.fsp.util.Checksum;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;

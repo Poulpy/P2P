@@ -1,4 +1,4 @@
-package abstractions;
+package fr.uvsq.fsp.abstractions;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -15,7 +15,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import util.FTPCommand;
+import fr.uvsq.fsp.util.FTPCommand;
 
 
 public class Yoda {

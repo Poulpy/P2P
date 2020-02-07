@@ -1,6 +1,6 @@
-package server;
+package fr.uvsq.fsp.server;
 
-import abstractions.Yoda;
+import fr.uvsq.fsp.abstractions.Yoda;
 import java.util.ArrayList;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -27,7 +27,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import util.FTPCommand;
+import fr.uvsq.fsp.util.FTPCommand;
 import java.nio.file.DirectoryStream;
 
 public class FSPCentral extends Yoda {
