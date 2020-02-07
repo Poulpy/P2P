@@ -120,6 +120,8 @@ java fr.uvsq.fsp.server.Central
 
 ## Faire marcher le projet sur Eclipse
 
+**Pour faire marcher le projet sur Eclipse, il faut bien suivre les instructions suivantes.**
+
 Importez un projet
 
 Projects from Git (with smart import)>Clone URI
@@ -127,15 +129,19 @@ Projects from Git (with smart import)>Clone URI
 Après avoir cloné le projet, ajoutez la librairie JUnit4 dans le BuildPath: 
 Clic droit sur le projet>BuildPath>Configure>Library>Add library>JUnit4
 
-Après, clic droit sur le répertoire src/, et ajoutez le au BuildPath.
+Après, Project>Properties>Java Build Path>Sources>Add Folder> et vous ajoutez le répertoire `src/`
 
 Ensuite vérifiez que le projet a bien une icone J (pour java).
 
 Dans Window>Preferences>General>Workspace, en bas, changez l'encodage en UTF-8.
 
-Enfin, pour exécuter le projet : 
-- clic droit sur Central.java, Run As>Java Application
-- clic droit sur Client.java, Run As>Java Application
+Enfin, pour exécuter le projet, d'abord : 
+
+clic droit sur Central.java, Run As>Java Application
+
+et seulement après :
+
+clic droit sur Client.java, Run As>Java Application
 
 Et ça maaaarche !
 
