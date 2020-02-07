@@ -124,24 +124,24 @@ java fr.uvsq.fsp.server.Central
 
 Importez un projet
 
-Projects from Git (with smart import)>Clone URI
+Projects from Git (with smart import) > Clone URI
 
 Après avoir cloné le projet, ajoutez la librairie JUnit4 dans le BuildPath: 
-Clic droit sur le projet>BuildPath>Configure>Library>Add library>JUnit4
+Project > Properties > Java BuildPath > Library > Add library > JUnit4
 
-Après, Project>Properties>Java Build Path>Sources>Add Folder> et vous ajoutez le répertoire `src/`
+Après, Project > Properties > Java Build Path > Sources > Add Folder > et vous ajoutez le répertoire `src/`. Il n'y qu'une seule case à cocher. Si l'onglet Sources liste d'autres répertoires (`P2P/client` par exemple), vous pouvez les enlever.
 
 Ensuite vérifiez que le projet a bien une icone J (pour java).
 
-Dans Window>Preferences>General>Workspace, en bas, changez l'encodage en UTF-8.
+Dans Window > Preferences > General > Workspace, en bas, changez l'encodage en UTF-8.
 
-Enfin, pour exécuter le projet, d'abord : 
+Enfin, pour exécuter le projet, **d'abord** : 
 
-clic droit sur Central.java, Run As>Java Application
+**clic droit** sur Central.java, Run As > Java Application
 
-et seulement après :
+et seulement **après** :
 
-clic droit sur Client.java, Run As>Java Application
+**clic droit** sur Client.java, Run As > Java Application
 
 Et ça maaaarche !
 
