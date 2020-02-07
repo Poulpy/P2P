@@ -110,7 +110,7 @@ javac src/fr/uvsq/fsp/client/Client.java
 javac src/fr/uvsq/fsp/server/Central.java
 ```
 
-Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serveur, exécutez le client :
+Ensuite, dans 2 terminaux différents, exécutez le serveur. Après avoir exécuté le serveur, exécutez le client :
 
 ```
 java fr.uvsq.fsp.client.Client
@@ -164,25 +164,15 @@ apt install junit4
 ```
 
 
-Pour compiler les tests :
+Pour compiler les tests et les exécuter :
 ```
-javac test/TestServer.java
-```
-
-Pour exécuter :
-```
-java org.junit.runner.JUnitCore test.TestServer
+javac src/fr/uvsq/fsp/test/TestServer.java
+java org.junit.runner.JUnitCore fr.uvsq.fsp.test.TestServer
 ```
 Si ça marche pas, essayez : 
 ```
-java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:. org.junit.runner.JUnitCore test.TestServer
+java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:src/ org.junit.runner.JUnitCore src.fr.uvsq.fsp.test.TestServer
 ```
-
-Pour sauvegarder les traces d'erreurs, ajoutez `> error_tests.txt`:
-```
-java org.junit.runner.JUnitCore test.TestServer > error_tests.txt
-```
-
 
 ## Ecrire des tests
 
