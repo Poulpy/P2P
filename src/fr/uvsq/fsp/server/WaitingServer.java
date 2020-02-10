@@ -30,99 +30,76 @@ import java.util.concurrent.TimeUnit;
 import fr.uvsq.fsp.util.FTPCommand;
 import java.nio.file.DirectoryStream;
 
-public class WaitingServer extends Yoda implements Runnable{
+public class WaitingServer extends Yoda implements Runnable {
 
-	
-	  Socket sock;
-	  Boolean isStopped;
-	  FSPCentral server1;
-    /**
-     * Chemin du fichier contenant les utilisateurs connus du serveur
-     * l'identifiant et le hash du mot de passe sont séparés par le
-     * séparateur sep
-     */
-    public static String cheminUtilisateurs;
+	Boolean isStopped = false;
 
-    private String sep = ",";
+	/**
+	 * Chemin du fichier contenant les utilisateurs connus du serveur
+	 * l'identifiant et le hash du mot de passe sont séparés par le
+	 * séparateur sep
+	 */
+	public static String cheminUtilisateurs;
 
-    /** Répertoire des fichiers partagés, créé au lancement du serveur */
-    public static String descriptionsFolder;
+	private String sep = ",";
 
-    public ServerSocket serverSocket;
+	/** Répertoire des fichiers partagés, créé au lancement du serveur */
+	public static String descriptionsFolder;
 
-    /** Liste des utilisateurs connectés */
-    public ArrayList<String> usersConnected;
+	public ServerSocket serverSocket;
 
-    // Attributs propre à un client :
-    // @Thread
-    private String id;
+	public WaitingServer(int portNumber) {
+		super(portNumber);
+	}
 
-    private String mdp;
+	public void disconnect() {
+		try {
+			serverSocket.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-    private boolean nouvelUtilisateur = false;
+	public void connect() throws IOException, UnknownHostException {
+		serverSocket = new ServerSocket(port, 10);
+	}
 
-    public String hostname = "dinfo";
-
-    public String userDescriptionFolder;
-
- 
-    public WaitingServer(String serverIP, int port, Socket sock) {
-    	
-    	super(serverIP, port);
-    	
-    	socket =sock;
-    	
-    }
-
-    public void disconnect() {
-        try {
-           
-            serverSocket.close();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    public void connect() throws IOException, UnknownHostException {
-        serverSocket = new ServerSocket(port, 10);
-        
-    }
 	public synchronized void stop() {
-		
-	isStopped=true;
-    disconnect();
-	
+		isStopped = true;
+		disconnect();
 	}
-	
-	private synchronized boolean isStopped ()
-	{
+
+	private synchronized boolean isStopped() {
 		return isStopped;
-	
 	}
-	
+
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		while(!isStopped) {
- 
+		Socket sock;
+
+		try {
+			connect();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		while (!isStopped()) {
+
 			try {
 				sock = serverSocket.accept();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            System.out.println("Connected");
-            new Thread(new FSPCentral("127.0.0.1", 60000,sock)).start();
-        
-		}
-		
-	}
-    
-    
-    
-}
+				if (isStopped()) {
+					System.out.println("Server has stopped");
 
+					return;
+				}
+				throw new RuntimeException("Error accepting client connection", e);
+			}
+
+			new Thread(new FSPCentral(sock)).start();
+		}
+	}
+}
 

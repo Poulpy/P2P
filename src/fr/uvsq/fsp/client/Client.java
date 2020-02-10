@@ -26,7 +26,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import fr.uvsq.fsp.view.ClientView;
 
-public class Client extends Application{
+public class Client extends Application {
 
     private Stage primaryStage;
 
@@ -81,7 +81,7 @@ public class Client extends Application{
         primaryStage.setTitle("File Sharing");
     }
 
-	
+
 
 
 }
