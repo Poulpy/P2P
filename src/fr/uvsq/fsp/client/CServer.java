@@ -1,5 +1,6 @@
 package fr.uvsq.fsp.client;
 
+import java.util.Scanner;
 import fr.uvsq.fsp.controler.ClientControler;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -31,6 +32,9 @@ public class CServer {
 
 	public static void main(String[] args) {
 		FSPClient client;
+		boolean loop = true;
+		Scanner scan;
+		String query;
 
 		client = new FSPClient("127.0.0.1", 50000);
 
@@ -40,7 +44,20 @@ public class CServer {
 
 			client.login();
 
-			//client.quit();
+
+			System.out.println("Tapez QUIT pour quitter le programme.");
+			scan = new Scanner(System.in);
+
+			while (loop) {
+				System.out.print("> ");
+				query = scan.nextLine();
+
+				if (query.equals("QUIT")) {
+					loop = false;
+				}
+			}
+
+			client.quit();
 			client.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
