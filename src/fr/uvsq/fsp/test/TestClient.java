@@ -10,7 +10,7 @@ public class TestClient {
 
     public FSPClient client;
 
-    @Before
+  
     public void setUp() throws Exception {
         client = new FSPClient("127.0.0.1", 50000);
     }

@@ -215,7 +215,8 @@ public class Yoda {
         File file;
 
         file = new File(filePath);
-        fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+        fileName = file.getName();
+        		// filePath.substring(filePath.lastIndexOf('/') + 1);
 
         // L'étiquette FILE va indiquer qu'on envoie le nom et la taille
         envoyerMessage("FILE " + fileName + " " + file.length());
@@ -241,8 +242,9 @@ public class Yoda {
 
         fileName = ftpCmd.content.split(" ")[0];
         fileSize = Integer.parseInt(ftpCmd.content.split(" ")[1]);
-
+        System.out.println(dir + fileName);
         enregistrerContenu(dir + fileName);
+        
     }
 }
 

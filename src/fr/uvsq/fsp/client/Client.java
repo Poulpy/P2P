@@ -1,5 +1,4 @@
 package fr.uvsq.fsp.client;
-
 import fr.uvsq.fsp.controler.ClientControler;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -27,7 +26,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import fr.uvsq.fsp.view.ClientView;
 
-public class Client extends Application {
+public class Client extends Application{
 
     private Stage primaryStage;
 
@@ -35,7 +34,7 @@ public class Client extends Application {
         FSPClient client;
         String msg;
 
-        client = new FSPClient("127.0.0.1", 50000);
+        client = new FSPClient("127.0.0.1", 60000);
 
         Application.launch(Client.class);
         try {
@@ -81,5 +80,9 @@ public class Client extends Application {
         primaryStage.show();
         primaryStage.setTitle("File Sharing");
     }
+
+	
+
+
 }
 

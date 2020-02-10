@@ -30,21 +30,21 @@ import java.util.concurrent.TimeUnit;
 import fr.uvsq.fsp.util.FTPCommand;
 import java.nio.file.DirectoryStream;
 
-public class FSPCentral extends Yoda {
+public class FSPCentral extends Yoda implements Runnable{
 
     /**
      * Chemin du fichier contenant les utilisateurs connus du serveur
      * l'identifiant et le hash du mot de passe sont séparés par le
      * séparateur sep
      */
-    public final String cheminUtilisateurs;
+    public static String cheminUtilisateurs;
 
     private String sep = ",";
 
     /** Répertoire des fichiers partagés, créé au lancement du serveur */
-    public final String descriptionsFolder;
+    public static String descriptionsFolder;
 
-    private ServerSocket serverSocket;
+    public ServerSocket serverSocket;
 
     /** Liste des utilisateurs connectés */
     public ArrayList<String> usersConnected;
@@ -72,6 +72,13 @@ public class FSPCentral extends Yoda {
         descriptionsFolder = descFolder;
         new File(descriptionsFolder).mkdirs();
     }
+    public FSPCentral(String serverIP, int port, Socket sock) {
+    	
+    	super(serverIP, port);
+    	usersConnected = new ArrayList<String>();
+    	socket =sock;
+    	new File(descriptionsFolder).mkdirs();
+    }
 
     public void disconnect() {
         try {
@@ -85,9 +92,9 @@ public class FSPCentral extends Yoda {
     }
 
 
-    public void connect(String clientIP) throws IOException, UnknownHostException {
-        serverSocket = new ServerSocket(port, 10, InetAddress.getByName(clientIP));
-        socket = serverSocket.accept();// @Thread
+    public void connect() throws IOException, UnknownHostException {
+        serverSocket = new ServerSocket(port, 10);
+        
     }
 
     /**
@@ -145,7 +152,8 @@ public class FSPCentral extends Yoda {
             case "HOSTNAME":
                 hostname = contenu;
                 usersConnected.add(hostname);
-                userDescriptionFolder = descriptionsFolder + hostname + "/";
+                userDescriptionFolder = descriptionsFolder + hostname+ File.separator ;
+                System.out.println(userDescriptionFolder);
                 new File(userDescriptionFolder).mkdirs();
                 break;
 
@@ -377,7 +385,7 @@ public class FSPCentral extends Yoda {
         allMatchingFiles = new ArrayList<String>();
 
         for (String userConnected : usersConnected) {
-            path = descriptionsFolder + userConnected + "/";
+            path = descriptionsFolder + userConnected + File.separator;
 
             files = searchFolderByKeyword(keyword, path);
 
@@ -419,5 +427,20 @@ public class FSPCentral extends Yoda {
         // deconnexion
         usersConnected.remove(hostname);
     }
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+	    open();
+		listen();
+		close();
+		
+	}
+
+	
+    
+    
+    
+    
 }
 
