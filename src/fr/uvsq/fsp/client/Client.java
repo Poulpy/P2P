@@ -28,58 +28,69 @@ import fr.uvsq.fsp.view.ClientView;
 
 public class Client extends Application {
 
-    private Stage primaryStage;
+	private Stage primaryStage;
 
-    public static void main(String[] args) {
-        FSPClient client;
-        String msg;
+	public static void main(String[] args) {
+		FSPClient client;
+		String msg;
+		String serverIP;
+		int port;
 
-        client = new FSPClient("127.0.0.1", 60000);
+		if (args.length != 2) {
+			System.out.println("Wrong number of arguments (2) : @serverIP port");
 
-        Application.launch(Client.class);
-        try {
-            client.connect();
-            client.open();
+			return;
+		}
 
-            client.login();
-            client.queryCentral();
+		serverIP = args[0];
+		port = Integer.parseInt(args[1]);
 
-            client.quit();
-            client.close();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (client.socket != null) {
-                try {
-                    client.socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    client.socket = null;
-                }
-            }
-        }
-    }
+		client = new FSPClient(serverIP, port);
 
-    @Override
-    public void start(Stage stage) {
-        ClientView view;
-        Scene scene;
-        ClientControler controler;
+		Application.launch(Client.class);
+		try {
+			client.connect();
+			client.open();
 
-        view = new ClientView();
-        scene = new Scene(view, 400, 400, Color.WHITE);
-        controler = new ClientControler(view);
+			client.login();
+			client.queryCentral();
 
-        primaryStage = stage;
-        primaryStage.setMinWidth(400);
-        primaryStage.setMinHeight(400);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        primaryStage.setTitle("File Sharing");
-    }
+			client.quit();
+			client.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (client.socket != null) {
+				try {
+					client.socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					client.socket = null;
+				}
+			}
+		}
+	}
+
+	@Override
+	public void start(Stage stage) {
+		ClientView view;
+		Scene scene;
+		ClientControler controler;
+
+		view = new ClientView();
+		scene = new Scene(view, 400, 400, Color.WHITE);
+		controler = new ClientControler(view);
+
+		primaryStage = stage;
+		primaryStage.setMinWidth(400);
+		primaryStage.setMinHeight(400);
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		primaryStage.setTitle("File Sharing");
+	}
 
 
 

@@ -82,6 +82,8 @@ public class FSPCentral extends Yoda implements Runnable{
 
 	public FSPCentral(Socket sock) {
 		super(sock);
+		usersConnected = new ArrayList<String>();
+		new File(descriptionsFolder).mkdirs();
 	}
 
 	public void disconnect() {
@@ -98,7 +100,6 @@ public class FSPCentral extends Yoda implements Runnable{
 
 	public void connect() throws IOException, UnknownHostException {
 		serverSocket = new ServerSocket(port, 10);
-
 	}
 
 	/**

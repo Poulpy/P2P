@@ -50,16 +50,14 @@ Central : le programme faisant office de serveur centralisé. Gère :
 ## Todo
 
 
-- Envoyer et récupérer le nom d'hôte
-- Plusieurs clients peuvent se connecter au serveur (multi thread)
-- Recherche entre le client et le serveur centralisé et téléchargement
+- Utiliser l'interface graphique
+- Plusieurs clients peuvent se connecter au serveur (multi thread). TODO A TESTER
+- Téléchargement de fichiers retournés par une recherche
 - Le serveur notifie le serveur centralisé de son activité.
 Création d'un chronomètre côté serveur :
 si le client n'envoie aucun message depuis x secondes, on le considère comme déconnecté. (Il faut alors envoyer un message qui incite le client à fermer la socket.)
 - Le client garde la liste des fichiers téléchargés
 - Le client met à jour les fichiers qu'il a téléchargé
-- Le serveur centralisé partage les fichiers d'un client si le serveur est actif
-- Un Client et un Serveur côté utilisateur. Pour l'instant les 2 sont dans une seule classe 'Client'
 
 ## Todo Code
 
