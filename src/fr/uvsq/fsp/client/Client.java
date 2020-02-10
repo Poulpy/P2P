@@ -29,57 +29,57 @@ import fr.uvsq.fsp.view.ClientView;
 
 public class Client extends Application {
 
-    private Stage primaryStage;
+	private Stage primaryStage;
 
-    public static void main(String[] args) {
-        FSPClient client;
+	public static void main(String[] args) {
+		FSPClient client;
 
-        client = new FSPClient("127.0.0.1", 50000);
+		client = new FSPClient("127.0.0.1", 50000);
 
-        Application.launch(Client.class);
-        try {
-            client.connect();
-            client.open();
-            
-            if( client.verifieHostname()) {
-            	client.queryCentral();
-            }else {
-            	client.quit();
-                client.close();
-            }
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (client.socket != null) {
-                try {
-                    client.socket.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    client.socket = null;
-                }
-            }
-        }
-    }
+		Application.launch(Client.class);
+		try {
+			client.connect();
+			client.open();
 
-    @Override
-    public void start(Stage stage) {
-        ClientView view;
-        Scene scene;
-        ClientControler controler;
+			if (client.verifieHostname()) {
+				client.queryCentral();
+			}
 
-        view = new ClientView();
-        scene = new Scene(view, 400, 400, Color.WHITE);
-        controler = new ClientControler(view);
+			client.quit();
+			client.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (client.socket != null) {
+				try {
+					client.socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					client.socket = null;
+				}
+			}
+		}
+	}
 
-        primaryStage = stage;
-        primaryStage.setMinWidth(400);
-        primaryStage.setMinHeight(400);
-        primaryStage.setScene(scene);
-        primaryStage.show();
-        primaryStage.setTitle("File Sharing");
-    }
+	@Override
+	public void start(Stage stage) {
+		ClientView view;
+		Scene scene;
+		ClientControler controler;
+
+		view = new ClientView();
+		scene = new Scene(view, 400, 400, Color.WHITE);
+		controler = new ClientControler(view);
+
+		primaryStage = stage;
+		primaryStage.setMinWidth(400);
+		primaryStage.setMinHeight(400);
+		primaryStage.setScene(scene);
+		primaryStage.show();
+		primaryStage.setTitle("File Sharing");
+	}
 }
 
