@@ -61,7 +61,8 @@ public class FSPClient extends Yoda {
 
 	/**
 	 * Authentification
-	 * @Server
+	 * Server
+	 * @Deprecated
 	 */
 	public void login() {
 		Scanner scan;
@@ -97,6 +98,30 @@ public class FSPClient extends Yoda {
 		}
 	}
 
+	public boolean login(String id, String mdp) {
+		String reponse;
+
+		try {
+			super.envoyerMessage("USER " + id);
+			reponse = super.lireMessage();
+			System.out.println(reponse);
+			if (!reponse.startsWith("2")) return false;
+
+			super.envoyerMessage("PASS " + Checksum.getMD5Hash(mdp));
+			reponse = super.lireMessage();
+			System.out.println(reponse);
+			if (!reponse.startsWith("2")) return false;
+
+			System.out.println("Authentification réussie !");
+			hostname();
+			envoyerDescriptions(descriptionsFolder);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		return true;
+	}
 	/**
 	 * Envoie le nom d'hôte de l'utilisateur
 	 */

@@ -36,16 +36,20 @@ public class CServer {
 		Scanner scan;
 		String query;
 		String serverIP;
+		String id;
+		String mdp;
 		int port;
 
-		if (args.length != 2) {
-			System.out.println("Wrong number of arguments (2) : @serverIP port");
+		if (args.length != 4) {
+			System.out.println("Wrong number of arguments (4) : serverIP port id mdp");
 
 			return;
 		}
 
 		serverIP = args[0];
 		port = Integer.parseInt(args[1]);
+		id = args[2];
+		mdp = args[3];
 
 		client = new FSPClient(serverIP, port);
 
@@ -53,18 +57,17 @@ public class CServer {
 			client.connect();
 			client.open();
 
-			client.login();
+			if (client.login(id, mdp)) {
+				System.out.println("Tapez QUIT pour quitter le programme.");
+				scan = new Scanner(System.in);
 
+				while (loop) {
+					System.out.print("> ");
+					query = scan.nextLine();
 
-			System.out.println("Tapez QUIT pour quitter le programme.");
-			scan = new Scanner(System.in);
-
-			while (loop) {
-				System.out.print("> ");
-				query = scan.nextLine();
-
-				if (query.equals("QUIT")) {
-					loop = false;
+					if (query.equals("QUIT")) {
+						loop = false;
+					}
 				}
 			}
 

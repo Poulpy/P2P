@@ -58,6 +58,7 @@ Création d'un chronomètre côté serveur :
 si le client n'envoie aucun message depuis x secondes, on le considère comme déconnecté. (Il faut alors envoyer un message qui incite le client à fermer la socket.)
 - Le client garde la liste des fichiers téléchargés
 - Le client met à jour les fichiers qu'il a téléchargé
+- Fermer tous les threads créés quand le serveur s'arrête => stocker dans un tableau ?
 
 ## Todo Code
 
@@ -105,16 +106,28 @@ Ouvrez un nouveau terminal. Compilez les fichiers java comme suit, à la racine 
 
 ```
 javac src/fr/uvsq/fsp/client/Client.java
+javac src/fr/uvsq/fsp/client/CServer.java
 javac src/fr/uvsq/fsp/server/Central.java
 ```
 
-Ensuite, dans 2 terminaux, exécutez le serveur. Après avoir exécuté le serveur, exécutez le client :
+Ensuite, dans 2 terminaux, exécutez le central. Après avoir exécuté le central, exécutez le serveur et ensuite le client.
+
+Pour le central renseignez le port.
+
+Pour le serveur l'adresse IP du serveur, le port, le login et le mot de passe
+
+Pour le client l'adresse IP du serveur et le port.
 
 ```
-java fr.uvsq.fsp.client.Client
-java fr.uvsq.fsp.server.Central
+java fr.uvsq.fsp.server.Central 60000
+java fr.uvsq.fsp.client.CServer 127.0.0.1 60000 toto admin
+java fr.uvsq.fsp.client.Client 127.0.0.1 60000
 ```
 
+### Troubleshoting
+
+Il se peut qu'en cours d'exécution, le central ou le client lance une exception "JVM Bind", "Connection refused, port already in use", "Adresse déjà utilisée".
+C'est que de précédents processus n'ont pas été correctement terminés. Il faut donc soit terminer correctement les processus soit choisir un autre port.
 
 ## Faire marcher le projet sur Eclipse
 
