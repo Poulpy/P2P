@@ -97,7 +97,7 @@ public class Yoda {
 	/**
 	 * dir est le répertoire où sont les descriptions
 	 * @Central
-	 * @deprecated
+	 * @Deprecated
 	 */
 	public void recevoirDescriptions(String dir) throws IOException {
 		String msg;

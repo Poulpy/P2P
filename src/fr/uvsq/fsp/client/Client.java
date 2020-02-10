@@ -54,6 +54,9 @@ public class Client extends Application {
 
 			client.login();
 			client.queryCentral();
+			if (client.verifieHostname()) {
+				client.queryCentral();
+			}
 
 			client.quit();
 			client.close();
@@ -91,9 +94,5 @@ public class Client extends Application {
 		primaryStage.show();
 		primaryStage.setTitle("File Sharing");
 	}
-
-
-
-
 }
 

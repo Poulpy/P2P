@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 import fr.uvsq.fsp.util.FTPCommand;
 import java.nio.file.DirectoryStream;
 
-public class FSPCentral extends Yoda implements Runnable{
+public class FSPCentral extends Yoda implements Runnable {
 
 	/**
 	 * Chemin du fichier contenant les utilisateurs connus du serveur
@@ -88,7 +88,6 @@ public class FSPCentral extends Yoda implements Runnable{
 
 	public void disconnect() {
 		try {
-
 			serverSocket.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -166,6 +165,14 @@ public class FSPCentral extends Yoda implements Runnable{
 				saveDescriptions(userDescriptionFolder, Integer.parseInt(contenu));
 				break;
 
+			case "HOST":
+				hostname = contenu;
+				 if (usersConnected.contains(hostname)) {
+					 super.envoyerMessage("25 Hostname existe");
+				 } else {
+					 super.envoyerMessage("32 Hostename n'exite pas");
+				 }
+				 break;
 			default:
 		}
 	}
@@ -189,7 +196,6 @@ public class FSPCentral extends Yoda implements Runnable{
 	 * FOUND dinfo/f1.txt dinfo/truc.txt
 	 */
 	public void found(ArrayList<String> files) throws IOException {
-		System.out.println(files);
 		String content;
 
 		content = new String();
@@ -402,7 +408,6 @@ public class FSPCentral extends Yoda implements Runnable{
 			allMatchingFiles.addAll(files);
 		}
 
-
 		return allMatchingFiles;
 	}
 
@@ -445,13 +450,6 @@ public class FSPCentral extends Yoda implements Runnable{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
-
-
-
-
-
-
 }
 
