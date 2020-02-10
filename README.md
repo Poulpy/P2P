@@ -50,6 +50,7 @@ Central : le programme faisant office de serveur centralisé. Gère :
 ## Todo
 
 
+- Tuer les threads du Central quand on quitte le programme. [Ici](https://docs.oracle.com/javase/1.5.0/docs/guide/misc/threadPrimitiveDeprecation.html)
 - Utiliser l'interface graphique
 - Plusieurs clients peuvent se connecter au serveur (multi thread). TODO A TESTER
 - Un Serveur attend une connexion d'un client, pour télécharger un ou plusieurs fichiers
