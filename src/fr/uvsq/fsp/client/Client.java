@@ -33,7 +33,6 @@ public class Client extends Application {
 
     public static void main(String[] args) {
         FSPClient client;
-        String msg;
 
         client = new FSPClient("127.0.0.1", 50000);
 
@@ -41,12 +40,13 @@ public class Client extends Application {
         try {
             client.connect();
             client.open();
-
-            client.login();
-            client.queryCentral();
-
-            client.quit();
-            client.close();
+            
+            if( client.verifieHostname()) {
+            	client.queryCentral();
+            }else {
+            	client.quit();
+                client.close();
+            }
         } catch (UnknownHostException e) {
             e.printStackTrace();
         } catch (IOException e) {

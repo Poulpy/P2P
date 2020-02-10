@@ -146,17 +146,27 @@ public class FSPCentral extends Yoda {
                 hostname = contenu;
                 usersConnected.add(hostname);
                 userDescriptionFolder = descriptionsFolder + hostname + "/";
+                userDescriptionFolder = descriptionsFolder + hostname+ File.separator ;
+                System.out.println(userDescriptionFolder);
                 new File(userDescriptionFolder).mkdirs();
                 break;
 
             case "FILECOUNT":
                 saveDescriptions(userDescriptionFolder, Integer.parseInt(contenu));
                 break;
-
+                
+            case "HOST":
+            	hostname = contenu;
+            	 if (usersConnected.contains(hostname)) {
+                     super.envoyerMessage("25 Hostname existe");
+                 } else {
+                     super.envoyerMessage("32 Hostename n'exite pas");
+                 }
+                 break;
             default:
         }
     }
-
+    
     /**
      * Le serveur envoie ce message quand il n'a pas trouvé
      * de fichiers correspondant au mot clef donné par un
@@ -184,7 +194,6 @@ public class FSPCentral extends Yoda {
         for (String file : files) {
             content += file + " ";
         }
-
         envoyerMessage("FOUND " + content);
     }
 
@@ -217,8 +226,8 @@ public class FSPCentral extends Yoda {
             reader.close();
         } catch (IOException e) {
             e.printStackTrace();
-        }
 
+        }
         return false;
     }
 
@@ -377,7 +386,9 @@ public class FSPCentral extends Yoda {
         allMatchingFiles = new ArrayList<String>();
 
         for (String userConnected : usersConnected) {
+        	
             path = descriptionsFolder + userConnected + "/";
+            path = descriptionsFolder + userConnected + File.separator;
 
             files = searchFolderByKeyword(keyword, path);
 
@@ -388,8 +399,6 @@ public class FSPCentral extends Yoda {
 
             allMatchingFiles.addAll(files);
         }
-
-
         return allMatchingFiles;
     }
 

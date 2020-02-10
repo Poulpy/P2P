@@ -103,7 +103,36 @@ public class FSPClient extends Yoda {
     public void hostname() throws IOException {
         envoyerMessage("HOSTNAME " + hostname);
     }
+    
+    /**
+     * Envoie le hostname au serveur centrale et 
+     * verifie qu'il existe sur usersConnected
+     * s'il n'existe pas il ferme la connection
+     * @throws IOException
+     */
+    public boolean verifieHostname() throws IOException {
+    	
+    	Scanner scan;
+        String reponse;
 
+        scan = new Scanner(System.in);
+        
+    	try {
+    		 	hostname = InetAddress.getLocalHost().getHostName();
+                super.envoyerMessage("HOST " + hostname);
+                reponse = super.lireMessage();
+                System.out.println(reponse);
+            if(reponse.startsWith("2")) {
+            	return true;
+            }else {
+            	return false;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
     /**
      * Laisse l'utilisateur interroger le serveur centralisé
      * si l'utilisateur n'a rien entré, rien n'est envoyé
