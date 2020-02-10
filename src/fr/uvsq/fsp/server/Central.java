@@ -21,11 +21,8 @@ public class Central {
             System.out.println("Listening");
             
             
-               Socket sock = server1.serverSocket.accept();
-               System.out.println("Connected");
-               new Thread(new FSPCentral("127.0.0.1", 60000,sock)).start();
             
-         
+               server1.disconnect();
    
     }
 }

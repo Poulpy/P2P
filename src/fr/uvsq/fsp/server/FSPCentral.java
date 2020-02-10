@@ -37,12 +37,12 @@ public class FSPCentral extends Yoda implements Runnable{
      * l'identifiant et le hash du mot de passe sont séparés par le
      * séparateur sep
      */
-    public static String cheminUtilisateurs;
+    public static String cheminUtilisateurs = "src/fr/uvsq/fsp/server/utilisateurs.csv";
 
     private String sep = ",";
 
     /** Répertoire des fichiers partagés, créé au lancement du serveur */
-    public static String descriptionsFolder;
+    public static String descriptionsFolder = "src/fr/uvsq/fsp/server/descriptions/";
 
     public ServerSocket serverSocket;
 
@@ -82,7 +82,7 @@ public class FSPCentral extends Yoda implements Runnable{
 
     public void disconnect() {
         try {
-            socket.close();// @Thread
+           
             serverSocket.close();
         } catch (UnknownHostException e) {
             e.printStackTrace();
@@ -434,6 +434,12 @@ public class FSPCentral extends Yoda implements Runnable{
 	    open();
 		listen();
 		close();
+		try {
+			socket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 
