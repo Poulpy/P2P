@@ -52,7 +52,7 @@ Central : le programme faisant office de serveur centralisé. Gère :
 
 - Utiliser l'interface graphique
 - Plusieurs clients peuvent se connecter au serveur (multi thread). TODO A TESTER
-- Téléchargement de fichiers retournés par une recherche
+- Un Serveur attend une connexion d'un client, pour télécharger un ou plusieurs fichiers
 - Le serveur notifie le serveur centralisé de son activité.
 Création d'un chronomètre côté serveur :
 si le client n'envoie aucun message depuis x secondes, on le considère comme déconnecté. (Il faut alors envoyer un message qui incite le client à fermer la socket.)
@@ -64,6 +64,10 @@ si le client n'envoie aucun message depuis x secondes, on le considère comme d�
 
 - Voir si toutes les ressources sont bien libérées quand on quitte l'application (`close()`) => try with resource.
 - Eviter l'anti-pattern GodClass : une classe qui a trop de responsabilités.
+- Mieux répartir les responsabilités. Il y a des classes qui peuvent faire certaines choses, eh bien qu'ils ne sont pas censer faire.
+CServer sert seulement à l'authentification et l'envoi de descriptions.
+Le Central reçoit les descriptions.
+Le Client peut recevoir un ou plusieurs fichiers
 - Utiliser la classe FTPCommand
 - Renommer les classes et les variables, leur donner de jolis noms
 - Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
@@ -75,6 +79,7 @@ si le client n'envoie aucun message depuis x secondes, on le considère comme d�
 
 ## Idées
 
+- Tester avec une Raspberry
 - Créer une spécification.
 Puisqu'on ne fait pas exactement une implémentation du protocol FTP,
 il est bien de spécifier ce qu'implémente notre application !
@@ -244,10 +249,20 @@ TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tab
 
 A la racine du projet :
 
-`javadoc -d docs/ */*.java`
+`javadoc -d docs/ src/fr/uvsq/fsp/*/*.java`
 
 Pour mettre à jour la documentation hébergée par Github, il faut faire un commit dans la branche `gh-pages`.
 
+```
+git checkout gh-pages
+git merge -
+git push origin gh-pages
+git checkout -
+```
+
+```
+git checkout gh-pages && git merge - && git push origin gh-pages && git checkout -
+```
 ### Dépendances
 
 Java 1.8
