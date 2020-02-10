@@ -35,8 +35,19 @@ public class CServer {
 		boolean loop = true;
 		Scanner scan;
 		String query;
+		String serverIP;
+		int port;
 
-		client = new FSPClient("127.0.0.1", 50000);
+		if (args.length != 2) {
+			System.out.println("Wrong number of arguments (2) : @serverIP port");
+
+			return;
+		}
+
+		serverIP = args[0];
+		port = Integer.parseInt(args[1]);
+
+		client = new FSPClient(serverIP, port);
 
 		try {
 			client.connect();

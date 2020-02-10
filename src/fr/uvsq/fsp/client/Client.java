@@ -52,8 +52,6 @@ public class Client extends Application {
 			client.connect();
 			client.open();
 
-			client.login();
-			client.queryCentral();
 			if (client.verifieHostname()) {
 				client.queryCentral();
 			}

@@ -47,7 +47,10 @@ public class FSPCentral extends Yoda implements Runnable {
 	public ServerSocket serverSocket;
 
 	/** Liste des utilisateurs connectés */
-	public ArrayList<String> usersConnected;
+	public static ArrayList<String> usersConnected;
+	static {
+		usersConnected = new ArrayList<String>();
+	}
 
 	// Attributs propre à un client :
 	// @Thread
@@ -82,7 +85,6 @@ public class FSPCentral extends Yoda implements Runnable {
 
 	public FSPCentral(Socket sock) {
 		super(sock);
-		usersConnected = new ArrayList<String>();
 		new File(descriptionsFolder).mkdirs();
 	}
 
@@ -155,10 +157,13 @@ public class FSPCentral extends Yoda implements Runnable {
 
 			case "HOSTNAME":
 				hostname = contenu;
-				usersConnected.add(hostname);
-				userDescriptionFolder = descriptionsFolder + hostname+ File.separator ;
+				synchronized (usersConnected) {
+					usersConnected.add(hostname);
+				}
+				userDescriptionFolder = descriptionsFolder + hostname + File.separator ;
 				System.out.println(userDescriptionFolder);
 				new File(userDescriptionFolder).mkdirs();
+				System.out.println(usersConnected);
 				break;
 
 			case "FILECOUNT":
@@ -167,12 +172,15 @@ public class FSPCentral extends Yoda implements Runnable {
 
 			case "HOST":
 				hostname = contenu;
-				 if (usersConnected.contains(hostname)) {
-					 super.envoyerMessage("25 Hostname existe");
-				 } else {
-					 super.envoyerMessage("32 Hostename n'exite pas");
-				 }
-				 break;
+
+				System.out.println(usersConnected);
+				if (usersConnected.contains(hostname)) {
+					super.envoyerMessage("25 Hostname existe");
+				} else {
+					super.envoyerMessage("32 Hostname n'exite pas");
+				}
+				break;
+
 			default:
 		}
 	}
@@ -435,7 +443,9 @@ public class FSPCentral extends Yoda implements Runnable {
 		}
 
 		// deconnexion
-		usersConnected.remove(hostname);
+		synchronized (usersConnected) {
+			usersConnected.remove(hostname);
+		}
 	}
 
 	@Override
