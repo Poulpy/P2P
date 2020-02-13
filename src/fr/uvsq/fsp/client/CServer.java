@@ -40,16 +40,22 @@ public class CServer {
 		String mdp;
 		int port;
 
-		if (args.length != 4) {
-			System.out.println("Wrong number of arguments (4) : serverIP port id mdp");
-
-			return;
+		if (args.length == 4) {
+			serverIP = args[0];
+			port = Integer.parseInt(args[1]);
+			id = args[2];
+			mdp = args[3];
+		} else {
+			scan = new Scanner(System.in);
+			System.out.print("Adresse IP du serveur : ");
+			serverIP = scan.nextLine();
+			System.out.print("Port : ");
+			port = Integer.parseInt(scan.nextLine());
+			System.out.print("Identifiant : ");
+			id = scan.nextLine();
+			System.out.print("Mot de passe : ");
+			mdp = scan.nextLine();
 		}
-
-		serverIP = args[0];
-		port = Integer.parseInt(args[1]);
-		id = args[2];
-		mdp = args[3];
 
 		client = new FSPClient(serverIP, port);
 

@@ -1,5 +1,5 @@
-
 package fr.uvsq.fsp.controler;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.animation.FadeTransition;

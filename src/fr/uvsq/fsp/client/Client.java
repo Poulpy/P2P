@@ -1,4 +1,6 @@
 package fr.uvsq.fsp.client;
+
+import java.util.Scanner;
 import fr.uvsq.fsp.controler.ClientControler;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -32,18 +34,21 @@ public class Client extends Application {
 
 	public static void main(String[] args) {
 		FSPClient client;
+		Scanner scan;
 		String msg;
 		String serverIP;
 		int port;
 
-		if (args.length != 2) {
-			System.out.println("Wrong number of arguments (2) : @serverIP port");
-
-			return;
+		if (args.length == 2) {
+			serverIP = args[0];
+			port = Integer.parseInt(args[1]);
+		} else {
+			scan = new Scanner(System.in);
+			System.out.print("Adresse IP du serveur : ");
+			serverIP = scan.nextLine();
+			System.out.print("Port : ");
+			port = Integer.parseInt(scan.nextLine());
 		}
-
-		serverIP = args[0];
-		port = Integer.parseInt(args[1]);
 
 		client = new FSPClient(serverIP, port);
 

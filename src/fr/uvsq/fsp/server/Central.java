@@ -1,4 +1,5 @@
 package fr.uvsq.fsp.server;
+
 import java.io.IOException;
 import java.io.File;
 import java.net.ServerSocket;
@@ -11,20 +12,21 @@ public class Central {
 
 	public static void main(String[] args) {
 		int port;
+		Scanner scan;
 
-		if (args.length != 1) {
-			System.out.println("Wrong number of arguments (1) : port");
-
-			return;
+		if (args.length == 1) {
+			port = Integer.parseInt(args[0]);
+		} else {
+			scan = new Scanner(System.in);
+			System.out.print("Port : ");
+			port = Integer.parseInt(scan.nextLine());
 		}
 
-		port = Integer.parseInt(args[0]);
 
-		new Thread(new WaitingServer(port)).start();;
+		new Thread(new WaitingServer(port)).start();
 
 		//waitForQuit();
 		boolean loop = true;
-		Scanner scan;
 
 		System.out.println("Tapez QUIT pour quitter le programme.");
 		scan = new Scanner(System.in);
@@ -36,6 +38,8 @@ public class Central {
 				loop = false;
 			}
 		}
+
+		//server.stopThread();
 	}
 }
 

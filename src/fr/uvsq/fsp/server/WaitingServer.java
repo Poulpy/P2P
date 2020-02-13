@@ -66,9 +66,8 @@ public class WaitingServer extends Yoda implements Runnable {
 		serverSocket = new ServerSocket(port, 10);
 	}
 
-	public synchronized void stop() {
+	public synchronized void stopThread() {
 		isStopped = true;
-		disconnect();
 	}
 
 	private synchronized boolean isStopped() {
@@ -78,6 +77,9 @@ public class WaitingServer extends Yoda implements Runnable {
 	@Override
 	public void run() {
 		Socket sock;
+		Thread[] servers = new Thread[10];
+		int count = 0;
+
 
 		try {
 			connect();
@@ -98,7 +100,14 @@ public class WaitingServer extends Yoda implements Runnable {
 				throw new RuntimeException("Error accepting client connection", e);
 			}
 
-			new Thread(new FSPCentral(sock)).start();
+			servers[count] = new Thread(new FSPCentral(sock));
+			servers[count++].start();
+		}
+
+		disconnect();
+
+		for (Thread server : servers) {
+			//server.stopThread();
 		}
 	}
 }

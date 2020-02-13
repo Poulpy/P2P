@@ -64,6 +64,8 @@ public class FSPCentral extends Yoda implements Runnable {
 
 	public String userDescriptionFolder;
 
+	private volatile boolean isRunning = true;
+
 	/**
 	 * Crée le répertoire contenant les descriptions des fichiers partagés,
 	 * s'il n'est pas déjà créé
@@ -428,7 +430,7 @@ public class FSPCentral extends Yoda implements Runnable {
 		FTPCommand ftpCmd;
 
 		try {
-			while ((msg = lireMessage()) != null) {
+			while ((msg = lireMessage()) != null && isRunning()) {
 				if (msg.equals("QUIT")) break;
 
 				ftpCmd = FTPCommand.parseCommand(msg);
@@ -450,16 +452,22 @@ public class FSPCentral extends Yoda implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		open();
 		listen();
 		close();
 		try {
 			socket.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	public synchronized boolean isRunning() {
+		return this.isRunning;
+	}
+
+	public synchronized void stopThread() {
+		isRunning = false;
 	}
 }
 
