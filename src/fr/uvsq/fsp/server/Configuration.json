@@ -1,0 +1,6 @@
+{
+    "usersPath" : "src/fr/uvsq/fsp/server/utilisateurs.csv",
+    "descriptionsFolder" : "src/fr/uvsq/fsp/server/descriptions/",
+    "numberOfConnectionsAllowed" : "10"
+}
+
