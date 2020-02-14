@@ -1,6 +1,7 @@
 package fr.uvsq.fsp.client;
 
 import fr.uvsq.fsp.abstractions.Yoda;
+import java.util.ArrayList;
 import fr.uvsq.fsp.util.Checksum;
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -184,6 +185,20 @@ public class FSPClient extends Yoda {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public ArrayList<String> parseFilesFound(String content) {
+		ArrayList<String> filesMatching;
+		String[] files;
+
+		filesMatching = new ArrayList<String>();
+		files = content.split(" ");
+
+		for (String file : files) {
+			filesMatching.add(file);
+		}
+
+		return filesMatching;
 	}
 
 	/**

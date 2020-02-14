@@ -1,6 +1,7 @@
 package fr.uvsq.fsp.client;
 
 import java.util.Scanner;
+import javafx.application.Platform;
 import fr.uvsq.fsp.controler.ClientControler;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -31,13 +32,13 @@ import fr.uvsq.fsp.view.ClientView;
 public class Client extends Application {
 
 	private Stage primaryStage;
+	private static String serverIP;
+	private static int port;
+	private static FSPClient client;
 
 	public static void main(String[] args) {
-		FSPClient client;
 		Scanner scan;
 		String msg;
-		String serverIP;
-		int port;
 
 		if (args.length == 2) {
 			serverIP = args[0];
@@ -51,14 +52,15 @@ public class Client extends Application {
 		}
 
 		client = new FSPClient(serverIP, port);
-
-		Application.launch(Client.class);
 		try {
 			client.connect();
 			client.open();
 
-			if (client.verifieHostname()) {
-				client.queryCentral();
+			if (!client.verifieHostname()) {
+				System.out.println("Utilisateur pas connecté");
+				Platform.exit();
+			} else {
+				Application.launch(Client.class);
 			}
 
 			client.quit();
@@ -68,6 +70,7 @@ public class Client extends Application {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
+			Platform.exit();
 			if (client.socket != null) {
 				try {
 					client.socket.close();
@@ -88,7 +91,7 @@ public class Client extends Application {
 
 		view = new ClientView();
 		scene = new Scene(view, 400, 400, Color.WHITE);
-		controler = new ClientControler(view);
+		//client = new FSPClient(serverIP, port);
 
 		primaryStage = stage;
 		primaryStage.setMinWidth(400);
@@ -96,6 +99,37 @@ public class Client extends Application {
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setTitle("File Sharing");
+
+		/*
+		try {
+			client.connect();
+			client.open();
+
+			if (!client.verifieHostname()) {
+				System.out.println("Utilisateur pas connecté");
+				Platform.exit();
+			} else {*/
+				controler = new ClientControler(view, client);
+			/*}
+
+			client.quit();
+			client.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			Platform.exit();
+			if (client.socket != null) {
+				try {
+					client.socket.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} finally {
+					client.socket = null;
+				}
+			}
+		}*/
 	}
 }
 
