@@ -51,15 +51,12 @@ Central : le programme faisant office de serveur centralisé. Gère :
 
 
 - Tuer les threads du Central quand on quitte le programme. [Ici](https://docs.oracle.com/javase/1.5.0/docs/guide/misc/threadPrimitiveDeprecation.html)
-- Utiliser l'interface graphique
+Utiliser une pool de Thread.
+- Utiliser l'interface graphique (Rercherche : fait; Téléchargement : à faire)
 - Plusieurs clients peuvent se connecter au serveur (multi thread). TODO A TESTER
 - Un Serveur attend une connexion d'un client, pour télécharger un ou plusieurs fichiers
-- Le serveur notifie le serveur centralisé de son activité.
-Création d'un chronomètre côté serveur :
-si le client n'envoie aucun message depuis x secondes, on le considère comme déconnecté. (Il faut alors envoyer un message qui incite le client à fermer la socket.)
 - Le client garde la liste des fichiers téléchargés
 - Le client met à jour les fichiers qu'il a téléchargé
-- Fermer tous les threads créés quand le serveur s'arrête => stocker dans un tableau ?
 
 ## Todo Code
 
@@ -76,6 +73,14 @@ Le Client peut recevoir un ou plusieurs fichiers
 - Plus de documentation (plus de tag : param, return, etc.)
 - Gérer les exceptions
 - Une classe de test pour tester une suite de tests
+- Controller : une méthode pour gérer chaque événement, à travers la surcharge de méthode. Actuellement, tous les événements sont dans le constructeur !
+- Central : une méthode pour gérer chaque commande (USER, PASS, etc) : + lisible
+- ClientView ClientController : message qui marque Aucun fichier trouvé (recherche)
+- Renommer ClientControler en ClientController
+- Quand un client envoie une commande : vérifier qu'il est connecté
+- Déconnexion d'un CServer : déconnexion d'un utilisateur
+- tester téléchargement fichiers mp3, fichiers exécutables etc
+
 
 
 ## Idées
@@ -93,6 +98,7 @@ il est bien de spécifier ce qu'implémente notre application !
 `FILE truc.txt 23`. Ce serait bien de pouvoir stocker dans un `HashMap<String, Object>` les valeurs. On pourrait avoir des valeurs optionnelles.
 Par ailleurs, on pourrait envoyer les données sous forme de texte brut, ou bien en xml, ou bien en json.
 Mieux, on pourrait juxtaposer les données d'un paquet. Actullement, les données sont séparées par des espaces.
+- Fichier de configuration
 
 ### Comment exécuter le projet ?
 
