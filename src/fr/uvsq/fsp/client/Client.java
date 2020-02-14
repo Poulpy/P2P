@@ -91,7 +91,6 @@ public class Client extends Application {
 
 		view = new ClientView();
 		scene = new Scene(view, 400, 400, Color.WHITE);
-		//client = new FSPClient(serverIP, port);
 
 		primaryStage = stage;
 		primaryStage.setMinWidth(400);
@@ -100,36 +99,7 @@ public class Client extends Application {
 		primaryStage.show();
 		primaryStage.setTitle("File Sharing");
 
-		/*
-		try {
-			client.connect();
-			client.open();
-
-			if (!client.verifieHostname()) {
-				System.out.println("Utilisateur pas connecté");
-				Platform.exit();
-			} else {*/
-				controler = new ClientControler(view, client);
-			/*}
-
-			client.quit();
-			client.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			Platform.exit();
-			if (client.socket != null) {
-				try {
-					client.socket.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					client.socket = null;
-				}
-			}
-		}*/
+		controler = new ClientControler(view, client);
 	}
 }
 

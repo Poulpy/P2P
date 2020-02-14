@@ -121,6 +121,9 @@ public class ClientControler {
 		return a;
 	}
 
+	/*
+	 * Query the server for files and display the results in the view.
+	 */
 	public void searchEvent() throws IOException {
 		String msg;
 		FTPCommand ftpCmd;
