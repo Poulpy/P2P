@@ -193,25 +193,16 @@ apt install junit4
 ```
 
 
-Pour compiler les tests :
+Pour compiler et exécuter les tests :
 ```
-javac test/TestServer.java
-```
-
-Pour exécuter :
-```
-java org.junit.runner.JUnitCore test.TestServer
-```
-Si ça marche pas, essayez : 
-```
-java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:. org.junit.runner.JUnitCore test.TestServer
+javac src/fr/uvsq/fsp/test/TestClient.java
+java org.junit.runner.JUnitCore fr.uvsq.fsp.test.TestClient
 ```
 
-Pour sauvegarder les traces d'erreurs, ajoutez `> error_tests.txt`:
+Si la compilation ne marche pas, essayez : 
 ```
-java org.junit.runner.JUnitCore test.TestServer > error_tests.txt
+java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src org.junit.runner.JUnitCore fr.uvsq.fsp.test.TestClient
 ```
-
 
 ## Ecrire des tests
 
@@ -259,14 +250,6 @@ A la racine du projet :
 `javadoc -d docs/ src/fr/uvsq/fsp/*/*.java`
 
 Pour mettre à jour la documentation hébergée par Github, il faut faire un commit dans la branche `gh-pages`.
-
-```
-git checkout gh-pages
-git merge -
-git push origin gh-pages
-git checkout -
-```
-
 ```
 git checkout gh-pages && git merge - && git push origin gh-pages && git checkout -
 ```
