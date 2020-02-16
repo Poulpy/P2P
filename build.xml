@@ -2,26 +2,61 @@
     <description>
         Peer to peer application for sharing files.
     </description>
+
     <property name="src" location="src/"/>
     <property name="build" location="build/"/>
     <property name="dist" location="dist/"/>
+    <property name="docs" location="./docs/"/>
+
+    <path id="classpath">
+        <pathelement location="${src}"/>
+    </path>
 
     <target name="init">
         <tstamp/>
         <mkdir dir="${build}"/>
+        <mkdir dir="${build}/central/"/>
+        <mkdir dir="${build}/server/"/>
+        <mkdir dir="${build}/client/"/>
     </target>
 
-    <target name="compile" depends="init">
-        <javac srcdir="${src}" destdir="${build}"/>
+    <target name="compile_all" depends="init">
+        <javac includeantruntime="false" srcdir="${src}/fr/uvsq/fsp/server/" destdir="${build}/central/">
+            <classpath refid="classpath"/>
+        </javac>
+        <javac includeantruntime="false" srcdir="${src}/fr/uvsq/fsp/client/" destdir="${build}/client/">
+            <classpath refid="classpath"/>
+        </javac>
+        <javac includeantruntime="false" srcdir="${src}/fr/uvsq/fsp/client/" destdir="${build}/server/">
+            <classpath refid="classpath"/>
+        </javac>
     </target>
 
-    <target name="dist" depends="compile">
+    <target name="dist" depends="compile_all">
         <mkdir dir="${dist}/lib/"/>
-        <jar jarfile="${dist}/lib/fsp-${DSTAMP}.jar" basedir="${build}"/>
+        <jar jarfile="${dist}/lib/fsp-central-${DSTAMP}.jar" basedir="${build}/central/">
+            <manifest>
+                <attribute name="Main-Class" value="${src}/fr/uvsq/fsp/server/Central.java"/>
+            </manifest>
+        </jar>
+        <jar jarfile="${dist}/lib/fsp-server-${DSTAMP}.jar" basedir="${build}/server/">
+            <manifest>
+                <attribute name="Main-Class" value="${src}/fr/uvsq/fsp/client/CServer.java"/>
+            </manifest>
+        </jar>
+        <jar jarfile="${dist}/lib/fsp-client-${DSTAMP}.jar" basedir="${build}/client/">
+            <manifest>
+                <attribute name="Main-Class" value="${src}/fr/uvsq/fsp/client/Client.java"/>
+            </manifest>
+        </jar>
     </target>
 
     <target name="clean">
         <delete dir="${build}"/>
         <delete dir="${dist}"/>
+    </target>
+
+    <target name="doc">
+        <javadoc sourcepath="${src}" destdir="${docs}"/>
     </target>
 </project>
