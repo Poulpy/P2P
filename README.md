@@ -193,10 +193,10 @@ apt install junit4
 ```
 
 
-Pour compiler et exécuter les tests :
+Pour compiler et exécuter tous les tests :
 ```
-javac src/fr/uvsq/fsp/test/TestClient.java
-java org.junit.runner.JUnitCore fr.uvsq.fsp.test.TestClient
+javac src/fr/uvsq/fsp/test/TestRunner.java
+java fr.uvsq.fsp.test.TestRunner
 ```
 
 Si la compilation ne marche pas, essayez : 
