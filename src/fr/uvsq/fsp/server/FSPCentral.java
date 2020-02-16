@@ -52,10 +52,7 @@ public class FSPCentral extends Yoda implements Runnable {
 		usersConnected = new ArrayList<String>();
 	}
 
-	// Attributs propre à un client :
-	// @Thread
 	private String id;
-
 	private String mdp;
 
 	private boolean nouvelUtilisateur = false;
@@ -121,51 +118,23 @@ public class FSPCentral extends Yoda implements Runnable {
 		String contenu;
 
 		contenu = ftpCmd.content;
-		files = new ArrayList<String>();
 
 		switch (ftpCmd.command) {
 			case "USER":
-				id = contenu;
-				if (utilisateurExiste(id)) {
-					super.envoyerMessage("21 Bon identifiant");
-				} else {
-					nouvelUtilisateur = true;
-					super.envoyerMessage("22 Identifiant inconnu");
-				}
+				handleUserCommand(contenu);
 				break;
 
 			case "PASS":
-				mdp = contenu;
+				handlePassCommand(contenu);
 
-				if (nouvelUtilisateur) {
-					EnregistrerUtilisateur(id, mdp);
-					nouvelUtilisateur = false;
-					super.envoyerMessage("24 Utilisateur créé : " + id + ", " + mdp);
-				} else if (mdpCorrect(id, mdp)) {
-					super.envoyerMessage("23 Mot de passe correct");
-				} else {
-					super.envoyerMessage("31 Mot de passe incorrect pour " + id);
-				}
 				break;
 
 			case "SEARCH":
-				files = searchUsersFoldersByKeyword(contenu);
-				if (files.isEmpty()) {
-					notFound();
-				} else {
-					found(files);
-				}
+				handleSearchCommand(contenu);
 				break;
 
 			case "HOSTNAME":
-				hostname = contenu;
-				synchronized (usersConnected) {
-					usersConnected.add(hostname);
-				}
-				userDescriptionFolder = descriptionsFolder + hostname + File.separator ;
-				System.out.println(userDescriptionFolder);
-				new File(userDescriptionFolder).mkdirs();
-				System.out.println(usersConnected);
+				handleHostnameCommand(contenu);
 				break;
 
 			case "FILECOUNT":
@@ -459,6 +428,49 @@ public class FSPCentral extends Yoda implements Runnable {
 			socket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
+		}
+	}
+
+	public void handleHostnameCommand(String hostname) throws IOException {
+		synchronized (usersConnected) {
+			usersConnected.add(hostname);
+		}
+		userDescriptionFolder = descriptionsFolder + hostname + File.separator ;
+		new File(userDescriptionFolder).mkdirs();
+	}
+
+	public void handleSearchCommand(String keyword) throws IOException {
+		ArrayList<String> files;
+
+		files = new ArrayList<String>();
+
+		files = searchUsersFoldersByKeyword(keyword);
+
+		if (files.isEmpty()) {
+			notFound();
+		} else {
+			found(files);
+		}
+	}
+
+	public void handlePassCommand(String mdp) throws IOException {
+		if (nouvelUtilisateur) {
+			EnregistrerUtilisateur(this.id, mdp);
+			nouvelUtilisateur = false;
+			envoyerMessage("24 Utilisateur créé : " + this.id + ", " + mdp);
+		} else if (mdpCorrect(this.id, mdp)) {
+			envoyerMessage("23 Mot de passe correct");
+		} else {
+			envoyerMessage("31 Mot de passe incorrect pour " + this.id);
+		}
+	}
+
+	public void handleUserCommand(String id) throws IOException {
+		if (utilisateurExiste(id)) {
+			envoyerMessage("21 Bon identifiant");
+		} else {
+			nouvelUtilisateur = true;
+			envoyerMessage("22 Identifiant inconnu");
 		}
 	}
 
