@@ -201,7 +201,8 @@ java fr.uvsq.fsp.test.TestRunner
 
 Si la compilation ne marche pas, essayez : 
 ```
-java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src org.junit.runner.JUnitCore fr.uvsq.fsp.test.TestClient
+java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src fr.uvsq.fsp.test.TestRunner
+
 ```
 
 ## Ecrire des tests
@@ -261,4 +262,5 @@ JavaFX 8
 
 JUnit 4
 
+Ant 10
 
