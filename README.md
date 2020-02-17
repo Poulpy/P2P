@@ -89,7 +89,6 @@ il est bien de spécifier ce qu'implémente notre application !
 - Dark mode
 - Interface graphique : ajouter un fichier dans le répertoire des fichiers partagés
 - Un checksum du contenu du message
-- Revoir la structure du projet : répertoire des descriptions, fichiers partagés, utilisateurs.csv (voir le standard ISO, ou la structure d'un projet Maven)
 - Un parseur pour analyser les messages (on en revient à une classe Message);
 ça permettrait d'avoir un protocole plus extensible. Pour l'instant le contenu est séparé par des espaces :
 `FILE truc.txt 23`. Ce serait bien de pouvoir stocker dans un `HashMap<String, Object>` les valeurs. On pourrait avoir des valeurs optionnelles.
