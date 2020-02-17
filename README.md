@@ -103,23 +103,10 @@ Mieux, on pourrait juxtaposer les données d'un paquet. Actullement, les donnée
 ### Comment exécuter le projet ?
 
 
-D'abord, écrire dans le `~/.bashrc` les lignes suivantes :
-
-```
-if [ ${#CLASSPATH} -eq 0 ]
-then
-    export CLASSPATH="/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src/"
-else
-    export CLASSPATH="$CLASSPATH:/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src/"
-fi
-```
-
 Ouvrez un nouveau terminal. Compilez les fichiers java comme suit, à la racine du projet :
 
 ```
-javac src/fr/uvsq/fsp/client/Client.java
-javac src/fr/uvsq/fsp/client/CServer.java
-javac src/fr/uvsq/fsp/server/Central.java
+javac -cp src:/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar src/fr/uvsq/fsp/*/*java -d build/
 ```
 
 Ensuite, dans 2 terminaux, exécutez le central. Après avoir exécuté le central, exécutez le serveur et ensuite le client.
@@ -131,6 +118,7 @@ Pour le serveur l'adresse IP du serveur, le port, le login et le mot de passe
 Pour le client l'adresse IP du serveur et le port.
 
 ```
+cd build/
 java fr.uvsq.fsp.server.Central 60000
 java fr.uvsq.fsp.client.CServer 127.0.0.1 60000 toto admin
 java fr.uvsq.fsp.client.Client 127.0.0.1 60000
@@ -181,60 +169,6 @@ un programme pour partager des fichiers auprès d'autres clients, et un autre qu
 ### Utilisateurs
 
 Les utilisateurs sont dans le fichier `server/utilisateurs.csv`
-
-## Pour exécuter les tests
-
-### Unix
-
-Il faut installer JUnit 4 :
-
-```
-apt install junit4
-```
-
-
-Pour compiler et exécuter tous les tests :
-```
-javac src/fr/uvsq/fsp/test/TestRunner.java
-java fr.uvsq.fsp.test.TestRunner
-```
-
-Si la compilation ne marche pas, essayez : 
-```
-java -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src fr.uvsq.fsp.test.TestRunner
-
-```
-
-## Ecrire des tests
-
-### Annotations
-
-#### Test
-
-Une méthode de test doit être systématiquement précédée d'une annotation @Test
-
-```java
-    @Test
-    public void testUtilisateurExiste() throws Exception {
-        Assert.assertEquals(0, 0);
-    }
-```
-
-#### Before
-
-Sera exécuté avant chaque test.
-
-#### After
-
-Sera exécuté après chaque test.
-
-#### BeforeClass
-
-Sera exécuté avant le premier test.
-
-#### AfterClass
-
-Sera exécuté après le dernier test.
 
 
 

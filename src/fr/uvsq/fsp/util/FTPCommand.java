@@ -25,11 +25,14 @@ public class FTPCommand {
         String type;
         String desc;
 
-        index = str.indexOf(' ');
-        type = str.substring(0, index);
-        desc = str.substring(index + 1, str.length());
-
-        return new FTPCommand(type, desc);
+        if (str.contains(" ")) {
+            index = str.indexOf(' ');
+            type = str.substring(0, index);
+            desc = str.substring(index + 1, str.length());
+            return new FTPCommand(type, desc);
+        } else {
+            return new FTPCommand(str, "");
+        }
     }
 }
 
