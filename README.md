@@ -72,7 +72,6 @@ Le Client peut recevoir un ou plusieurs fichiers
 - Plus de documentation (plus de tag : param, return, etc.)
 - Gérer les exceptions
 - Controller : une méthode pour gérer chaque événement, à travers la surcharge de méthode. Actuellement, tous les événements sont dans le constructeur !
-- Central : une méthode pour gérer chaque commande (USER, PASS, etc) : + lisible
 - ClientView ClientController : message qui marque Aucun fichier trouvé (recherche)
 - Renommer ClientControler en ClientController
 - Quand un client envoie une commande : vérifier qu'il est connecté
