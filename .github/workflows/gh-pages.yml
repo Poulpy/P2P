@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: actions/checkout@v2
       - name: docs
         uses: peaceiris/actions-gh-pages@v3
         with:
