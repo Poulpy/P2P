@@ -66,7 +66,6 @@ Utiliser une pool de Thread.
 CServer sert seulement à l'authentification et l'envoi de descriptions.
 Le Central reçoit les descriptions.
 Le Client peut recevoir un ou plusieurs fichiers
-- Utiliser la classe FTPCommand
 - Renommer les classes et les variables, leur donner de jolis noms
 - Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - Ecrire des tests.
