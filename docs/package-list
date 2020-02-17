@@ -2,6 +2,6 @@ fr.uvsq.fsp.abstractions
 fr.uvsq.fsp.client
 fr.uvsq.fsp.controler
 fr.uvsq.fsp.server
-fr.uvsq.fsp.test
 fr.uvsq.fsp.util
 fr.uvsq.fsp.view
+test
