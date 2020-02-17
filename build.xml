@@ -1,4 +1,4 @@
-<project name="FSP" default="dist" basedir=".">
+<project name="FSP" default="all" basedir=".">
     <description>
         Peer to peer application for sharing files.
     </description>
@@ -38,6 +38,8 @@
         <tstamp/>
         <mkdir dir="${build}"/>
     </target>
+
+    <target name="all" depends="doc,test,dist"/>
 
     <target name="compile" depends="init">
         <javac includeantruntime="false" sourcepath="" srcdir="${src}" destdir="${build}">
