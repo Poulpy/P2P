@@ -71,7 +71,6 @@ Le Client peut recevoir un ou plusieurs fichiers
 - Ecrire des tests.
 - Plus de documentation (plus de tag : param, return, etc.)
 - Gérer les exceptions
-- Une classe de test pour tester une suite de tests
 - Controller : une méthode pour gérer chaque événement, à travers la surcharge de méthode. Actuellement, tous les événements sont dans le constructeur !
 - Central : une méthode pour gérer chaque commande (USER, PASS, etc) : + lisible
 - ClientView ClientController : message qui marque Aucun fichier trouvé (recherche)
