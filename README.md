@@ -103,13 +103,11 @@ Mieux, on pourrait juxtaposer les données d'un paquet. Actullement, les donnée
 ### Comment exécuter le projet ?
 
 
-Ouvrez un nouveau terminal. Compilez les fichiers java comme suit, à la racine du projet :
-
 ```
-javac -cp src:/usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar src/fr/uvsq/fsp/*/*java -d build/
+ant compile
 ```
 
-Ensuite, dans 2 terminaux, exécutez le central. Après avoir exécuté le central, exécutez le serveur et ensuite le client.
+Ensuite, dans 3 terminaux, exécutez le central. Après avoir exécuté le central, exécutez le serveur et ensuite le client.
 
 Pour le central renseignez le port.
 
@@ -122,6 +120,29 @@ cd build/
 java fr.uvsq.fsp.server.Central 60000
 java fr.uvsq.fsp.client.CServer 127.0.0.1 60000 toto admin
 java fr.uvsq.fsp.client.Client 127.0.0.1 60000
+```
+
+### Exécuter les tests
+
+
+```
+ant test
+```
+
+Les tests sont exécutés à chaque push.
+
+
+### Générer la documentation
+
+
+```
+ant doc
+```
+
+### Mettre en ligne la documentation
+
+```
+git checkout gh-pages && git merge - && git push origin gh-pages && git checkout -
 ```
 
 ### Troubleshoting
@@ -178,16 +199,6 @@ Les utilisateurs sont dans le fichier `server/utilisateurs.csv`
 
 TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tableau markdown
 
-### Générer la documentation
-
-A la racine du projet :
-
-`javadoc -d docs/ src/fr/uvsq/fsp/*/*.java`
-
-Pour mettre à jour la documentation hébergée par Github, il faut faire un commit dans la branche `gh-pages`.
-```
-git checkout gh-pages && git merge - && git push origin gh-pages && git checkout -
-```
 ### Dépendances
 
 Java 1.8
@@ -198,4 +209,3 @@ JUnit 4
 
 Ant 10
 
-javac -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src/ test/*.java -d build/
