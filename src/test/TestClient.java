@@ -13,7 +13,7 @@ public class TestClient {
 
     @Before
     public void setUp() throws Exception {
-        client = new FSPClient("127.0.0.1", 50000);
+        client = new FSPClient("127.0.0.1", 50000, "src/test/descriptions");
     }
 
     @Test

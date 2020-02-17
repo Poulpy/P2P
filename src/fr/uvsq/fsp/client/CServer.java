@@ -57,7 +57,7 @@ public class CServer {
 			mdp = scan.nextLine();
 		}
 
-		client = new FSPClient(serverIP, port);
+		client = new FSPClient(serverIP, port, "src/fr/uvsq/client/descriptions/");
 
 		try {
 			client.connect();

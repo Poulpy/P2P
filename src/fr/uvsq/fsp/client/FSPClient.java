@@ -32,10 +32,11 @@ public class FSPClient extends Yoda {
 	public String mdp = " ";
 
 	/** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
-	public final String descriptionsFolder = "src/fr/uvsq/fsp/client/descriptions/";
+	public final String descriptionsFolder;// = "src/fr/uvsq/fsp/client/descriptions/";
 
-	public FSPClient(String serverIP, int port) {
+	public FSPClient(String serverIP, int port, String descFolder) {
 		super(serverIP, port);
+        descriptionsFolder = descFolder;
 		new File(descriptionsFolder).mkdirs();
 
 		try {
