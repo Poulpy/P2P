@@ -76,7 +76,7 @@ public class Yoda {
 	 * Envoie d'abord le nombre de fichiers à envoyer
 	 *
 	 * descriptionsDir est le répertoire où sont les descriptions
-	 * @Server
+	 * Server
 	 */
 	public void envoyerDescriptions(String descriptionsDir) throws IOException {
 		File dir;
@@ -96,8 +96,8 @@ public class Yoda {
 
 	/**
 	 * dir est le répertoire où sont les descriptions
-	 * @Central
-	 * @Deprecated
+	 * Central
+	 * Deprecated
 	 */
 	public void recevoirDescriptions(String dir) throws IOException {
 		String msg;
@@ -120,7 +120,7 @@ public class Yoda {
 
 	/**
 	 * dir est le répertoire où sont les descriptions
-	 * @Central
+	 * Central
 	 */
 	public void saveDescriptions(String dir, int fileCount) throws IOException {
 		for (int i = 0; i != fileCount; i++) {

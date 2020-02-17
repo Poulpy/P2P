@@ -392,7 +392,7 @@ public class FSPCentral extends Yoda implements Runnable {
 
 
 	/**
-	 * @Thread
+	 * Thread
 	 */
 	public void listen() {
 		String msg;

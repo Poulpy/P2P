@@ -73,7 +73,9 @@
     </target>
 
     <target name="doc">
-        <javadoc sourcepath="${src}" destdir="${docs}"/>
+        <javadoc sourcepath="${src}" destdir="${docs}">
+            <classpath refid="classpath.test"/>
+        </javadoc>
     </target>
 
     <target name="test" depends="compile">

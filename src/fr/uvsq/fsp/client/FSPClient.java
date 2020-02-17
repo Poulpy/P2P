@@ -64,7 +64,6 @@ public class FSPClient extends Yoda {
 	/**
 	 * Authentification
 	 * Server
-	 * @Deprecated
 	 */
 	public void login() {
 		Scanner scan;
