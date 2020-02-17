@@ -1,6 +1,16 @@
-name: Docs
-uses: peaceiris/actions-gh-pages@v3
-with:
-  deploy_key: ${{secrets.ACTIONS_DEPLOY_KEY}}
-  publish_dir: ./docs
+name: github pages
+
+on: [push]
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      name: docs
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        publish_dir: ./docs
 
