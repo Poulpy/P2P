@@ -1,4 +1,4 @@
-package fr.uvsq.fsp.test;
+package test;
 
 import fr.uvsq.fsp.client.FSPClient;
 import org.junit.Assert;

@@ -198,3 +198,4 @@ JUnit 4
 
 Ant 10
 
+javac -cp /usr/share/java/junit4.jar:/usr/share/java/hamcrest-core.jar:./src/ test/*.java -d build/
