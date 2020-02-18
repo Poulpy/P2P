@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.DataOutputStream;
+import java.io.DataInputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -26,8 +28,8 @@ public class FSPCore {
 	public PrintWriter writer;
 
 	// Fichier
-	//public DataOutputStream dos;
-	//public DataInputStream dis;
+	public DataOutputStream dos;
+	public DataInputStream dis;
 
 	/** Adresse IP du serveur */
 	public String adresseIPServeur = "127.0.0.1";
@@ -54,7 +56,7 @@ public class FSPCore {
 	/**
 	 * Ouvre des ressources pour écrire/lire dans des sockets
 	 */
-	public void open() {
+	public void open2() {
 		try {
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF8"));
 			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8")), true);
@@ -65,6 +67,16 @@ public class FSPCore {
 		}
 	}
 
+	public void open() {
+		try {
+			dis = new DataInputStream(socket.getInputStream());
+			dos = new DataOutputStream(socket.getOutputStream());
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Envoie toutes les descriptions
@@ -102,22 +114,30 @@ public class FSPCore {
 	/**
 	 * Lit un message (une ligne) envoyé par socket
 	 */
-	public String lireMessage() throws IOException {
+	public String lireMessage2() throws IOException {
 		return reader.readLine();
+	}
+
+	public String lireMessage() throws IOException {
+		return dis.readUTF();
 	}
 
 	/**
 	 * Envoie une message à travers une socket
 	 */
-	public void envoyerMessage(String msg) throws IOException {
+	public void envoyerMessage2(String msg) throws IOException {
 		System.out.println("> " + msg);
 		writer.println(msg);
 	}
 
+	public void envoyerMessage(String msg) throws IOException {
+		dos.writeUTF(msg);
+		dos.flush();
+	}
 	/**
 	 * Libère les ressources
 	 */
-	public void close() {
+	public void close2() {
 		try {
 			reader.close();
 			writer.close();
@@ -128,6 +148,16 @@ public class FSPCore {
 		}
 	}
 
+	public void close() {
+		try {
+			dos.close();
+			dis.close();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Envoie UN fichier par socket
