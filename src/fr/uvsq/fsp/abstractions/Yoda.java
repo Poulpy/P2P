@@ -17,7 +17,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import fr.uvsq.fsp.util.FTPCommand;
 
-
+// TODO rename FSPCore
 public class Yoda {
 
 	/** Ecriture dans une socket */
@@ -29,9 +29,6 @@ public class Yoda {
 	// Fichier
 	//public DataOutputStream dos;
 	//public DataInputStream dis;
-
-	/** Adresse IP de l'utilisateur */
-	public String adresseIP = "127.0.0.1";
 
 	/** Adresse IP du serveur */
 	public String adresseIPServeur = "127.0.0.1";
@@ -252,7 +249,6 @@ public class Yoda {
 		fileSize = Integer.parseInt(ftpCmd.content.split(" ")[1]);
 		System.out.println(dir + fileName);
 		enregistrerContenu(dir + fileName);
-
 	}
 }
 

@@ -1,7 +1,7 @@
 package fr.uvsq.fsp.server;
 
 import fr.uvsq.fsp.abstractions.Yoda;
-import java.util.ArrayList;
+import fr.uvsq.fsp.util.FTPCommand;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -22,27 +22,29 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import fr.uvsq.fsp.util.FTPCommand;
-import java.nio.file.DirectoryStream;
 
 public class FSPCentral extends Yoda implements Runnable {
+
+	public static String configFolder;
 
 	/**
 	 * Chemin du fichier contenant les utilisateurs connus du serveur
 	 * l'identifiant et le hash du mot de passe sont séparés par le
 	 * séparateur sep
 	 */
-	public static String cheminUtilisateurs = "src/fr/uvsq/fsp/server/utilisateurs.csv";
+	public static String cheminUtilisateurs;
 
 	private String sep = ",";
 
 	/** Répertoire des fichiers partagés, créé au lancement du serveur */
-	public static String descriptionsFolder = "src/fr/uvsq/fsp/server/descriptions/";
+	public static String descriptionsFolder;
 
 	public ServerSocket serverSocket;
 
@@ -61,29 +63,25 @@ public class FSPCentral extends Yoda implements Runnable {
 
 	public String userDescriptionFolder;
 
-	private volatile boolean isRunning = true;
-
 	/**
 	 * Crée le répertoire contenant les descriptions des fichiers partagés,
 	 * s'il n'est pas déjà créé
 	 */
-	public FSPCentral(String serverIP, int port, String usersFile, String descFolder) {
-		super(serverIP, port);
-		usersConnected = new ArrayList<String>();
-		cheminUtilisateurs = usersFile;
-		descriptionsFolder = descFolder;
-		new File(descriptionsFolder).mkdirs();
-	}
-
-	public FSPCentral(String serverIP, int port, Socket sock) {
-		super(serverIP, port);
-		usersConnected = new ArrayList<String>();
-		socket = sock;
-		new File(descriptionsFolder).mkdirs();
-	}
-
 	public FSPCentral(Socket sock) {
 		super(sock);
+		configFolder = "central/";
+		cheminUtilisateurs = configFolder + "utilisateurs.csv";
+		descriptionsFolder = configFolder + "descriptions/";
+
+		new File(descriptionsFolder).mkdirs();
+	}
+
+	public FSPCentral(Socket sock, String configDir) {
+		super(sock);
+		configFolder = configDir;
+		cheminUtilisateurs = configFolder + "utilisateurs.csv";
+		descriptionsFolder = configFolder + "descriptions/";
+
 		new File(descriptionsFolder).mkdirs();
 	}
 
@@ -121,6 +119,7 @@ public class FSPCentral extends Yoda implements Runnable {
 
 		switch (ftpCmd.command) {
 			case "USER":
+				id = contenu;
 				handleUserCommand(contenu);
 				break;
 
@@ -399,7 +398,7 @@ public class FSPCentral extends Yoda implements Runnable {
 		FTPCommand ftpCmd;
 
 		try {
-			while ((msg = lireMessage()) != null && isRunning()) {
+			while ((msg = lireMessage()) != null) {
 				if (msg.equals("QUIT")) break;
 
 				ftpCmd = FTPCommand.parseCommand(msg);
@@ -472,14 +471,6 @@ public class FSPCentral extends Yoda implements Runnable {
 			nouvelUtilisateur = true;
 			envoyerMessage("22 Identifiant inconnu");
 		}
-	}
-
-	public synchronized boolean isRunning() {
-		return this.isRunning;
-	}
-
-	public synchronized void stopThread() {
-		isRunning = false;
 	}
 }
 

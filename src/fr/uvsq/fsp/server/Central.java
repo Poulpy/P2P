@@ -1,12 +1,12 @@
 package fr.uvsq.fsp.server;
 
-import java.io.IOException;
+import fr.uvsq.fsp.server.FSPCentral;
 import java.io.File;
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
-import fr.uvsq.fsp.server.FSPCentral;
 
 public class Central {
 
@@ -25,7 +25,6 @@ public class Central {
 
 		new Thread(new WaitingServer(port)).start();
 
-		//waitForQuit();
 		boolean loop = true;
 
 		System.out.println("Tapez QUIT pour quitter le programme.");
@@ -38,8 +37,6 @@ public class Central {
 				loop = false;
 			}
 		}
-
-		//server.stopThread();
 	}
 }
 

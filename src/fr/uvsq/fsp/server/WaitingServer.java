@@ -1,7 +1,7 @@
 package fr.uvsq.fsp.server;
 
 import fr.uvsq.fsp.abstractions.Yoda;
-import java.util.ArrayList;
+import fr.uvsq.fsp.util.FTPCommand;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -22,29 +22,17 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
-import fr.uvsq.fsp.util.FTPCommand;
-import java.nio.file.DirectoryStream;
 
 public class WaitingServer extends Yoda implements Runnable {
 
 	Boolean isStopped = false;
-
-	/**
-	 * Chemin du fichier contenant les utilisateurs connus du serveur
-	 * l'identifiant et le hash du mot de passe sont séparés par le
-	 * séparateur sep
-	 */
-	public static String cheminUtilisateurs;
-
-	private String sep = ",";
-
-	/** Répertoire des fichiers partagés, créé au lancement du serveur */
-	public static String descriptionsFolder;
 
 	public ServerSocket serverSocket;
 
@@ -80,7 +68,6 @@ public class WaitingServer extends Yoda implements Runnable {
 		Thread[] servers = new Thread[10];
 		int count = 0;
 
-
 		try {
 			connect();
 		} catch (IOException e) {
@@ -105,10 +92,6 @@ public class WaitingServer extends Yoda implements Runnable {
 		}
 
 		disconnect();
-
-		for (Thread server : servers) {
-			//server.stopThread();
-		}
 	}
 }
 

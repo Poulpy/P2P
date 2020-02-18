@@ -1,10 +1,11 @@
 package fr.uvsq.fsp.client;
 
-import java.util.Scanner;
 import fr.uvsq.fsp.controler.ClientControler;
+import fr.uvsq.fsp.view.ClientView;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
@@ -26,12 +27,11 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import fr.uvsq.fsp.view.ClientView;
 
 public class CServer {
 
 	public static void main(String[] args) {
-		FSPClient client;
+		FSPServer client;
 		boolean loop = true;
 		Scanner scan;
 		String query;
@@ -57,7 +57,7 @@ public class CServer {
 			mdp = scan.nextLine();
 		}
 
-		client = new FSPClient(serverIP, port, "src/fr/uvsq/client/descriptions/");
+		client = new FSPServer(serverIP, port, "client/");
 
 		try {
 			client.connect();
