@@ -1,7 +1,7 @@
 package fr.uvsq.fsp.server;
 
-import fr.uvsq.fsp.abstractions.Yoda;
-import fr.uvsq.fsp.util.FTPCommand;
+import fr.uvsq.fsp.abstractions.FSPCore;
+import fr.uvsq.fsp.util.Command;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class FSPCentral extends Yoda implements Runnable {
+public class FSPCentral extends FSPCore implements Runnable {
 
 	public static String configFolder;
 
@@ -111,7 +111,7 @@ public class FSPCentral extends Yoda implements Runnable {
 	 * Le serveur vérifie que le mot de passe est correct en fonction
 	 * de l'identifiant précédemment envoyé
 	 */
-	public void gererMessage(FTPCommand ftpCmd) throws IOException {
+	public void gererMessage(Command ftpCmd) throws IOException {
 		ArrayList<String> files;
 		String contenu;
 
@@ -395,13 +395,13 @@ public class FSPCentral extends Yoda implements Runnable {
 	 */
 	public void listen() {
 		String msg;
-		FTPCommand ftpCmd;
+		Command ftpCmd;
 
 		try {
 			while ((msg = lireMessage()) != null) {
 				if (msg.equals("QUIT")) break;
 
-				ftpCmd = FTPCommand.parseCommand(msg);
+				ftpCmd = Command.parseCommand(msg);
 				System.out.println(msg);
 
 				gererMessage(ftpCmd);

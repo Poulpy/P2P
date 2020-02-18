@@ -15,10 +15,10 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import fr.uvsq.fsp.util.FTPCommand;
+import fr.uvsq.fsp.util.Command;
 
 // TODO rename FSPCore
-public class Yoda {
+public class FSPCore {
 
 	/** Ecriture dans une socket */
 	public BufferedReader reader;
@@ -39,17 +39,17 @@ public class Yoda {
 
 	/**
 	 */
-	public Yoda(String serverIP, int portNumber) {
+	public FSPCore(String serverIP, int portNumber) {
 		adresseIPServeur = serverIP;
 		port = portNumber;
 	}
 
 
-	public Yoda(int portNumber) {
+	public FSPCore(int portNumber) {
 		port = portNumber;
 	}
 
-	public Yoda(Socket sock) {
+	public FSPCore(Socket sock) {
 		socket = sock;
 	}
 
@@ -98,13 +98,13 @@ public class Yoda {
 	 */
 	public void recevoirDescriptions(String dir) throws IOException {
 		String msg;
-		FTPCommand ftpCmd;
+		Command ftpCmd;
 		int fileCount;
 
 		// On attend un message avec pour commande FILECOUNT
 		do {
 			msg = lireMessage();
-			ftpCmd = FTPCommand.parseCommand(msg);
+			ftpCmd = Command.parseCommand(msg);
 		} while (!ftpCmd.command.equals("FILECOUNT"));
 
 		// On récupère le nombre de fichiers à recevoir
@@ -235,14 +235,14 @@ public class Yoda {
 	 */
 	public void lireFichier(String dir) throws IOException {
 		String msg;
-		FTPCommand ftpCmd;
+		Command ftpCmd;
 		String fileName;
 		int fileSize;
 
 		// On attend un message avec pour commande FILE
 		do {
 			msg = lireMessage();
-			ftpCmd = FTPCommand.parseCommand(msg);
+			ftpCmd = Command.parseCommand(msg);
 		} while (!ftpCmd.command.equals("FILE"));
 
 		fileName = ftpCmd.content.split(" ")[0];

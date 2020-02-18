@@ -1,13 +1,13 @@
 package fr.uvsq.fsp.util;
 
-public class FTPCommand {
+public class Command {
 
     // USER, PASS
     public String command;
     // toto
     public String content;
 
-    public FTPCommand(String cmd, String cont) {
+    public Command(String cmd, String cont) {
         command = cmd;
         content = cont;
     }
@@ -20,7 +20,7 @@ public class FTPCommand {
      * Analyse un texte comme :
      * "USER toto" ou "PASS bidule"
      */
-    public static FTPCommand parseCommand(String str) {
+    public static Command parseCommand(String str) {
         int index;
         String type;
         String desc;
@@ -29,9 +29,9 @@ public class FTPCommand {
             index = str.indexOf(' ');
             type = str.substring(0, index);
             desc = str.substring(index + 1, str.length());
-            return new FTPCommand(type, desc);
+            return new Command(type, desc);
         } else {
-            return new FTPCommand(str, "");
+            return new Command(str, "");
         }
     }
 }

@@ -24,7 +24,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import java.net.UnknownHostException;
 import javafx.stage.Stage;
-import fr.uvsq.fsp.util.FTPCommand;
+import fr.uvsq.fsp.util.Command;
 import javafx.util.Duration;
 import fr.uvsq.fsp.view.ClientView;
 import fr.uvsq.fsp.client.FSPClient;
@@ -126,13 +126,13 @@ public class ClientControler {
 	 */
 	public void searchEvent() throws IOException {
 		String msg;
-		FTPCommand ftpCmd;
+		Command ftpCmd;
 
 		System.out.println("SEARCH " + scene.searchField.getText());
 
 		client.search(scene.searchField.getText());
 		msg = client.lireMessage();
-		ftpCmd = FTPCommand.parseCommand(msg);
+		ftpCmd = Command.parseCommand(msg);
 
 		if (ftpCmd.command.equals("FOUND")) {
 			filesMatching = client.parseFilesFound(ftpCmd.content);

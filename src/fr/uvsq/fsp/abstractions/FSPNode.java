@@ -1,11 +1,11 @@
 package fr.uvsq.fsp.abstractions;
 
-import fr.uvsq.fsp.abstractions.Yoda;
+import fr.uvsq.fsp.abstractions.FSPCore;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class FSPNode extends Yoda {
+public class FSPNode extends FSPCore {
 
 	public FSPNode(String serverIP, int port) {
 		super(serverIP, port);

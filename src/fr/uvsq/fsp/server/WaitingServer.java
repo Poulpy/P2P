@@ -1,7 +1,7 @@
 package fr.uvsq.fsp.server;
 
-import fr.uvsq.fsp.abstractions.Yoda;
-import fr.uvsq.fsp.util.FTPCommand;
+import fr.uvsq.fsp.abstractions.FSPCore;
+import fr.uvsq.fsp.util.Command;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class WaitingServer extends Yoda implements Runnable {
+public class WaitingServer extends FSPCore implements Runnable {
 
 	Boolean isStopped = false;
 
