@@ -20,7 +20,7 @@ public class TestServer {
 
 	@Before
 	public void setUp() throws Exception {
-		central = new FSPCentral(sock, "test/");
+		central = new FSPCentral(sock, "build/test/central/");
 	}
 
 	@Test
@@ -32,9 +32,8 @@ public class TestServer {
 
 	@Test
 	public void testMdpCorrect() throws Exception {
-		Assert.assertTrue(central.mdpCorrect("toto", "4cb9c8a8048fd02294477fcb1a41191a"));
-		Assert.assertFalse(central.mdpCorrect("toto", "a"));
-		Assert.assertTrue(central.mdpCorrect("titi", "21232f297a57a5a743894a0e4a801fc3"));
+		Assert.assertTrue(central.mdpCorrect("toto", "21232f297a57a5a743894a0e4a801fc3"));
+		Assert.assertFalse(central.mdpCorrect("totot", "21232f297a57a5a743894a0e4a801fc3"));
 	}
 
 	@Test
@@ -49,6 +48,7 @@ public class TestServer {
 
 	@Test
 	public void testSearchByKeyword() throws Exception {
+		//central.handleHostnameCommand("dinfo");
 		File fileToSearch = new File(central.descriptionsFolder + "dinfo/yojinbo");
 		Assert.assertTrue(central.searchByKeyword("Le", fileToSearch));
 		Assert.assertTrue(central.searchByKeyword("garde", fileToSearch));
