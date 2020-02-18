@@ -33,6 +33,7 @@
 	<property name="src.fr.uvsq.fsp.client.descriptions.dir" location="src/fr/uvsq/fsp/client/descriptions/"/>
 	<property name="src.fr.uvsq.fsp.server.users" location="src/fr/uvsq/fsp/server/utilisateurs.csv"/>
 	<property name="test" location="./src/test/"/>
+	<property name="src.fr.uvsq.fsp.client.stylesheet" location="src/fr/uvsq/fsp/client/stylesheet.css"/>
 
 	<path id="classpath">
 		<pathelement location="${src}"/>
@@ -70,6 +71,7 @@
 				<include name="*"/>
 			</fileset>
 		</copy>
+		<copy file="${src.fr.uvsq.fsp.client.stylesheet}" todir="${build.client.dir}"/>
 	</target>
 
 	<target name="dist" depends="compile" description="Generating the jar files">

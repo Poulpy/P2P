@@ -57,7 +57,7 @@ public class CServer {
 			mdp = scan.nextLine();
 		}
 
-		client = new FSPServer(serverIP, port, "client/");
+		client = new FSPServer(serverIP, port, "client/descriptions/");
 
 		try {
 			client.connect();

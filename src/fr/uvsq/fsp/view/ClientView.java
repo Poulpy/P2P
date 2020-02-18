@@ -62,7 +62,7 @@ public class ClientView extends Group {
         //controler = new ClientControler(this);
         GridPane grid = new GridPane();
 
-        getStylesheets().add("fr/uvsq/fsp/client/stylesheet.css");
+        getStylesheets().add("client/stylesheet.css");
 
         // Bouton de recherche
         searchButton = new Button("Rechercher");
