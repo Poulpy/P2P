@@ -32,6 +32,9 @@ import java.util.concurrent.TimeUnit;
 
 public class FSPCentral extends FSPCore implements Runnable {
 
+	/**
+	 * Folder containing the descriptions/ folder and the users file
+	 */
 	public static String configFolder;
 
 	/**
@@ -430,6 +433,10 @@ public class FSPCentral extends FSPCore implements Runnable {
 		}
 	}
 
+	/**
+	 * Gère la connexion d'un utilisateur
+	 * Crée un dossier désigné par son nom d'hôte, qui stockera toutes ses descriptions
+	 */
 	public void handleHostnameCommand(String hostname) throws IOException {
 		synchronized (usersConnected) {
 			usersConnected.add(hostname);
@@ -438,6 +445,10 @@ public class FSPCentral extends FSPCore implements Runnable {
 		new File(userDescriptionFolder).mkdirs();
 	}
 
+	/**
+	 * Cherche dans le dossier descriptions/ un mot clef
+	 * Renvoie les résultats au client
+	 */
 	public void handleSearchCommand(String keyword) throws IOException {
 		ArrayList<String> files;
 

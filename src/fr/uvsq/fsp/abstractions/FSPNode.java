@@ -11,6 +11,9 @@ public class FSPNode extends FSPCore {
 		super(serverIP, port);
 	}
 
+	/**
+	 * Fermeture de la socket
+	 */
 	public void disconnect() {
 		try {
 			socket.close();
@@ -21,6 +24,9 @@ public class FSPNode extends FSPCore {
 		}
 	}
 
+	/**
+	 * Ouverture d'une socket
+	 */
 	public void connect() throws UnknownHostException, IOException {
 		socket = new Socket(adresseIPServeur, port);
 	}

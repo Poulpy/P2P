@@ -1,6 +1,5 @@
 package fr.uvsq.fsp.view;
 
-import fr.uvsq.fsp.controler.ClientControler;
 import java.io.IOException;
 import java.util.ArrayList;
 import javafx.animation.FadeTransition;
@@ -49,17 +48,11 @@ public class ClientView extends Group {
     public TextField searchField;
 
     /**
-     * The class that manages all events.
-     */
-    public ClientControler controler;
-
-    /**
      * Pops when a user downloaded successfully.
      */
     public Label downloadLabel;
 
     public ClientView() {
-        //controler = new ClientControler(this);
         GridPane grid = new GridPane();
 
         getStylesheets().add("client/stylesheet.css");

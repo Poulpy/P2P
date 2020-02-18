@@ -2,7 +2,7 @@
 
 
 FSP est un protocol similaire à FTP, en plus simple.
-La documentation est disponible [ici](https://poulpy.github.io/P2P/docs)
+La documentation est disponible [ici](https://poulpy.github.io/P2P/)
 
 ## Comment un client communique avec un serveur TCP ?
 
@@ -73,7 +73,6 @@ Le Client peut recevoir un ou plusieurs fichiers
 - Gérer les exceptions
 - Controller : une méthode pour gérer chaque événement, à travers la surcharge de méthode. Actuellement, tous les événements sont dans le constructeur !
 - ClientView ClientController : message qui marque Aucun fichier trouvé (recherche)
-- Renommer ClientControler en ClientController
 - Quand un client envoie une commande : vérifier qu'il est connecté
 - Déconnexion d'un CServer : déconnexion d'un utilisateur
 - tester téléchargement fichiers mp3, fichiers exécutables etc

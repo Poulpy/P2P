@@ -32,7 +32,9 @@ public class FSPServer extends FSPNode {
 	}
 
 	/**
-	 * Authentification
+	 * Authentification de l'utilisateur
+	 * Envoie l'identifiant puis le le mot de passe
+	 * Si l'authentification est réussie, renvoie true
 	 */
 	public boolean login(String id, String mdp) {
 		String reponse;

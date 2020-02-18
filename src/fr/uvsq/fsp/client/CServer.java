@@ -1,6 +1,5 @@
 package fr.uvsq.fsp.client;
 
-import fr.uvsq.fsp.controler.ClientControler;
 import fr.uvsq.fsp.view.ClientView;
 import java.io.IOException;
 import java.net.UnknownHostException;

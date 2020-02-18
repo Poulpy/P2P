@@ -1,6 +1,10 @@
-package fr.uvsq.fsp.controler;
+package fr.uvsq.fsp.controller;
 
+import fr.uvsq.fsp.client.FSPClient;
+import fr.uvsq.fsp.util.Command;
+import fr.uvsq.fsp.view.ClientView;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
@@ -22,14 +26,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
-import java.net.UnknownHostException;
 import javafx.stage.Stage;
-import fr.uvsq.fsp.util.Command;
 import javafx.util.Duration;
-import fr.uvsq.fsp.view.ClientView;
-import fr.uvsq.fsp.client.FSPClient;
 
-public class ClientControler {
+public class ClientController {
 
 	/**
 	 * Files matching the search
@@ -39,7 +39,7 @@ public class ClientControler {
 	public ClientView scene;
 	public FSPClient client;
 
-	public ClientControler(ClientView view, FSPClient fspClient) {
+	public ClientController(ClientView view, FSPClient fspClient) {
 		this.scene = view;
 		this.client = fspClient;
 
@@ -121,7 +121,7 @@ public class ClientControler {
 		return a;
 	}
 
-	/*
+	/**
 	 * Query the server for files and display the results in the view.
 	 */
 	public void searchEvent() throws IOException {

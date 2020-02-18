@@ -1,5 +1,6 @@
 package fr.uvsq.fsp.abstractions;
 
+import fr.uvsq.fsp.util.Command;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,9 +16,7 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import fr.uvsq.fsp.util.Command;
 
-// TODO rename FSPCore
 public class FSPCore {
 
 	/** Ecriture dans une socket */
@@ -43,7 +42,6 @@ public class FSPCore {
 		adresseIPServeur = serverIP;
 		port = portNumber;
 	}
-
 
 	public FSPCore(int portNumber) {
 		port = portNumber;
@@ -88,30 +86,6 @@ public class FSPCore {
 			for (Path path : stream) {
 				envoyerFichier(path.toString());
 			}
-		}
-	}
-
-	/**
-	 * dir est le répertoire où sont les descriptions
-	 * Central
-	 * Deprecated
-	 */
-	public void recevoirDescriptions(String dir) throws IOException {
-		String msg;
-		Command ftpCmd;
-		int fileCount;
-
-		// On attend un message avec pour commande FILECOUNT
-		do {
-			msg = lireMessage();
-			ftpCmd = Command.parseCommand(msg);
-		} while (!ftpCmd.command.equals("FILECOUNT"));
-
-		// On récupère le nombre de fichiers à recevoir
-		fileCount = Integer.parseInt(ftpCmd.content);
-
-		for (int i = 0; i != fileCount; i++) {
-			lireFichier(dir);
 		}
 	}
 
