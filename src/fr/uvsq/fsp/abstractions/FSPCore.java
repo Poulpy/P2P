@@ -8,6 +8,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.InputStream;
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.DataOutputStream;
 import java.io.DataInputStream;
 import java.io.OutputStreamWriter;
@@ -162,7 +165,7 @@ public class FSPCore {
 	/**
 	 * Envoie UN fichier par socket
 	 */
-	public void envoyerContenu(String filePath) throws IOException {
+	public void envoyerContenu2(String filePath) throws IOException {
 		BufferedReader br;
 		File file;
 		FileReader fr;
@@ -189,12 +192,57 @@ public class FSPCore {
 		fr.close();
 	}
 
+	public void envoyerContenu(String filePath) throws IOException {
+		File file;
+		InputStream in;
+		int fileSize;
+		byte[] bytes;
+		int count;
+
+		file = new File(filePath);
+		fileSize = (int) file.length();// pas utilisée
+		in = new FileInputStream(file);
+		bytes = new byte[fileSize];
+
+		// On envoie le fichier ligne par ligne
+		while ((count = in.read(bytes)) > 0) {
+			System.out.println(count);
+			dos.write(bytes, 0, count);
+			dos.flush();
+		}
+
+		System.out.println("Envoi fini");
+		in.close();
+	}
+
+	public void enregistrerContenu(String filePath, int fileSize) throws IOException {
+		int count;
+		byte[] bytes = new byte[fileSize];
+		FileOutputStream fos;
+		int sum;
+
+		fos = new FileOutputStream(filePath);
+		sum = 0;
+
+		while ((count = dis.read(bytes)) > 0 && (sum < fileSize)) {
+			sum += count;
+			System.out.println("Lu : " + count);
+			System.out.println("Total lu : " + sum);
+			System.out.println("Reste : " + (fileSize - sum));
+			fos.write(bytes, 0, count);
+			fos.flush();
+		}
+
+		System.out.println("Lecture finie");
+		fos.close();
+	}
+
 	/**
 	 * Récupère UN fichier envoyé par socket
 	 *
 	 * Ici on a un BufferedReader qu'on pourrait mettre en attribut
 	 */
-	public void enregistrerContenu(String filePath) throws IOException {
+	public void enregistrerContenu2(String filePath) throws IOException {
 		BufferedWriter bw;
 		File file;
 		FileWriter fw;
@@ -244,15 +292,15 @@ public class FSPCore {
 		int fileSize;
 
 		// On attend un message avec pour commande FILE
-		do {
+		//do {
 			msg = lireMessage();
 			ftpCmd = Command.parseCommand(msg);
-		} while (!ftpCmd.command.equals("FILE"));
+		//} while (!ftpCmd.command.equals("FILE"));
 
 		fileName = ftpCmd.content.split(" ")[0];
 		fileSize = Integer.parseInt(ftpCmd.content.split(" ")[1]);
-		System.out.println(dir + fileName);
-		enregistrerContenu(dir + fileName);
+		System.out.println(dir + fileName + ", " + fileSize);
+		enregistrerContenu(dir + fileName, fileSize);
 	}
 }
 
