@@ -63,7 +63,6 @@ public class Client extends Application {
 				Application.launch(Client.class);
 			}
 
-			client.quit();
 			client.close();
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -73,7 +72,7 @@ public class Client extends Application {
 			Platform.exit();
 			if (client.socket != null) {
 				try {
-					client.socket.close();
+					client.disconnect();
 				} catch (IOException e) {
 					e.printStackTrace();
 				} finally {

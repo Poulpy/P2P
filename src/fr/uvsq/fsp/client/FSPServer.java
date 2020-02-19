@@ -70,5 +70,13 @@ public class FSPServer extends FSPNode {
 		hostname = InetAddress.getLocalHost().getHostName();
 		envoyerMessage("HOSTNAME " + hostname);
 	}
+
+	/**
+	 * Méthode à appeler quand l'utilisateur veut quitter la session
+	 * Doit recevoir un accusé réception
+	 */
+	public void quit() throws IOException {
+		super.envoyerMessage("QUIT");
+	}
 }
 

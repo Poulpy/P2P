@@ -145,16 +145,18 @@ public class FSPCentral extends FSPCore implements Runnable {
 
 			case "HOST":
 				hostname = contenu;
-
-				System.out.println(usersConnected);
-				if (usersConnected.contains(hostname)) {
-					super.envoyerMessage("25 Hostname existe");
-				} else {
-					super.envoyerMessage("32 Hostname n'exite pas");
-				}
+				handleHostCommand(contenu);
 				break;
 
 			default:
+		}
+	}
+
+	public void handleHostCommand(String hostname) throws IOException {
+		if (usersConnected.contains(hostname)) {
+			super.envoyerMessage("25 Hostname existe");
+		} else {
+			super.envoyerMessage("32 Hostname n'exite pas");
 		}
 	}
 

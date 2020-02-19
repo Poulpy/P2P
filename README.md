@@ -61,21 +61,12 @@ Utiliser une pool de Thread.
 ## Todo Code
 
 - Voir si toutes les ressources sont bien libérées quand on quitte l'application (`close()`) => try with resource.
-- Eviter l'anti-pattern GodClass : une classe qui a trop de responsabilités.
-- Mieux répartir les responsabilités. Il y a des classes qui peuvent faire certaines choses, eh bien qu'ils ne sont pas censer faire.
-CServer sert seulement à l'authentification et l'envoi de descriptions.
-Le Central reçoit les descriptions.
-Le Client peut recevoir un ou plusieurs fichiers
-- Renommer les classes et les variables, leur donner de jolis noms
-- Refaire les constructeurs du client et du serveur (qui soit utiles quoi :p)
 - Ecrire des tests.
 - Plus de documentation (plus de tag : param, return, etc.)
 - Gérer les exceptions
-- Controller : une méthode pour gérer chaque événement, à travers la surcharge de méthode. Actuellement, tous les événements sont dans le constructeur !
+- Controller : une méthode pour gérer chaque événement Actuellement, tous les événements sont dans le constructeur !
 - ClientView ClientController : message qui marque Aucun fichier trouvé (recherche)
 - Quand un client envoie une commande : vérifier qu'il est connecté
-- Déconnexion d'un CServer : déconnexion d'un utilisateur
-- tester téléchargement fichiers mp3, fichiers exécutables etc
 
 
 
@@ -93,7 +84,8 @@ il est bien de spécifier ce qu'implémente notre application !
 `FILE truc.txt 23`. Ce serait bien de pouvoir stocker dans un `HashMap<String, Object>` les valeurs. On pourrait avoir des valeurs optionnelles.
 Par ailleurs, on pourrait envoyer les données sous forme de texte brut, ou bien en xml, ou bien en json.
 Mieux, on pourrait juxtaposer les données d'un paquet. Actullement, les données sont séparées par des espaces.
-- Fichier de configuration
+- Fichier de configuration : Configration.json
+- Un parseur pour analyser les arguments en ligne de commande
 
 ### Comment exécuter le projet ?
 
@@ -173,26 +165,10 @@ et seulement **après** :
 Et ça maaaarche !
 
 
-## Pourquoi un utilisateur a besoin d'installer un client et en plus un serveur ?
-
-Le principe de cette application est de pouvoir partager des fichiers.
-Tant que le programme côté client est actif, on partage les fichiers contenus dans la machine côté client.
-S'il ne tourne pas, on arrête de partager les fichiers.
-Mais est-ce que l'utilisateur est tout le temps connecté au serveur ?
-Non pas forcément, c'est pour ça qu'on a besoin de 2 programmes côté client :
-un programme pour partager des fichiers auprès d'autres clients, et un autre qui traitera les requêtes du client.
-
-### Utilisateurs
-
-Les utilisateurs sont dans le fichier `server/utilisateurs.csv`
-
-
 
 ## Je sais pas quoi faire
 
 `find * -name *.java -type f | xargs grep -n TODO`
-
-TODO Faire un script qui mettrait tous les TODO dans le README sous forme de tableau markdown
 
 ### Dépendances
 

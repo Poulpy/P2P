@@ -14,14 +14,8 @@ public class FSPNode extends FSPCore {
 	/**
 	 * Fermeture de la socket
 	 */
-	public void disconnect() {
-		try {
-			socket.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void disconnect() throws UnknownHostException, IOException {
+		socket.close();
 	}
 
 	/**
@@ -29,14 +23,6 @@ public class FSPNode extends FSPCore {
 	 */
 	public void connect() throws UnknownHostException, IOException {
 		socket = new Socket(adresseIPServeur, port);
-	}
-
-	/**
-	 * Méthode à appeler quand l'utilisateur veut quitter la session
-	 * Doit recevoir un accusé réception
-	 */
-	public void quit() throws IOException {
-		super.envoyerMessage("QUIT");
 	}
 }
 
