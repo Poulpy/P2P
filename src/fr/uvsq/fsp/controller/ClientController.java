@@ -43,16 +43,19 @@ public class ClientController {
 		this.scene = view;
 		this.client = fspClient;
 
+		scene.serverIPField.setText(client.adresseIPServeur);
+		scene.portField.setText(String.valueOf(client.port));
+
 		// événements
 		scene.searchButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				if (!scene.searchField.getText().equals("")) {
-						try {
-							searchEvent();
-						} catch (IOException ex) {
-							ex.printStackTrace();
-						}
+					try {
+						searchEvent();
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
 				}
 			}
 		});

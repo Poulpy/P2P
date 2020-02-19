@@ -52,6 +52,8 @@ public class Client extends Application {
 		}
 
 		client = new FSPClient(serverIP, port, "client/descriptions/");
+		Application.launch(Client.class);
+		/*
 		try {
 			client.connect();
 			client.open();
@@ -80,6 +82,7 @@ public class Client extends Application {
 				}
 			}
 		}
+		*/
 	}
 
 	@Override

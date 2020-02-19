@@ -46,6 +46,8 @@ public class ClientView extends Group {
      * Receives the keyword to be sent to the server.
      */
     public TextField searchField;
+    public TextField serverIPField;
+    public TextField portField;
 
     /**
      * Pops when a user downloaded successfully.
@@ -56,6 +58,18 @@ public class ClientView extends Group {
         GridPane grid = new GridPane();
 
         getStylesheets().add("client/stylesheet.css");
+
+        serverIPField = new TextField();
+        serverIPField.getStyleClass().add("removeLightGlow");
+        serverIPField.getStyleClass().add("searchField");
+        serverIPField.setPrefWidth(70);
+        serverIPField.setPrefHeight(10);
+
+        portField = new TextField();
+        portField.getStyleClass().add("removeLightGlow");
+        portField.getStyleClass().add("searchField");
+        portField.setPrefWidth(50);
+        portField.setPrefHeight(10);
 
         // Bouton de recherche
         searchButton = new Button("Rechercher");
@@ -95,11 +109,15 @@ public class ClientView extends Group {
         downloadLabel = new Label();
         downloadLabel.getStyleClass().add("greenFont");
 
-        grid.add(searchField, 0, 0, 1, 1);
-        grid.add(searchButton, 1, 0, 1, 1);
-        grid.add(fileList, 0, 2, 1, 2);
-        grid.add(downloadButton, 1, 2, 1, 1);
-        grid.add(downloadLabel, 1, 3, 1, 1);
+        grid.add(serverIPField, 0, 0, 1, 1);
+        grid.add(portField, 1, 0, 1, 1);
+
+        grid.add(searchField, 0, 1, 2, 1);
+        grid.add(searchButton, 2, 1, 1, 1);
+
+        grid.add(fileList, 0, 2, 2, 2);
+        grid.add(downloadButton, 2, 2, 1, 1);
+        grid.add(downloadLabel, 2, 3, 1, 1);
 
         grid.setHgap(10);
         grid.setVgap(10);
