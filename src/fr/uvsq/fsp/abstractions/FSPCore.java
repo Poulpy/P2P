@@ -24,13 +24,6 @@ import java.nio.file.Paths;
 
 public class FSPCore {
 
-	/** Ecriture dans une socket */
-	public BufferedReader reader;
-
-	/** Lecture dans une socket */
-	public PrintWriter writer;
-
-	// Fichier
 	public DataOutputStream dos;
 	public DataInputStream dis;
 
@@ -59,17 +52,6 @@ public class FSPCore {
 	/**
 	 * Ouvre des ressources pour écrire/lire dans des sockets
 	 */
-	public void open2() {
-		try {
-			reader = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF8"));
-			writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream(), "UTF8")), true);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
 	public void open() {
 		try {
 			dis = new DataInputStream(socket.getInputStream());
@@ -115,12 +97,8 @@ public class FSPCore {
 	}
 
 	/**
-	 * Lit un message (une ligne) envoyé par socket
+	 * Lit un message envoyé par socket
 	 */
-	public String lireMessage2() throws IOException {
-		return reader.readLine();
-	}
-
 	public String lireMessage() throws IOException {
 		return dis.readUTF();
 	}
@@ -128,27 +106,9 @@ public class FSPCore {
 	/**
 	 * Envoie une message à travers une socket
 	 */
-	public void envoyerMessage2(String msg) throws IOException {
-		System.out.println("> " + msg);
-		writer.println(msg);
-	}
-
 	public void envoyerMessage(String msg) throws IOException {
 		dos.writeUTF(msg);
 		dos.flush();
-	}
-	/**
-	 * Libère les ressources
-	 */
-	public void close2() {
-		try {
-			reader.close();
-			writer.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	public void close() {
@@ -165,33 +125,6 @@ public class FSPCore {
 	/**
 	 * Envoie UN fichier par socket
 	 */
-	public void envoyerContenu2(String filePath) throws IOException {
-		BufferedReader br;
-		File file;
-		FileReader fr;
-		String line;
-		int fileSize;
-
-		file = new File(filePath);
-		fileSize = (int) file.length();// pas utilisée
-		fr = new FileReader(file);
-		br = new BufferedReader(fr);
-
-		// On envoie le fichier ligne par ligne
-		while ((line = br.readLine()) != null) {
-			envoyerMessage(line);
-		}
-
-		// L'étiquette END marque la fin du fichier
-		// TODO Une alternative serait d'utiliser la taille du fichier,
-		// mais c'est trop compliqué. Toutefois, qu'est-ce qu'il se passe
-		// si le fichier contient END ?
-		// Ou bien le nombre de lignes, mais obtenir une méthode efficace
-		// qui compte le nombre de lignes, c'est pas facile
-		envoyerMessage("END");
-		fr.close();
-	}
-
 	public void envoyerContenu(String filePath) throws IOException {
 		File file;
 		InputStream in;
@@ -224,41 +157,21 @@ public class FSPCore {
 		fos = new FileOutputStream(filePath);
 		sum = 0;
 
-		while ((count = dis.read(bytes)) > 0 && (sum < fileSize)) {
-			sum += count;
-			System.out.println("Lu : " + count);
-			System.out.println("Total lu : " + sum);
-			System.out.println("Reste : " + (fileSize - sum));
-			fos.write(bytes, 0, count);
-			fos.flush();
+		while (sum != fileSize) {
+			if ((count = dis.read(bytes)) > 0) {
+				sum += count;
+				System.out.println("Lu : " + count);
+				System.out.println("Total lu : " + sum);
+				System.out.println("Reste : " + (fileSize - sum));
+				fos.write(bytes, 0, count);
+				System.out.println("write");
+				fos.flush();
+				System.out.println("flush");
+			}
 		}
 
 		System.out.println("Lecture finie");
 		fos.close();
-	}
-
-	/**
-	 * Récupère UN fichier envoyé par socket
-	 *
-	 * Ici on a un BufferedReader qu'on pourrait mettre en attribut
-	 */
-	public void enregistrerContenu2(String filePath) throws IOException {
-		BufferedWriter bw;
-		File file;
-		FileWriter fw;
-		String msg;
-
-		file = new File(filePath);
-		fw = new FileWriter(file);
-		bw = new BufferedWriter(fw);
-
-		// Chaque ligne du fichier nous est envoyée
-		// L'étiquette END marque la fin de la transmission
-		while (!(msg = lireMessage()).equals("END")) {
-			bw.write(msg + "\n");
-		}
-
-		bw.close();
 	}
 
 	/**
@@ -268,16 +181,22 @@ public class FSPCore {
 	 * Ensuite on envoie le contenu
 	 */
 	public void envoyerFichier(String filePath) throws IOException {
+		String msg;
+		Command cmd;
 		String fileName;
 		File file;
 
 		file = new File(filePath);
 		fileName = file.getName();
-				// filePath.substring(filePath.lastIndexOf('/') + 1);
 
 		// L'étiquette FILE va indiquer qu'on envoie le nom et la taille
 		envoyerMessage("FILE " + fileName + " " + file.length());
 		envoyerContenu(filePath);
+		do {
+			System.out.println("Waiting...");
+			msg = lireMessage();
+			cmd = Command.parseCommand(msg);
+		} while (!cmd.command.equals("ACK"));
 	}
 
 
@@ -292,15 +211,14 @@ public class FSPCore {
 		int fileSize;
 
 		// On attend un message avec pour commande FILE
-		//do {
-			msg = lireMessage();
-			ftpCmd = Command.parseCommand(msg);
-		//} while (!ftpCmd.command.equals("FILE"));
+		msg = lireMessage();
+		ftpCmd = Command.parseCommand(msg);
 
 		fileName = ftpCmd.content.split(" ")[0];
 		fileSize = Integer.parseInt(ftpCmd.content.split(" ")[1]);
 		System.out.println(dir + fileName + ", " + fileSize);
 		enregistrerContenu(dir + fileName, fileSize);
+		envoyerMessage("ACK");
 	}
 }
 
