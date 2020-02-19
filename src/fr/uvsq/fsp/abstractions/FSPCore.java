@@ -139,7 +139,6 @@ public class FSPCore {
 
 		// On envoie le fichier ligne par ligne
 		while ((count = in.read(bytes)) > 0) {
-			System.out.println(count);
 			dos.write(bytes, 0, count);
 			dos.flush();
 		}
@@ -150,27 +149,23 @@ public class FSPCore {
 
 	public void enregistrerContenu(String filePath, int fileSize) throws IOException {
 		int count;
-		byte[] bytes = new byte[fileSize];
+		byte[] bytes;
 		FileOutputStream fos;
 		int sum;
 
+		bytes = new byte[fileSize];
 		fos = new FileOutputStream(filePath);
 		sum = 0;
 
-		while (sum != fileSize) {
+		while (sum < fileSize) {
 			if ((count = dis.read(bytes)) > 0) {
 				sum += count;
-				System.out.println("Lu : " + count);
-				System.out.println("Total lu : " + sum);
-				System.out.println("Reste : " + (fileSize - sum));
 				fos.write(bytes, 0, count);
-				System.out.println("write");
 				fos.flush();
-				System.out.println("flush");
 			}
 		}
 
-		System.out.println("Lecture finie");
+		System.out.println("Lecture finie : " + filePath);
 		fos.close();
 	}
 
@@ -192,6 +187,8 @@ public class FSPCore {
 		// L'étiquette FILE va indiquer qu'on envoie le nom et la taille
 		envoyerMessage("FILE " + fileName + " " + file.length());
 		envoyerContenu(filePath);
+
+		// On attend l'accusé réception
 		do {
 			System.out.println("Waiting...");
 			msg = lireMessage();
