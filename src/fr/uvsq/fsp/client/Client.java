@@ -45,7 +45,8 @@ public class Client extends Application {
 			port = Integer.parseInt(args[1]);
 		}
 
-		client = new FSPClient(serverIP, port, "client/descriptions/");
+		client = new FSPClient(serverIP, port, "client/");
+
 		Application.launch(Client.class);
 		/*
 		try {

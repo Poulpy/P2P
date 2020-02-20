@@ -3,6 +3,10 @@ package fr.uvsq.fsp.client;
 import fr.uvsq.fsp.abstractions.FSPNode;
 import fr.uvsq.fsp.util.Checksum;
 import java.io.BufferedInputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.BufferedOutputStream;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
@@ -23,15 +27,17 @@ import java.util.Scanner;
 public class FSPClient extends FSPNode {
 
 	/** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
+	public final String clientFolder;
 	public final String descriptionsFolder;
-	public final String clientFolder = "client/";
-	public final String clientSharedFolder = clientFolder + "shared/";
-	public final String clientwDownloadsFolder = clientFolder + "downloads/";
+	public final String clientSharedFolder;
+	public final String clientDownloadsFolder;
 
-	public FSPClient(String serverIP, int port, String descFolder) {
+	public FSPClient(String serverIP, int port, String clientFolder) {
 		super(serverIP, port);
-		descriptionsFolder = descFolder;
-		new File(descriptionsFolder).mkdirs();
+		this.clientFolder = clientFolder;
+		descriptionsFolder = clientFolder + "descriptions/";
+		clientSharedFolder = clientFolder + "shared/";
+		clientDownloadsFolder = clientFolder + "downloads/";
 	}
 
 	/**

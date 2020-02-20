@@ -75,9 +75,12 @@
 		<mkdir dir="${build.client.downloads.dir}"/>
 		<!-- Copy all downloads -->
 		<copy todir="${build.client.downloads.dir}">
-			<dirset dir="${src.fr.uvsq.fsp.client.downloads.dir}">
-				<include name="*"/>
+			<dirset dir="${src.fr.uvsq.fsp.client.downloads.dir}" includes="**">
 			</dirset>
+		</copy>
+		<copy todir="${build.client.downloads.dir}">
+			<fileset dir="${src.fr.uvsq.fsp.client.downloads.dir}" includes="**">
+			</fileset>
 		</copy>
 
 		<mkdir dir="${build.client.shared.dir}"/>
@@ -169,6 +172,7 @@
 			<test name="test.TestChecksum"/>
 			<test name="test.TestClient"/>
 			<test name="test.TestServer"/>
+			<test name="test.TestFileLister"/>
 		</junit>
 	</target>
 </project>
