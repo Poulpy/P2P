@@ -58,37 +58,39 @@ public class ClientController {
 		filesShared = FileLister.list(client.clientSharedFolder);
 		scene.setListView(scene.sharedList, filesShared);
 
+		filesDownloaded = FileLister.listWithLevel(client.clientDownloadsFolder, 1);
+		scene.setListView(scene.downloadList, filesDownloaded);
+
 		scene.refreshConnectionButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
 				if (scene.serverIPField.getText() == null
-					|| scene.portField.getText() == null)
+					|| scene.portField.getText() == null
+					|| scene.serverIPField.getText().equals("")
+					|| scene.portField.getText().equals(""))
 					return;
 
-				if (!(scene.serverIPField.getText().equals("")
-					&& scene.portField.getText().equals(""))) {
 
-					if (swap++ % 2 == 0) {
-						scene.connectionLabel.getStyleClass().remove("greenFont");
-						scene.connectionLabel.getStyleClass().add("redFont");
-						scene.connectionLabel.setText("Connection failed");
-					} else {
-						scene.connectionLabel.getStyleClass().remove("redFont");
-						scene.connectionLabel.getStyleClass().add("greenFont");
-						scene.connectionLabel.setText("Connection successful");
-					}
-
-						/*
-						try {
-							client.connect();
-							client.open();
-						} catch (IOException e) {
-							e.printStackTrace();
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-						}
-						*/
+				if (swap++ % 2 == 0) {
+					scene.connectionLabel.getStyleClass().remove("greenFont");
+					scene.connectionLabel.getStyleClass().add("redFont");
+					scene.connectionLabel.setText("Connection failed");
+				} else {
+					scene.connectionLabel.getStyleClass().remove("redFont");
+					scene.connectionLabel.getStyleClass().add("greenFont");
+					scene.connectionLabel.setText("Connection successful");
 				}
+
+				/*
+				try {
+					client.connect();
+					client.open();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
+				*/
 			}
 		});
 

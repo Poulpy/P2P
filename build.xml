@@ -65,6 +65,7 @@
 		<javac includeantruntime="false" sourcepath="" srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source">
 			<include name="**/*.java"/>
 			<classpath refid="classpath.test"/>
+			<compilerarg value="-Xlint:unchecked"/>
 		</javac>
 		<mkdir dir="${build.central.descriptions.dir}"/>
 		<!-- Copy users file (id, password hash) -->

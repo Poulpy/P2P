@@ -49,6 +49,7 @@ public class ClientView extends Group {
 	 */
 	public ListView<String> fileList;
 	public ListView<String> sharedList;
+	public ListView<String> downloadList;
 
 	/**
 	 * Receives the keyword to be sent to the server.
@@ -104,6 +105,7 @@ public class ClientView extends Group {
 		refreshConnectionButton.setPrefHeight(10);
 
 		connectionLabel = new Label();
+		connectionLabel.getStyleClass().add("littleFont");
 
 		// Bouton de recherche
 		searchButton = new Button("Rechercher");
@@ -136,6 +138,13 @@ public class ClientView extends Group {
 		downloadButton.setPrefHeight(35);
 		downloadButton.getStyleClass().add("searchButton");
 		downloadButton.getStyleClass().add("removeLightGlow");
+
+		// Liste affichant les fichiers téléchargés
+		downloadList = new ListView<String>();
+		downloadList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		downloadList.setPrefHeight(100);
+		downloadList.setPrefWidth(250);
+		downloadList.setOrientation(Orientation.VERTICAL);
 
 		downloadLabel = new Label();
 		downloadLabel.getStyleClass().add("greenFont");
@@ -170,6 +179,7 @@ public class ClientView extends Group {
 		grid.add(fileList, 0, 2, 2, 2);
 		grid.add(downloadButton, 2, 2, 2, 1);
 		grid.add(downloadLabel, 2, 3, 2, 1);
+		grid.add(downloadList, 4, 2, 4, 2);
 
 		grid.add(sharedList, 0, 4, 2, 2);
 		grid.add(uploadButton, 2, 4, 2, 1);
@@ -196,7 +206,7 @@ public class ClientView extends Group {
 		}
 	}
 
-	public void setListView(ListView lv, ArrayList<String> items) {
+	public void setListView(ListView<String> lv, ArrayList<String> items) {
 		lv.getItems().clear();
 
 		for (int i = 0; i != items.size(); i++) {

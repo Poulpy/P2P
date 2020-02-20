@@ -106,7 +106,7 @@ Pour le client l'adresse IP du serveur et le port.
 cd build/
 java fr.uvsq.fsp.server.Central 60000
 java fr.uvsq.fsp.client.CServer 127.0.0.1 60000 toto admin
-java fr.uvsq.fsp.client.Client 127.0.0.1 60000
+java fr.uvsq.fsp.client.Client
 ```
 
 ### Exécuter les tests
