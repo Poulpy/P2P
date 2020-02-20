@@ -41,8 +41,21 @@ public class ClientView extends Group {
 	 * Button to query the server.
 	 */
 	public Button searchButton;
+
+	/**
+	 * Button to open a socket with the server
+	 */
 	public Button refreshConnectionButton;
+
+	/**
+	 * Button to upload a file for sharing
+	 */
 	public Button uploadButton;
+
+	/**
+	 * Button for sending the description of an uploaded file
+	 */
+	public Button sendDescriptionButton;
 
 	/**
 	 * List showing the results/files sent by the server.
@@ -59,10 +72,10 @@ public class ClientView extends Group {
 	public TextField portField;
 
 	/**
-	 * Pops when a user downloaded successfully.
+	 * Label that displays any kind of information:
+	 * Connection, download, upload
 	 */
-	public Label downloadLabel;
-	public Label connectionLabel;
+	public Label messageLabel;
 
 	public TextArea descriptionArea;
 
@@ -104,8 +117,7 @@ public class ClientView extends Group {
 		refreshConnectionButton.setPrefWidth(10);
 		refreshConnectionButton.setPrefHeight(10);
 
-		connectionLabel = new Label();
-		connectionLabel.getStyleClass().add("littleFont");
+		messageLabel = new Label();
 
 		// Bouton de recherche
 		searchButton = new Button("Rechercher");
@@ -146,9 +158,6 @@ public class ClientView extends Group {
 		downloadList.setPrefWidth(250);
 		downloadList.setOrientation(Orientation.VERTICAL);
 
-		downloadLabel = new Label();
-		downloadLabel.getStyleClass().add("greenFont");
-
 		// Liste affichant les fichiers partagés par l'utilisateur
 		sharedList = new ListView<String>();
 		sharedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -157,32 +166,38 @@ public class ClientView extends Group {
 		sharedList.setOrientation(Orientation.VERTICAL);
 
 		uploadButton = new Button("Téléverser");
-		searchButton.setPrefWidth(120);
-		searchButton.setPrefHeight(35);
+		uploadButton.setPrefWidth(120);
+		uploadButton.setPrefHeight(35);
 		uploadButton.getStyleClass().add("searchButton");
 		uploadButton.getStyleClass().add("removeLightGlow");
 
+		sendDescriptionButton = new Button("Partager");
+		sendDescriptionButton.setPrefWidth(120);
+		sendDescriptionButton.setPrefHeight(35);
+		sendDescriptionButton.getStyleClass().add("searchButton");
+		sendDescriptionButton.getStyleClass().add("removeLightGlow");
+
 		descriptionArea = new TextArea();
 		descriptionArea.getStyleClass().add("bold");
-		descriptionArea.setPrefHeight(50);
+		descriptionArea.setPrefHeight(70);
 		descriptionArea.setPrefWidth(150);
 		descriptionArea.setPromptText("Description");
 
 		grid.add(serverIPField, 0, 0, 1, 1);
 		grid.add(portField, 1, 0, 1, 1);
 		grid.add(refreshConnectionButton, 2, 0, 1, 1);
-		grid.add(connectionLabel, 3, 0, 1, 1);
+		grid.add(messageLabel, 4, 0, 2, 1);
 
 		grid.add(searchField, 0, 1, 2, 1);
 		grid.add(searchButton, 2, 1, 2, 1);
+		grid.add(downloadList, 4, 1, 4, 5);
 
 		grid.add(fileList, 0, 2, 2, 2);
 		grid.add(downloadButton, 2, 2, 2, 1);
-		grid.add(downloadLabel, 2, 3, 2, 1);
-		grid.add(downloadList, 4, 2, 4, 2);
 
 		grid.add(sharedList, 0, 4, 2, 2);
-		grid.add(uploadButton, 2, 4, 2, 1);
+		grid.add(uploadButton, 2, 4, 1, 1);
+		grid.add(sendDescriptionButton, 3, 4, 1, 1);
 		grid.add(descriptionArea, 2, 5, 2, 1);
 
 		grid.setHgap(10);

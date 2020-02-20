@@ -87,11 +87,13 @@ public class Client extends Application {
 		ClientController controller;
 
 		view = new ClientView();
-		scene = new Scene(view, 600, 500, Color.WHITE);
+		scene = new Scene(view, 700, 580, Color.WHITE);
 
 		primaryStage = stage;
-		primaryStage.setMinWidth(600);
+		primaryStage.setMinWidth(700);
 		primaryStage.setMinHeight(550);
+		primaryStage.setMaxWidth(700);
+		primaryStage.setMaxHeight(580);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setTitle("File Sharing");

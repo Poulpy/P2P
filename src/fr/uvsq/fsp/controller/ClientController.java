@@ -72,13 +72,13 @@ public class ClientController {
 
 
 				if (swap++ % 2 == 0) {
-					scene.connectionLabel.getStyleClass().remove("greenFont");
-					scene.connectionLabel.getStyleClass().add("redFont");
-					scene.connectionLabel.setText("Connection failed");
+					scene.messageLabel.getStyleClass().clear();
+					scene.messageLabel.getStyleClass().add("redFont");
+					scene.messageLabel.setText("Connection failed");
 				} else {
-					scene.connectionLabel.getStyleClass().remove("redFont");
-					scene.connectionLabel.getStyleClass().add("greenFont");
-					scene.connectionLabel.setText("Connection successful");
+					scene.messageLabel.getStyleClass().clear();
+					scene.messageLabel.getStyleClass().add("greenFont");
+					scene.messageLabel.setText("Connection successful");
 				}
 
 				/*
@@ -126,16 +126,17 @@ public class ClientController {
 			public void handle(KeyEvent ke) {
 				if (isConnected && !ke.getCode().equals(KeyCode.ENTER)) {
 					ObservableList<Integer> indices = scene.fileList.getSelectionModel().getSelectedIndices();
+					ArrayList<String> downloads;
+
+					downloads = new ArrayList<String>();
 
 					for (Integer index : indices) {
 					// TODO Télécharger un fichier
 						System.out.println("GET " + filesMatching.get(index));
+						downloads = samples();
 					}
 
-					if (indices.size() > 0) {
-						scene.downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
-						scene.fadeAnimation(scene.downloadLabel, 2000);
-					}
+					displayUploadMessage(downloads.size());
 
 				}
 			}
@@ -147,16 +148,17 @@ public class ClientController {
 			public void handle(ActionEvent e) {
 				if (isConnected) {
 					ObservableList<Integer> indices = scene.fileList.getSelectionModel().getSelectedIndices();
+					ArrayList<String> downloads;
 
-					if (indices.size() > 0) {
-						for (Integer index : indices) {
-							// TODO Télécharger un fichier
-							System.out.println("GET " + filesMatching.get(index));
-						}
+					downloads = new ArrayList<String>();
 
-						scene.downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
-						scene.fadeAnimation(scene.downloadLabel, 2000);
+					for (Integer index : indices) {
+						// TODO Télécharger un fichier
+						System.out.println("GET " + filesMatching.get(index));
+						downloads = samples();
 					}
+
+					displayUploadMessage(downloads.size());
 				}
 			}
 		});
@@ -191,6 +193,18 @@ public class ClientController {
 			filesMatching = client.parseFilesFound(ftpCmd.content);
 			scene.updateListView(filesMatching);
 		}
+	}
+
+	public void displayUploadMessage(int fileCount) {
+		scene.messageLabel.getStyleClass().clear();
+		if (fileCount > 0) {
+			scene.messageLabel.getStyleClass().add("greenFont");
+			scene.messageLabel.setText("Téléchargé " + fileCount + " fichier(s)");
+		} else {
+			scene.messageLabel.getStyleClass().add("redFont");
+			scene.messageLabel.setText("Erreur");
+		}
+		scene.fadeAnimation(scene.messageLabel, 2000);
 	}
 }
 
