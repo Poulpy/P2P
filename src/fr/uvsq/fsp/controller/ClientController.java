@@ -56,9 +56,11 @@ public class ClientController {
 					&& scene.portField.getText().equals(""))) {
 
 					if (swap++ % 2 == 0) {
+						scene.connectionLabel.getStyleClass().remove("greenFont");
 						scene.connectionLabel.getStyleClass().add("redFont");
 						scene.connectionLabel.setText("Connection failed");
 					} else {
+						scene.connectionLabel.getStyleClass().remove("redFont");
 						scene.connectionLabel.getStyleClass().add("greenFont");
 						scene.connectionLabel.setText("Connection successful");
 					}
