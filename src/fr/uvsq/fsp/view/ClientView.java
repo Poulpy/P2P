@@ -19,6 +19,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -41,11 +42,13 @@ public class ClientView extends Group {
 	 */
 	public Button searchButton;
 	public Button refreshConnectionButton;
+	public Button uploadButton;
 
 	/**
 	 * List showing the results/files sent by the server.
 	 */
 	public ListView<String> fileList;
+	public ListView<String> sharedList;
 
 	/**
 	 * Receives the keyword to be sent to the server.
@@ -60,6 +63,8 @@ public class ClientView extends Group {
 	public Label downloadLabel;
 	public Label connectionLabel;
 
+	public TextArea descriptionArea;
+
 
 	public ClientView() {
 		GridPane grid = new GridPane();
@@ -73,6 +78,7 @@ public class ClientView extends Group {
 		serverIPField.getStyleClass().add("littleFont");
 		serverIPField.setPrefWidth(70);
 		serverIPField.setPrefHeight(10);
+		serverIPField.setPromptText("@IP server");
 
 		// Champ du port
 		portField = new TextField();
@@ -81,6 +87,7 @@ public class ClientView extends Group {
 		portField.getStyleClass().add("littleFont");
 		portField.setPrefWidth(50);
 		portField.setPrefHeight(10);
+		portField.setPromptText("Port");
 
 		Image refreshConnectionImage;
 		// Bouton pour rafraichir la connexion
@@ -104,8 +111,6 @@ public class ClientView extends Group {
 		searchButton.setPrefHeight(35);
 		searchButton.getStyleClass().add("searchButton");
 		searchButton.getStyleClass().add("removeLightGlow");
-		searchButton.setLayoutX(30);
-		searchButton.setLayoutY(50);
 
 
 		// Champ de recherche
@@ -114,8 +119,7 @@ public class ClientView extends Group {
 		searchField.getStyleClass().add("searchField");
 		searchField.setPrefWidth(150);
 		searchField.setPrefHeight(35);
-		searchField.setLayoutX(30);
-		searchField.setLayoutY(10);
+		searchField.setPromptText("Mot clef");
 
 
 
@@ -136,6 +140,24 @@ public class ClientView extends Group {
 		downloadLabel = new Label();
 		downloadLabel.getStyleClass().add("greenFont");
 
+		// Liste affichant les fichiers partagés par l'utilisateur
+		sharedList = new ListView<String>();
+		sharedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+		sharedList.setPrefHeight(200);
+		sharedList.setPrefWidth(150);
+		sharedList.setOrientation(Orientation.VERTICAL);
+
+		uploadButton = new Button("Téléverser");
+		searchButton.setPrefWidth(120);
+		searchButton.setPrefHeight(35);
+		uploadButton.getStyleClass().add("searchButton");
+		uploadButton.getStyleClass().add("removeLightGlow");
+
+		descriptionArea = new TextArea();
+		descriptionArea.getStyleClass().add("bold");
+		descriptionArea.setPrefHeight(50);
+		descriptionArea.setPrefWidth(150);
+
 		grid.add(serverIPField, 0, 0, 1, 1);
 		grid.add(portField, 1, 0, 1, 1);
 		grid.add(refreshConnectionButton, 2, 0, 1, 1);
@@ -147,6 +169,10 @@ public class ClientView extends Group {
 		grid.add(fileList, 0, 2, 2, 2);
 		grid.add(downloadButton, 2, 2, 2, 1);
 		grid.add(downloadLabel, 2, 3, 2, 1);
+
+		grid.add(sharedList, 0, 4, 2, 2);
+		grid.add(uploadButton, 2, 4, 2, 1);
+		grid.add(descriptionArea, 2, 5, 2, 1);
 
 		grid.setHgap(10);
 		grid.setVgap(10);

@@ -35,6 +35,8 @@
 	<property name="test" location="./src/test/"/>
 	<property name="src.fr.uvsq.fsp.client.stylesheet" location="src/fr/uvsq/fsp/client/stylesheet.css"/>
 	<property name="src.fr.uvsq.fsp.client.refresh" location="src/fr/uvsq/fsp/client/refresh.png"/>
+	<property name="src.fr.uvsq.fsp.client.shared.dir" location="src/fr/uvsq/fsp/client/shared/"/>
+	<property name="src.fr.uvsq.fsp.client.downloads.dir" location="src/fr/uvsq/fsp/client/downloads/"/>
 
 	<path id="classpath">
 		<pathelement location="${src}"/>
@@ -67,6 +69,22 @@
 		<copy file="${src.fr.uvsq.fsp.server.users}" todir="${build.central.dir}"/>
 		<!-- Copy refresh png icon -->
 		<copy file="${src.fr.uvsq.fsp.client.refresh}" todir="${build.client.dir}"/>
+
+		<mkdir dir="${build.client.downloads.dir}"/>
+		<!-- Copy all downloads -->
+		<copy todir="${build.client.downloads.dir}">
+			<fileset dir="${src.fr.uvsq.fsp.client.downloads.dir}">
+				<include name="*"/>
+			</fileset>
+		</copy>
+
+		<mkdir dir="${build.client.shared.dir}"/>
+		<!-- Copy all shared files -->
+		<copy todir="${build.client.shared.dir}">
+			<fileset dir="${src.fr.uvsq.fsp.client.shared.dir}">
+				<include name="*"/>
+			</fileset>
+		</copy>
 
 		<mkdir dir="${build.client.descriptions.dir}"/>
 		<!-- Copy all descriptions -->

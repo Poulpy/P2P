@@ -43,12 +43,6 @@ public class Client extends Application {
 		if (args.length == 2) {
 			serverIP = args[0];
 			port = Integer.parseInt(args[1]);
-		} else {
-			scan = new Scanner(System.in);
-			System.out.print("Adresse IP du serveur : ");
-			serverIP = scan.nextLine();
-			System.out.print("Port : ");
-			port = Integer.parseInt(scan.nextLine());
 		}
 
 		client = new FSPClient(serverIP, port, "client/descriptions/");
@@ -95,8 +89,8 @@ public class Client extends Application {
 		scene = new Scene(view, 400, 400, Color.WHITE);
 
 		primaryStage = stage;
-		primaryStage.setMinWidth(400);
-		primaryStage.setMinHeight(400);
+		primaryStage.setMinWidth(500);
+		primaryStage.setMinHeight(550);
 		primaryStage.setScene(scene);
 		primaryStage.show();
 		primaryStage.setTitle("File Sharing");

@@ -1,0 +1,101 @@
+#!/bin/bash
+
+sync_path="../mirror"
+
+main() {
+    while [ "$choice" != 'q' ]
+    do
+        echo 'Phone book'
+        echo '* * * * * * * * * * * * *'
+        echo '1 - Add a form'
+        echo '2 - List all saved names'
+        echo '3 - Search a phone number'
+        echo '4 - Change a phone number'
+        echo '5 - Search a name'
+        echo '6 - Synchronize phonebooks'
+        echo 'q - Quit'
+        echo '* * * * * * * * * * * * *'
+        echo -n 'Your choice : '
+        read choice
+        case "$choice" in
+            1) add_form;;
+            2) name_list;;
+            3) search_phone_number;;
+            4) change_phone_number;;
+            5) search_form;;
+            6) sync_phonebook;;
+            q)
+                if [ $# -eq 1 -a "${1:1:1}" = 's' ]
+                then
+                    d="${1#-s=}"
+                    $("$sync_path" . "$d") && echo "Synchronization successful with $d"
+                fi
+                exit 0;;
+        esac
+    done
+
+}
+
+sync_phonebook() {
+    echo -n 'Location of directory to synchronize : '
+    read dir
+    $("$sync_path" . "$dir") && echo "Synchronization successful with $dir"
+}
+
+add_form() {
+    echo -n 'Name : '
+    read name
+    echo -n 'Telephone number : '
+    read number
+
+    echo "$number" > "$name"
+}
+
+name_list() {
+    ls *[^~]
+}
+
+search_phone_number() {
+    echo -n 'Name : '
+    read name
+
+    if [ -e "$name" ]
+    then
+        cat "$name"
+    else
+        echo "The form doesn't exist for $name."
+    fi
+}
+
+change_phone_number() {
+    echo -n 'Name : '
+    read name
+
+    echo -n 'New phone number : '
+    read number
+
+    if [ -e "$name" ]
+    then
+        echo "$number" > "$name"
+    else
+        echo "The form doesn't exist for $name."
+    fi
+}
+
+search_form() {
+    echo -n 'Phone number : '
+    read number
+
+    for form in $(ls *[^~])
+    do
+        if [ $number = $(cat $form) ]
+        then
+            echo "$form"
+            return
+        fi
+    done
+
+    echo "No name found for the number $number."
+}
+
+main $1
