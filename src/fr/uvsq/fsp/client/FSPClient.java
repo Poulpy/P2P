@@ -25,6 +25,8 @@ public class FSPClient extends FSPNode {
 	/** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
 	public final String descriptionsFolder;
 	public final String clientFolder = "client/";
+	public final String clientSharedFolder = clientFolder + "shared/";
+	public final String clientwDownloadsFolder = clientFolder + "downloads/";
 
 	public FSPClient(String serverIP, int port, String descFolder) {
 		super(serverIP, port);

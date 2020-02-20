@@ -35,6 +35,8 @@
 	<property name="test" location="./src/test/"/>
 	<property name="src.fr.uvsq.fsp.client.stylesheet" location="src/fr/uvsq/fsp/client/stylesheet.css"/>
 	<property name="src.fr.uvsq.fsp.client.refresh" location="src/fr/uvsq/fsp/client/refresh.png"/>
+	<property name="build.client.shared.dir" location="build/client/shared/"/>
+	<property name="build.client.downloads.dir" location="build/client/downloads/"/>
 	<property name="src.fr.uvsq.fsp.client.shared.dir" location="src/fr/uvsq/fsp/client/shared/"/>
 	<property name="src.fr.uvsq.fsp.client.downloads.dir" location="src/fr/uvsq/fsp/client/downloads/"/>
 
