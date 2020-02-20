@@ -157,6 +157,7 @@ public class ClientView extends Group {
 		descriptionArea.getStyleClass().add("bold");
 		descriptionArea.setPrefHeight(50);
 		descriptionArea.setPrefWidth(150);
+		descriptionArea.setPromptText("Description");
 
 		grid.add(serverIPField, 0, 0, 1, 1);
 		grid.add(portField, 1, 0, 1, 1);

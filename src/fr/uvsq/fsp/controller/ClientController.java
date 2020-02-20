@@ -50,14 +50,21 @@ public class ClientController {
 		this.client = fspClient;
 
 		scene.serverIPField.setText(client.adresseIPServeur);
-		scene.portField.setText(String.valueOf(client.port));
+		if (client.port != 0)
+		{
+			scene.portField.setText(String.valueOf(client.port));
+		}
 
-		filesShared = FileLister.list(client.clientSharedFolder, 0);
+		filesShared = FileLister.list(client.clientSharedFolder);
 		scene.setListView(scene.sharedList, filesShared);
 
 		scene.refreshConnectionButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
+				if (scene.serverIPField.getText() == null
+					|| scene.portField.getText() == null)
+					return;
+
 				if (!(scene.serverIPField.getText().equals("")
 					&& scene.portField.getText().equals(""))) {
 

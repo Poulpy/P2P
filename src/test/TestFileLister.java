@@ -34,12 +34,11 @@ public class TestFileLister {
 		System.out.println("+++++++");
 		*/
 
-		a = FileLister.list("build/client/downloads/", 1);
+		a = FileLister.listWithLevel("build/client/downloads/", 1);
 		System.out.println(a);
 		System.out.println("+++++++");
-		a = FileLister.list("build/client/shared/", 0);
+		a = FileLister.list("build/client/shared/");
 		System.out.println(a);
 	}
 }
-
 
