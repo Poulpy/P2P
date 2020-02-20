@@ -29,3 +29,11 @@
     -fx-text-fill: green;
 }
 
+.redFont {
+    -fx-text-fill: red;
+}
+
+.littleFont {
+    -fx-font-size: 0.8em;
+}
+

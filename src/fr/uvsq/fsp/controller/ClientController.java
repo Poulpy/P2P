@@ -38,6 +38,9 @@ public class ClientController {
 
 	public ClientView scene;
 	public FSPClient client;
+	public boolean isConnected = false;
+
+	public int swap = 0;
 
 	public ClientController(ClientView view, FSPClient fspClient) {
 		this.scene = view;
@@ -46,11 +49,39 @@ public class ClientController {
 		scene.serverIPField.setText(client.adresseIPServeur);
 		scene.portField.setText(String.valueOf(client.port));
 
+		scene.refreshConnectionButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if (!(scene.serverIPField.getText().equals("")
+					&& scene.portField.getText().equals(""))) {
+
+					if (swap++ % 2 == 0) {
+						scene.connectionLabel.getStyleClass().add("redFont");
+						scene.connectionLabel.setText("Connection failed");
+					} else {
+						scene.connectionLabel.getStyleClass().add("greenFont");
+						scene.connectionLabel.setText("Connection successful");
+					}
+
+						/*
+						try {
+							client.connect();
+							client.open();
+						} catch (IOException e) {
+							e.printStackTrace();
+						} catch (UnknownHostException e) {
+							e.printStackTrace();
+						}
+						*/
+				}
+			}
+		});
+
 		// événements
 		scene.searchButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				if (!scene.searchField.getText().equals("")) {
+				if (isConnected && !scene.searchField.getText().equals("")) {
 					try {
 						searchEvent();
 					} catch (IOException ex) {
@@ -62,7 +93,7 @@ public class ClientController {
 		scene.searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent ke) {
-				if (ke.getCode().equals(KeyCode.ENTER)) {
+				if (isConnected && !ke.getCode().equals(KeyCode.ENTER)) {
 					if (!scene.searchField.getText().equals("")) {
 						try {
 							searchEvent();
@@ -76,7 +107,7 @@ public class ClientController {
 		scene.fileList.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent ke) {
-				if (ke.getCode().equals(KeyCode.ENTER)) {
+				if (isConnected && !ke.getCode().equals(KeyCode.ENTER)) {
 					ObservableList<Integer> indices = scene.fileList.getSelectionModel().getSelectedIndices();
 
 					for (Integer index : indices) {
@@ -86,7 +117,7 @@ public class ClientController {
 
 					if (indices.size() > 0) {
 						scene.downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
-						scene.fadeAnimation(scene.downloadLabel);
+						scene.fadeAnimation(scene.downloadLabel, 2000);
 					}
 
 				}
@@ -97,16 +128,18 @@ public class ClientController {
 		scene.downloadButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				ObservableList<Integer> indices = scene.fileList.getSelectionModel().getSelectedIndices();
+				if (isConnected) {
+					ObservableList<Integer> indices = scene.fileList.getSelectionModel().getSelectedIndices();
 
-				for (Integer index : indices) {
-					// TODO Télécharger un fichier
-					System.out.println("GET " + filesMatching.get(index));
-				}
+					if (indices.size() > 0) {
+						for (Integer index : indices) {
+							// TODO Télécharger un fichier
+							System.out.println("GET " + filesMatching.get(index));
+						}
 
-				if (indices.size() > 0) {
-					scene.downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
-					scene.fadeAnimation(scene.downloadLabel);
+						scene.downloadLabel.setText("Téléchargé " + indices.size() + " fichier(s)");
+						scene.fadeAnimation(scene.downloadLabel, 2000);
+					}
 				}
 			}
 		});

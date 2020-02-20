@@ -58,25 +58,32 @@ public class ClientView extends Group {
 	 * Pops when a user downloaded successfully.
 	 */
 	public Label downloadLabel;
+	public Label connectionLabel;
+
 
 	public ClientView() {
 		GridPane grid = new GridPane();
 
 		getStylesheets().add("client/stylesheet.css");
 
+		// Champ de l'adresse du serveur central
 		serverIPField = new TextField();
 		serverIPField.getStyleClass().add("removeLightGlow");
 		serverIPField.getStyleClass().add("searchField");
+		serverIPField.getStyleClass().add("littleFont");
 		serverIPField.setPrefWidth(70);
 		serverIPField.setPrefHeight(10);
 
+		// Champ du port
 		portField = new TextField();
 		portField.getStyleClass().add("removeLightGlow");
 		portField.getStyleClass().add("searchField");
+		portField.getStyleClass().add("littleFont");
 		portField.setPrefWidth(50);
 		portField.setPrefHeight(10);
 
 		Image refreshConnectionImage;
+		// Bouton pour rafraichir la connexion
 		refreshConnectionButton = new Button();
 		try {
 			refreshConnectionImage = new Image(new FileInputStream("client/refresh.png"));
@@ -88,6 +95,8 @@ public class ClientView extends Group {
 		refreshConnectionButton.getStyleClass().add("removeLightGlow");
 		refreshConnectionButton.setPrefWidth(10);
 		refreshConnectionButton.setPrefHeight(10);
+
+		connectionLabel = new Label();
 
 		// Bouton de recherche
 		searchButton = new Button("Rechercher");
@@ -130,13 +139,14 @@ public class ClientView extends Group {
 		grid.add(serverIPField, 0, 0, 1, 1);
 		grid.add(portField, 1, 0, 1, 1);
 		grid.add(refreshConnectionButton, 2, 0, 1, 1);
+		grid.add(connectionLabel, 3, 0, 1, 1);
 
 		grid.add(searchField, 0, 1, 2, 1);
-		grid.add(searchButton, 2, 1, 1, 1);
+		grid.add(searchButton, 2, 1, 2, 1);
 
 		grid.add(fileList, 0, 2, 2, 2);
-		grid.add(downloadButton, 2, 2, 1, 1);
-		grid.add(downloadLabel, 2, 3, 1, 1);
+		grid.add(downloadButton, 2, 2, 2, 1);
+		grid.add(downloadLabel, 2, 3, 2, 1);
 
 		grid.setHgap(10);
 		grid.setVgap(10);
@@ -162,8 +172,8 @@ public class ClientView extends Group {
 	/**
 	 * Animation sur un label : fait apparaître puis disparaître le text
 	 */
-	public void fadeAnimation(Label text) {
-		FadeTransition ft = new FadeTransition(Duration.millis(2000), text);
+	public void fadeAnimation(Label text, long duration) {
+		FadeTransition ft = new FadeTransition(Duration.millis(duration), text);
 		ft.setFromValue(0.0);
 		ft.setToValue(1.0);
 		ft.setCycleCount(2);
