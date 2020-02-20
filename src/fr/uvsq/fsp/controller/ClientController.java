@@ -1,5 +1,6 @@
 package fr.uvsq.fsp.controller;
 
+import fr.uvsq.fsp.util.FileLister;
 import fr.uvsq.fsp.client.FSPClient;
 import fr.uvsq.fsp.util.Command;
 import fr.uvsq.fsp.view.ClientView;
@@ -35,6 +36,8 @@ public class ClientController {
 	 * Files matching the search
 	 */
 	public ArrayList<String> filesMatching;
+	public ArrayList<String> filesShared;
+	public ArrayList<String> filesDownloaded;
 
 	public ClientView scene;
 	public FSPClient client;
@@ -48,6 +51,9 @@ public class ClientController {
 
 		scene.serverIPField.setText(client.adresseIPServeur);
 		scene.portField.setText(String.valueOf(client.port));
+
+		filesShared = FileLister.list(client.clientSharedFolder, 0);
+		scene.setListView(scene.sharedList, filesShared);
 
 		scene.refreshConnectionButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override

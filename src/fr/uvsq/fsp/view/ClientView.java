@@ -195,6 +195,14 @@ public class ClientView extends Group {
 		}
 	}
 
+	public void setListView(ListView lv, ArrayList<String> items) {
+		lv.getItems().clear();
+
+		for (int i = 0; i != items.size(); i++) {
+			lv.getItems().add(items.get(i));
+		}
+	}
+
 	/**
 	 * Animation sur un label : fait apparaître puis disparaître le text
 	 */
