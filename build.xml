@@ -75,9 +75,9 @@
 		<mkdir dir="${build.client.downloads.dir}"/>
 		<!-- Copy all downloads -->
 		<copy todir="${build.client.downloads.dir}">
-			<fileset dir="${src.fr.uvsq.fsp.client.downloads.dir}">
+			<dirset dir="${src.fr.uvsq.fsp.client.downloads.dir}">
 				<include name="*"/>
-			</fileset>
+			</dirset>
 		</copy>
 
 		<mkdir dir="${build.client.shared.dir}"/>
