@@ -34,6 +34,7 @@
 	<property name="src.fr.uvsq.fsp.server.users" location="src/fr/uvsq/fsp/server/utilisateurs.csv"/>
 	<property name="test" location="./src/test/"/>
 	<property name="src.fr.uvsq.fsp.client.stylesheet" location="src/fr/uvsq/fsp/client/stylesheet.css"/>
+	<property name="src.fr.uvsq.fsp.client.refresh" location="src/fr/uvsq/fsp/client/refresh.png"/>
 
 	<path id="classpath">
 		<pathelement location="${src}"/>
@@ -64,6 +65,9 @@
 		<mkdir dir="${build.central.descriptions.dir}"/>
 		<!-- Copy users file (id, password hash) -->
 		<copy file="${src.fr.uvsq.fsp.server.users}" todir="${build.central.dir}"/>
+		<!-- Copy refresh png icon -->
+		<copy file="${src.fr.uvsq.fsp.client.refresh}" todir="${build.client.dir}"/>
+
 		<mkdir dir="${build.client.descriptions.dir}"/>
 		<!-- Copy all descriptions -->
 		<copy todir="${build.client.descriptions.dir}">
