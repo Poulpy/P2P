@@ -1,14 +1,14 @@
 package test;
 
 import fr.uvsq.fsp.util.CSVParser;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import java.io.IOException;
-import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 public class TestCSVParser {
 

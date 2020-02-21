@@ -10,8 +10,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 
+/**
+ * Reads a writes to a csv file
+ */
 public class CSVParser {
 
+    /**
+     * Reads a CSV file and returns a map
+     * @throws IOException
+     */
     public static Map<String, String> read(String filePath) throws IOException {
         Map<String, String> map;
         String values[];
@@ -35,6 +42,13 @@ public class CSVParser {
         return map;
     }
 
+    /**
+     * Write the key-value pair of a map a csv file
+     * key,value
+     * @param map La table de hashage a écrire dans le fichier csv
+     * @param filePath Le chemin du fichier csv
+     * @throws IOException
+     */
     public static void write(Map<String, String> map, String filePath) throws IOException {
         BufferedWriter writer;
 

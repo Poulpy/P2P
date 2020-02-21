@@ -23,28 +23,6 @@ public class TestServer {
 		central = new FSPCentral(sock, "build/test/central/");
 	}
 
-	@Test
-	public void testUtilisateurExiste() throws Exception {
-		Assert.assertTrue(central.utilisateurExiste("toto"));
-		Assert.assertTrue(central.utilisateurExiste("titi"));
-		Assert.assertFalse(central.utilisateurExiste("totot"));
-	}
-
-	@Test
-	public void testMdpCorrect() throws Exception {
-		Assert.assertTrue(central.mdpCorrect("toto", "21232f297a57a5a743894a0e4a801fc3"));
-		Assert.assertFalse(central.mdpCorrect("totot", "21232f297a57a5a743894a0e4a801fc3"));
-	}
-
-	@Test
-	public void testEnregistrerUtilisateur() throws Exception {
-		Assert.assertFalse(central.utilisateurExiste("pouic"));
-		central.EnregistrerUtilisateur("pouic", "hey");
-		Assert.assertTrue(central.utilisateurExiste("pouic"));
-		Assert.assertTrue(central.mdpCorrect("pouic", "hey"));
-		Assert.assertTrue(central.enleverUtilisateur("pouic"));
-		Assert.assertFalse(central.utilisateurExiste("pouic"));
-	}
 
 	@Test
 	public void testSearchByKeyword() throws Exception {

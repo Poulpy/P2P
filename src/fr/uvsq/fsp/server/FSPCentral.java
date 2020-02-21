@@ -2,6 +2,7 @@ package fr.uvsq.fsp.server;
 
 import fr.uvsq.fsp.abstractions.FSPCore;
 import fr.uvsq.fsp.util.Command;
+import fr.uvsq.fsp.util.CSVParser;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -28,6 +29,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class FSPCentral extends FSPCore implements Runnable {
@@ -44,8 +47,6 @@ public class FSPCentral extends FSPCore implements Runnable {
 	 */
 	public static String cheminUtilisateurs;
 
-	private String sep = ",";
-
 	/** Répertoire des fichiers partagés, créé au lancement du serveur */
 	public static String descriptionsFolder;
 
@@ -56,6 +57,8 @@ public class FSPCentral extends FSPCore implements Runnable {
 	static {
 		usersConnected = new ArrayList<String>();
 	}
+
+	public static Map<String, String> users;
 
 	private String id;
 	private String mdp;
@@ -77,6 +80,11 @@ public class FSPCentral extends FSPCore implements Runnable {
 		configFolder = "central/";
 		cheminUtilisateurs = configFolder + "utilisateurs.csv";
 		descriptionsFolder = configFolder + "descriptions/";
+		try {
+			users = CSVParser.read(cheminUtilisateurs);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		new File(descriptionsFolder).mkdirs();
 	}
@@ -86,6 +94,11 @@ public class FSPCentral extends FSPCore implements Runnable {
 		configFolder = configDir;
 		cheminUtilisateurs = configFolder + "utilisateurs.csv";
 		descriptionsFolder = configFolder + "descriptions/";
+		try {
+			users = CSVParser.read(cheminUtilisateurs);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 
 		new File(descriptionsFolder).mkdirs();
 	}
@@ -116,42 +129,6 @@ public class FSPCentral extends FSPCore implements Runnable {
 	 * Le serveur vérifie que le mot de passe est correct en fonction
 	 * de l'identifiant précédemment envoyé
 	 */
-	public void gererMessage(Command ftpCmd) throws IOException {
-		String contenu;
-
-		contenu = ftpCmd.content;
-
-		switch (ftpCmd.command) {
-			case "USER":
-				id = contenu;
-				handleUserCommand(contenu);
-				break;
-
-			case "PASS":
-				handlePassCommand(contenu);
-				break;
-
-			case "SEARCH":
-				handleSearchCommand(contenu);
-				break;
-
-			case "HOSTNAME":
-				handleHostnameCommand(contenu);
-				break;
-
-			case "FILECOUNT":
-				saveDescriptions(userDescriptionFolder, Integer.parseInt(contenu));
-				break;
-
-			case "HOST":
-				hostname = contenu;
-				handleHostCommand(contenu);
-				break;
-
-			default:
-		}
-	}
-
 	public boolean handleServerCommands(Command cmd) throws IOException {
 		String contenu;
 		boolean quit;
@@ -254,134 +231,6 @@ public class FSPCentral extends FSPCore implements Runnable {
 
 		System.out.println("FOUND " + content);
 		envoyerMessage("FOUND " + content);
-	}
-
-	/**
-	 * Vérifier qu'un utilisateur existe
-	 * On regarde si son identifiant/nom est présent
-	 * dans le fichier utilisateurs.csv
-	 * Les utilisateurs sont stockés comme ça :
-	 * identifiant,hash_du_mot_de_passe
-	 */
-	public boolean utilisateurExiste(String identifiant) {
-		BufferedReader reader;
-		String[] idMdp;
-		String ligne;
-
-		idMdp = new String[2];
-
-		try {
-			reader = new BufferedReader(new FileReader(cheminUtilisateurs));
-
-			// Lecture de chaque ligne
-			while ((ligne = reader.readLine()) != null) {
-				idMdp = ligne.split(sep);
-
-				if (idMdp[0].equals(identifiant)) {
-					return true;
-				}
-			}
-
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return false;
-	}
-
-	/**
-	 * Vérifier qu'un mot de passe est correct pour
-	 * un utilisateur; On regarde dans le fichier
-	 * utilisateurs.csv
-	 */
-	public boolean mdpCorrect(String identifiant, String hashMdp) {
-		BufferedReader reader;
-		String[] idMdp;
-		String ligne;
-
-		idMdp = new String[2];
-
-		try {
-			reader = new BufferedReader(new FileReader(cheminUtilisateurs));
-
-			// Lecture de chaque ligne
-			while ((ligne = reader.readLine()) != null) {
-				idMdp = ligne.split(sep);
-
-				if (idMdp[0].equals(identifiant) && idMdp[1].equals(hashMdp)) {
-					return true;
-				}
-			}
-
-			reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return false;
-	}
-
-	/**
-	 * Supprime un utilisateur du fichier des utilisateurs
-	 * en fonction de son identifiant
-	 *
-	 * On créé un nouveau fichier. On lit l'ancien fichier, si l'id match, alors
-	 * on n'écrit pas la ligne dans le nouveau fichier. A la fin, on renomme le nouveau fichier
-	 *
-	 * On booléen indique si on a bien supprimé un utilisateur. Si non, c'est que
-	 * l'utilisateur n'existe pas
-	 */
-	public boolean enleverUtilisateur(String userID) throws IOException {
-		File fileBeforeRemove;
-		File fileAfterRemove;
-		String currentLine;
-		String someID;
-		BufferedWriter writer;
-		BufferedReader reader;
-		boolean isUserRemoved;
-
-		isUserRemoved = false;
-
-		fileBeforeRemove = new File(cheminUtilisateurs);
-		fileAfterRemove = new File("users.csv");
-
-		writer = new BufferedWriter(new FileWriter(fileAfterRemove));
-		reader = new BufferedReader(new FileReader(fileBeforeRemove));
-
-		while ((currentLine = reader.readLine()) != null) {
-			someID = currentLine.split(sep)[0];
-
-			if (someID.equals(userID)) {
-				isUserRemoved = true;
-				continue;
-			} else {
-				writer.write(currentLine + System.getProperty("line.separator"));
-			}
-		}
-
-		reader.close();
-		writer.close();
-		fileAfterRemove.renameTo(fileBeforeRemove);
-
-		return isUserRemoved;
-	}
-
-	/**
-	 * Création d'un utilisateur dans le fichier csv/tsv
-	 */
-	public void EnregistrerUtilisateur(String s, String c) {
-		// try with resource : les objets sont automatiquement fermés
-		try (
-			FileWriter fw = new FileWriter(cheminUtilisateurs, true);
-			BufferedWriter bw = new BufferedWriter(fw);
-			PrintWriter out = new PrintWriter(bw)
-		)
-		{
-			out.println(s + sep + c);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -541,10 +390,11 @@ public class FSPCentral extends FSPCore implements Runnable {
 
 	public void handlePassCommand(String mdp) throws IOException {
 		if (nouvelUtilisateur) {
-			EnregistrerUtilisateur(this.id, mdp);
+			users.put(this.id, mdp);
 			nouvelUtilisateur = false;
+			saveUsers();
 			envoyerMessage("24 Utilisateur créé : " + this.id + ", " + mdp);
-		} else if (mdpCorrect(this.id, mdp)) {
+		} else if (users.get(this.id).equals(mdp)) {
 			envoyerMessage("23 Mot de passe correct");
 		} else {
 			envoyerMessage("31 Mot de passe incorrect pour " + this.id);
@@ -552,7 +402,7 @@ public class FSPCentral extends FSPCore implements Runnable {
 	}
 
 	public void handleUserCommand(String id) throws IOException {
-		if (utilisateurExiste(id)) {
+		if (users.keySet().contains(id)) {
 			envoyerMessage("21 Bon identifiant");
 		} else {
 			nouvelUtilisateur = true;
@@ -582,6 +432,10 @@ public class FSPCentral extends FSPCore implements Runnable {
 		} else {
 			return false;
 		}
+	}
+
+	public void saveUsers() throws IOException {
+		CSVParser.write(users, cheminUtilisateurs);
 	}
 }
 
