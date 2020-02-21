@@ -240,5 +240,16 @@ public class ClientView extends Group {
 		ft.setAutoReverse(true);
 		ft.playFromStart();
 	}
+
+	public void displayConnection(boolean successful) {
+		messageLabel.getStyleClass().clear();
+		if (successful) {
+			messageLabel.getStyleClass().add("greenFont");
+			messageLabel.setText("Connection successful");
+		} else {
+			messageLabel.getStyleClass().add("redFont");
+			messageLabel.setText("Connection failed");
+		}
+	}
 }
 

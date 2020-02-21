@@ -102,5 +102,21 @@ public class Client extends Application {
 
 		controller = new ClientController(view, client);
 	}
+
+	@Override
+	public void stop() {
+		if (client.toClose) {
+			System.out.println("client.close();");
+			try {
+				client.envoyerMessage("STOP");
+				client.disconnect();
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			client.close();
+		}
+	}
 }
 

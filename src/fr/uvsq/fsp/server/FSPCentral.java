@@ -128,7 +128,6 @@ public class FSPCentral extends FSPCore implements Runnable {
 
 			case "PASS":
 				handlePassCommand(contenu);
-
 				break;
 
 			case "SEARCH":
@@ -152,11 +151,64 @@ public class FSPCentral extends FSPCore implements Runnable {
 		}
 	}
 
+	public listenServer(Command command) {
+		ArrayList<String> files;
+		String contenu;
+
+		contenu = ftpCmd.content;
+
+		switch (ftpCmd.command) {
+			case "USER":
+				id = contenu;
+				handleUserCommand(contenu);
+				break;
+
+			case "PASS":
+				handlePassCommand(contenu);
+				break;
+
+			case "HOSTNAME":
+				handleHostnameCommand(contenu);
+				break;
+
+			case "FILECOUNT":
+				saveDescriptions(userDescriptionFolder, Integer.parseInt(contenu));
+				break;
+			default:
+		}
+	}
+
+	public listenClient(Command command) {
+		ArrayList<String> files;
+		String contenu;
+
+		contenu = ftpCmd.content;
+
+		switch (ftpCmd.command) {
+			case "SEARCH":
+				handleSearchCommand(contenu);
+				break;
+
+			case "HOST":
+				hostname = contenu;
+				handleHostCommand(contenu);
+				break;
+
+			default:
+		}
+	}
+
+	public boolean isClientLogged() {
+		return usersConnected.contains(hostname);
+	}
+
 	public void handleHostCommand(String hostname) throws IOException {
 		if (usersConnected.contains(hostname)) {
 			super.envoyerMessage("25 Hostname existe");
 		} else {
-			super.envoyerMessage("32 Hostname n'exite pas");
+			super.envoyerMessage("32 Hostname n'existe pas");
+			disconnect();
+			close();
 		}
 	}
 
@@ -187,6 +239,7 @@ public class FSPCentral extends FSPCore implements Runnable {
 			content += file + " ";
 		}
 
+		System.out.println("FOUND " + content);
 		envoyerMessage("FOUND " + content);
 	}
 
@@ -404,7 +457,15 @@ public class FSPCentral extends FSPCore implements Runnable {
 
 		try {
 			while ((msg = lireMessage()) != null) {
-				if (msg.equals("QUIT")) break;
+				if (msg.equals("QUIT")) {
+					// deconnexion
+					synchronized (usersConnected) {
+						usersConnected.remove(hostname);
+					}
+					break;
+				} else if (msg.equals("STOP")) {
+					break;
+				}
 
 				ftpCmd = Command.parseCommand(msg);
 				System.out.println(msg);
@@ -417,22 +478,14 @@ public class FSPCentral extends FSPCore implements Runnable {
 			e.printStackTrace();
 		}
 
-		// deconnexion
-		synchronized (usersConnected) {
-			usersConnected.remove(hostname);
-		}
 	}
 
 	@Override
 	public void run() {
 		open();
 		listen();
+		disconnect();
 		close();
-		try {
-			socket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**

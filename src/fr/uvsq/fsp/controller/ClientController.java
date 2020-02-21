@@ -70,27 +70,18 @@ public class ClientController {
 					|| scene.portField.getText().equals(""))
 					return;
 
+				client.port = Integer.parseInt(scene.portField.getText());
+				client.adresseIPServeur = scene.serverIPField.getText();
 
-				if (swap++ % 2 == 0) {
-					scene.messageLabel.getStyleClass().clear();
-					scene.messageLabel.getStyleClass().add("redFont");
-					scene.messageLabel.setText("Connection failed");
-				} else {
-					scene.messageLabel.getStyleClass().clear();
-					scene.messageLabel.getStyleClass().add("greenFont");
-					scene.messageLabel.setText("Connection successful");
-				}
-
-				/*
 				try {
 					client.connect();
 					client.open();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
+					scene.displayConnection(true);
+					isConnected = true;
+				} catch (IOException ex) {
+					ex.printStackTrace();
+					scene.displayConnection(false);
 				}
-				*/
 			}
 		});
 
@@ -110,7 +101,7 @@ public class ClientController {
 		scene.searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent ke) {
-				if (isConnected && !ke.getCode().equals(KeyCode.ENTER)) {
+				if (isConnected && ke.getCode().equals(KeyCode.ENTER)) {
 					if (!scene.searchField.getText().equals("")) {
 						try {
 							searchEvent();
@@ -124,7 +115,7 @@ public class ClientController {
 		scene.fileList.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent ke) {
-				if (isConnected && !ke.getCode().equals(KeyCode.ENTER)) {
+				if (isConnected && ke.getCode().equals(KeyCode.ENTER)) {
 					ObservableList<Integer> indices = scene.fileList.getSelectionModel().getSelectedIndices();
 					ArrayList<String> downloads;
 
@@ -188,6 +179,7 @@ public class ClientController {
 		client.search(scene.searchField.getText());
 		msg = client.lireMessage();
 		ftpCmd = Command.parseCommand(msg);
+		System.out.println(msg);
 
 		if (ftpCmd.command.equals("FOUND")) {
 			filesMatching = client.parseFilesFound(ftpCmd.content);

@@ -34,6 +34,8 @@ public class FSPCore {
 
 	public Socket socket;
 
+	public boolean toClose = false;
+
 	/**
 	 */
 	public FSPCore(String serverIP, int portNumber) {
@@ -56,6 +58,7 @@ public class FSPCore {
 		try {
 			dis = new DataInputStream(socket.getInputStream());
 			dos = new DataOutputStream(socket.getOutputStream());
+			toClose = true;
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
