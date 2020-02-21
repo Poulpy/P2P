@@ -46,6 +46,7 @@ Central : le programme faisant office de serveur centralisé. Gère :
 - le serveur centralisé authentifie l'utilisateur et renvoie le résultat au serveur (succès échec)
 - le serveur centralisé garde les noms et descriptions des fichiers téléchargés
 - le serveur après l'authentification télécharge à partir du serveur centralisé les noms des fichiers partagés et leurs descriptions
+- Le client garde la liste des fichiers téléchargés
 
 ## Todo
 
@@ -55,7 +56,6 @@ Utiliser une pool de Thread.
 - Utiliser l'interface graphique (Rercherche : fait; Téléchargement : à faire)
 - Plusieurs clients peuvent se connecter au serveur (multi thread). TODO A TESTER
 - Un Serveur attend une connexion d'un client, pour télécharger un ou plusieurs fichiers
-- Le client garde la liste des fichiers téléchargés
 - Le client met à jour les fichiers qu'il a téléchargé
 
 ## Todo Code
