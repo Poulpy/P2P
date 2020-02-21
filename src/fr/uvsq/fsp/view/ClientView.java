@@ -1,8 +1,8 @@
 package fr.uvsq.fsp.view;
 
-import java.io.IOException;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
@@ -10,19 +10,22 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.text.Text;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
-import javafx.scene.control.TextField;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
@@ -153,14 +156,12 @@ public class ClientView extends Group {
 
 		// Liste affichant les fichiers téléchargés
 		downloadList = new ListView<String>();
-		downloadList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		downloadList.setPrefHeight(100);
 		downloadList.setPrefWidth(250);
 		downloadList.setOrientation(Orientation.VERTICAL);
 
 		// Liste affichant les fichiers partagés par l'utilisateur
 		sharedList = new ListView<String>();
-		sharedList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		sharedList.setPrefHeight(200);
 		sharedList.setPrefWidth(150);
 		sharedList.setOrientation(Orientation.VERTICAL);
@@ -250,6 +251,12 @@ public class ClientView extends Group {
 			messageLabel.getStyleClass().add("redFont");
 			messageLabel.setText("Connection failed");
 		}
+	}
+
+	public WritableImage toImage(String text) {
+		Text t = new Text(text);
+		Scene scene = new Scene(new StackPane(t));
+		return t.snapshot(null, null);
 	}
 }
 

@@ -11,6 +11,7 @@ import javafx.animation.FadeTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.scene.input.MouseEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
@@ -152,6 +153,13 @@ public class ClientController {
 
 					displayUploadMessage(downloads.size());
 				}
+			}
+		});
+
+		scene.downloadList.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				System.out.println(scene.downloadList.getSelectionModel().getSelectedItem());
 			}
 		});
 	}
