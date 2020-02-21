@@ -1,6 +1,7 @@
 package fr.uvsq.fsp.server;
 
 import fr.uvsq.fsp.abstractions.FSPCore;
+import fr.uvsq.fsp.util.PatternFinder;
 import fr.uvsq.fsp.util.Command;
 import fr.uvsq.fsp.util.CSVParser;
 import java.io.BufferedInputStream;
@@ -234,83 +235,6 @@ public class FSPCentral extends FSPCore implements Runnable {
 	}
 
 	/**
-	 * Cherche un mot dans un fichier
-	 *
-	 * Retourne un booléen indiquant si le mot clef a été trouvé
-	 */
-	public boolean searchByKeyword(String keyword, File fileToSearch) throws IOException {
-		BufferedReader reader;
-		String currentLine;
-		boolean match;
-
-		match = false;
-		reader = new BufferedReader(new FileReader(fileToSearch));
-
-		while ((currentLine = reader.readLine()) != null && !match) {
-			if (currentLine.contains(keyword)) {
-				match = true;
-			}
-		}
-
-		reader.close();
-
-		return match;
-	}
-
-	/**
-	 * Cherche dans les fichiers d'un dossier un mot clef
-	 *
-	 * Retourne le chemin dess fichiers contenant le motif
-	 */
-	public ArrayList<String> searchFolderByKeyword(String keyword, String folderToSearch) throws IOException {
-		File fileToSearch;
-		ArrayList<String> filesMatching = new ArrayList<String>();
-
-		try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get(folderToSearch))) {
-			for (Path path : stream) {
-				fileToSearch = new File(path.toString());
-				if (searchByKeyword(keyword, fileToSearch)) {
-					filesMatching.add(path.toString());
-				}
-			}
-		}
-
-		return filesMatching;
-	}
-
-	/**
-	 * Retourne le nom d'hôte et le chemin du fichier, fichier qui correspond
-	 * au mot clef donné en argument.
-	 * Plusieurs fichiers peuvent être renvoyés (on retourne un tableau)
-	 * Si le mot clef se trouve dans un fichier 'yojinbo' de l'utilisateur 'dinfo' :
-	 * Renvoie 'dinfo/yojinbo'
-	 */
-	public ArrayList<String> searchUsersFoldersByKeyword(String keyword) throws IOException {
-		String path;
-		ArrayList<String> files;
-		ArrayList<String> allMatchingFiles;
-
-		files = new ArrayList<String>();
-		allMatchingFiles = new ArrayList<String>();
-
-		for (String userConnected : usersConnected) {
-			path = descriptionsFolder + userConnected + File.separator;
-
-			files = searchFolderByKeyword(keyword, path);
-
-			for (int j = 0; j != files.size(); j++) {
-				int i = files.get(j).indexOf(userConnected);
-				files.set(j, files.get(j).substring(i));
-			}
-
-			allMatchingFiles.addAll(files);
-		}
-
-		return allMatchingFiles;
-	}
-
-
-	/**
 	 * Thread
 	 */
 	public void listen() throws IOException, UnknownHostException {
@@ -379,7 +303,7 @@ public class FSPCentral extends FSPCore implements Runnable {
 
 		files = new ArrayList<String>();
 
-		files = searchUsersFoldersByKeyword(keyword);
+		files = PatternFinder.grepFolder(keyword, descriptionsFolder, true);
 
 		if (files.isEmpty()) {
 			notFound();

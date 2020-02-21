@@ -175,6 +175,7 @@
 			<test name="test.TestServer"/>
 			<test name="test.TestFileLister"/>
 			<test name="test.TestCSVParser"/>
+			<test name="test.TestPatternFinder"/>
 		</junit>
 	</target>
 </project>
