@@ -66,6 +66,8 @@ public class FSPCentral extends FSPCore implements Runnable {
 
 	public String userDescriptionFolder;
 
+	public boolean isClient;
+
 	/**
 	 * Crée le répertoire contenant les descriptions des fichiers partagés,
 	 * s'il n'est pas déjà créé
@@ -115,7 +117,6 @@ public class FSPCentral extends FSPCore implements Runnable {
 	 * de l'identifiant précédemment envoyé
 	 */
 	public void gererMessage(Command ftpCmd) throws IOException {
-		ArrayList<String> files;
 		String contenu;
 
 		contenu = ftpCmd.content;
@@ -151,13 +152,14 @@ public class FSPCentral extends FSPCore implements Runnable {
 		}
 	}
 
-	public listenServer(Command command) {
-		ArrayList<String> files;
+	public boolean handleServerCommands(Command cmd) throws IOException {
 		String contenu;
+		boolean quit;
 
-		contenu = ftpCmd.content;
+		contenu = cmd.content;
+		quit = false;
 
-		switch (ftpCmd.command) {
+		switch (cmd.command) {
 			case "USER":
 				id = contenu;
 				handleUserCommand(contenu);
@@ -174,17 +176,23 @@ public class FSPCentral extends FSPCore implements Runnable {
 			case "FILECOUNT":
 				saveDescriptions(userDescriptionFolder, Integer.parseInt(contenu));
 				break;
+
+			case "QUIT":
+				quit = true;
 			default:
 		}
+
+		return quit;
 	}
 
-	public listenClient(Command command) {
-		ArrayList<String> files;
+	public boolean handleClientCommands(Command cmd) throws IOException {
 		String contenu;
+		boolean quit;
 
-		contenu = ftpCmd.content;
+		contenu = cmd.content;
+		quit = false;
 
-		switch (ftpCmd.command) {
+		switch (cmd.command) {
 			case "SEARCH":
 				handleSearchCommand(contenu);
 				break;
@@ -194,8 +202,13 @@ public class FSPCentral extends FSPCore implements Runnable {
 				handleHostCommand(contenu);
 				break;
 
+			case "STOP":
+				quit = true;
+
 			default:
 		}
+
+		return quit;
 	}
 
 	public boolean isClientLogged() {
@@ -451,31 +464,23 @@ public class FSPCentral extends FSPCore implements Runnable {
 	/**
 	 * Thread
 	 */
-	public void listen() {
+	public void listen() throws IOException, UnknownHostException {
 		String msg;
 		Command ftpCmd;
+		boolean quit;
 
-		try {
-			while ((msg = lireMessage()) != null) {
-				if (msg.equals("QUIT")) {
-					// deconnexion
-					synchronized (usersConnected) {
-						usersConnected.remove(hostname);
-					}
-					break;
-				} else if (msg.equals("STOP")) {
-					break;
-				}
+		quit = false;
 
-				ftpCmd = Command.parseCommand(msg);
-				System.out.println(msg);
+		while (!quit && (msg = lireMessage()) != null) {
 
-				gererMessage(ftpCmd);
+			ftpCmd = Command.parseCommand(msg);
+			System.out.println(msg);
+
+			if (isClient) {
+				quit = handleClientCommands(ftpCmd);
+			} else {
+				quit = handleServerCommands(ftpCmd);
 			}
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 
 	}
@@ -483,8 +488,24 @@ public class FSPCentral extends FSPCore implements Runnable {
 	@Override
 	public void run() {
 		open();
-		listen();
-		disconnect();
+
+		try {
+			waitForTypeCommand();
+			listen();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (!isClient) {
+			// deconnexion
+			synchronized (usersConnected) {
+				usersConnected.remove(hostname);
+			}
+		}
+
+		//disconnect();
 		close();
 	}
 
@@ -536,6 +557,30 @@ public class FSPCentral extends FSPCore implements Runnable {
 		} else {
 			nouvelUtilisateur = true;
 			envoyerMessage("22 Identifiant inconnu");
+		}
+	}
+
+	public void waitForTypeCommand() throws IOException {
+		String msg;
+		Command cmd;
+
+		do {
+			do {
+				msg = lireMessage();
+				cmd = Command.parseCommand(msg);
+			} while (!cmd.command.equals("TYPE"));
+		} while (!handleTypeCommand(cmd.content));
+	}
+
+	public boolean handleTypeCommand(String type) throws IOException {
+		if (type.equals("SERVER")) {
+			isClient = false;
+			return true;
+		} else if (type.equals("CLIENT")) {
+			isClient = true;
+			return true;
+		} else {
+			return false;
 		}
 	}
 }

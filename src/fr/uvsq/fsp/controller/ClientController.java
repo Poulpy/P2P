@@ -76,6 +76,7 @@ public class ClientController {
 				try {
 					client.connect();
 					client.open();
+					client.type();
 					scene.displayConnection(true);
 					isConnected = true;
 				} catch (IOException ex) {

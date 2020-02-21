@@ -31,6 +31,11 @@ public class FSPServer extends FSPNode {
 		new File(descriptionsFolder).mkdirs();
 	}
 
+
+	public void type() throws IOException {
+		envoyerMessage("TYPE SERVER");
+	}
+
 	/**
 	 * Authentification de l'utilisateur
 	 * Envoie l'identifiant puis le le mot de passe

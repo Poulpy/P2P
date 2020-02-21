@@ -48,36 +48,6 @@ public class Client extends Application {
 		client = new FSPClient(serverIP, port, "client/");
 
 		Application.launch(Client.class);
-		/*
-		try {
-			client.connect();
-			client.open();
-
-			if (!client.verifieHostname()) {
-				System.out.println("Utilisateur pas connecté");
-				Platform.exit();
-			} else {
-				Application.launch(Client.class);
-			}
-
-			client.close();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			Platform.exit();
-			if (client.socket != null) {
-				try {
-					client.disconnect();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} finally {
-					client.socket = null;
-				}
-			}
-		}
-		*/
 	}
 
 	@Override

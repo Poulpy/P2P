@@ -40,6 +40,10 @@ public class FSPClient extends FSPNode {
 		clientDownloadsFolder = clientFolder + "downloads/";
 	}
 
+	public void type() throws IOException {
+		envoyerMessage("TYPE CLIENT");
+	}
+
 	/**
 	 * Envoie le hostname au serveur centrale et
 	 * verifie qu'il existe sur usersConnected

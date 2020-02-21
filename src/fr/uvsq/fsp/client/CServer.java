@@ -61,6 +61,7 @@ public class CServer {
 		try {
 			client.connect();
 			client.open();
+			client.type();
 
 			if (client.login(id, mdp)) {
 				System.out.println("Tapez QUIT pour quitter le programme.");
