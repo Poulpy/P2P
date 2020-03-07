@@ -179,6 +179,11 @@ public class FSPCentral extends FSPCore implements Runnable {
 				hostname = contenu;
 				handleHostCommand(contenu);
 				break;
+				
+			case "FILECOUNT":
+				System.out.println(userDescriptionFolder);
+				saveDescriptions(userDescriptionFolder, Integer.parseInt(contenu));
+				break;
 
 			case "STOP":
 				quit = true;
@@ -201,6 +206,8 @@ public class FSPCentral extends FSPCore implements Runnable {
 			disconnect();
 			close();
 		}
+		userDescriptionFolder = descriptionsFolder + hostname + File.separator ;
+		new File(userDescriptionFolder).mkdirs();
 	}
 
 	/**

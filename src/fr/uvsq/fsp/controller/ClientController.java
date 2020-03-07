@@ -88,8 +88,10 @@ public class ClientController {
 					client.connect();
 					client.open();
 					client.type();
-					scene.displayConnection(true);
-					isConnected = true;
+					if (client.verifieHostname()) {						
+						scene.displayConnection(true);
+						isConnected = true;
+					}
 				} catch (IOException ex) {
 					ex.printStackTrace();
 					scene.displayConnection(false);
@@ -220,12 +222,24 @@ public class ClientController {
 			@Override
 			public void handle(MouseEvent e) {
 				String file = scene.sharedList.getSelectionModel().getSelectedItem();
-				System.out.println(file + " : " + scene.descriptionArea.getText());
-				try (PrintWriter out = new PrintWriter(client.descriptionsFolder + file)) {
-				    out.println(scene.descriptionArea.getText());
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+				if (null!=file) {
+					System.out.println(file + " : " + scene.descriptionArea.getText());
+					try (PrintWriter out = new PrintWriter(client.descriptionsFolder + file)) {
+					    out.println(scene.descriptionArea.getText());
+					} catch (FileNotFoundException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					try {
+						client.envoyerMessage("FILECOUNT 1");
+						client.envoyerFichier(client.descriptionsFolder + file);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				} else {
+					System.out.println("Pas de sélection OwO");
+				
 				}
 			}
 		});
