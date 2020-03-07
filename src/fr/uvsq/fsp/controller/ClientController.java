@@ -6,7 +6,9 @@ import fr.uvsq.fsp.util.Command;
 import fr.uvsq.fsp.view.ClientView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -197,6 +199,8 @@ public class ClientController {
 
 	                        //copy source to target using Files Class
 	                        Files.copy(sourceDirectory, targetDirectory);
+	                        filesShared = FileLister.list(client.clientSharedFolder);
+	                		scene.setListView(scene.sharedList, filesShared);
 	                    } catch (IOException ex) {
 	                        ex.printStackTrace();
 	                    }
@@ -209,6 +213,20 @@ public class ClientController {
 			@Override
 			public void handle(MouseEvent e) {
 				System.out.println(scene.downloadList.getSelectionModel().getSelectedItem());
+			}
+		});
+		
+		scene.sendDescriptionButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent e) {
+				String file = scene.sharedList.getSelectionModel().getSelectedItem();
+				System.out.println(file + " : " + scene.descriptionArea.getText());
+				try (PrintWriter out = new PrintWriter(client.descriptionsFolder + file)) {
+				    out.println(scene.descriptionArea.getText());
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		});
 	}
