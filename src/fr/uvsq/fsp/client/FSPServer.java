@@ -16,6 +16,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.ServerSocket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -24,14 +25,13 @@ public class FSPServer extends FSPNode {
 
 	/** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
 	public final String descriptionsFolder;
-
+	public ServerSocket serverSocket;
 	public FSPServer(String serverIP, int port, String descFolder) {
 		super(serverIP, port);
 		descriptionsFolder = descFolder;
 		new File(descriptionsFolder).mkdirs();
 	}
-
-
+	
 	public void type() throws IOException {
 		envoyerMessage("TYPE SERVER");
 	}

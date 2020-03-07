@@ -186,6 +186,7 @@ public class FSPCore {
 
 		file = new File(filePath);
 		fileName = file.getName();
+		System.out.println("FILE " + fileName + " " + file.length());
 
 		// L'étiquette FILE va indiquer qu'on envoie le nom et la taille
 		envoyerMessage("FILE " + fileName + " " + file.length());

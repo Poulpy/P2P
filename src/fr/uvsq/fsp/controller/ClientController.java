@@ -126,6 +126,14 @@ public class ClientController {
 					for (Integer index : indices) {
 					// TODO Télécharger un fichier
 						System.out.println("GET " + filesMatching.get(index));
+						try {
+							client.download("127.0.0.1","starwars");
+							client.lireFichier(client.clientDownloadsFolder);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
 						downloads = samples();
 					}
 
@@ -148,6 +156,14 @@ public class ClientController {
 					for (Integer index : indices) {
 						// TODO Télécharger un fichier
 						System.out.println("GET " + filesMatching.get(index));
+						try {
+							client.download("127.0.0.1","starwars");
+							client.lireFichier(client.clientDownloadsFolder);
+						} catch (IOException ex) {
+							// TODO Auto-generated catch block
+							ex.printStackTrace();
+						}
+
 						downloads = samples();
 					}
 

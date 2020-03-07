@@ -43,6 +43,13 @@ public class FSPClient extends FSPNode {
 	public void type() throws IOException {
 		envoyerMessage("TYPE CLIENT");
 	}
+	
+	public void download(String host, String fileName) throws IOException {
+		Socket sock = new Socket(host, 50000);
+		System.out.println("Download " + fileName);
+		envoyerMessage("Download " + fileName);	
+		sock.close();
+	}
 
 	/**
 	 * Envoie le hostname au serveur centrale et

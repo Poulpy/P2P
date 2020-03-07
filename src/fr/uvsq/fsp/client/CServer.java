@@ -1,7 +1,11 @@
 package fr.uvsq.fsp.client;
 
 import fr.uvsq.fsp.view.ClientView;
+import fr.uvsq.fsp.abstractions.FSPCore;
+import fr.uvsq.fsp.util.*;
 import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -56,25 +60,34 @@ public class CServer {
 			mdp = scan.nextLine();
 		}
 
-		client = new FSPServer(serverIP, port, "client/descriptions/");
+		client = new FSPServer(serverIP, port, "src/fr/uvsq/fsp/client/descriptions/");
 
+		ServerSocket serverSocket;
+		
 		try {
 			client.connect();
 			client.open();
 			client.type();
-
+			
 			if (client.login(id, mdp)) {
 				System.out.println("Tapez QUIT pour quitter le programme.");
 				scan = new Scanner(System.in);
-
+				serverSocket = new ServerSocket(50000, 10);
+				
 				while (loop) {
-					System.out.print("> ");
-					query = scan.nextLine();
-
-					if (query.equals("QUIT")) {
-						loop = false;
+					FSPCore fspCore = new FSPCore("DESKTOP-F5FEM34",50000);
+					fspCore.socket = serverSocket.accept();
+					System.out.println("hgfhfytf");
+					fspCore.open();
+					String msg = fspCore.lireMessage();
+					System.out.println(msg);
+					Command fcmd = Command.parseCommand(msg);
+					if(fcmd.command.equals("Download")) {
+						fspCore.envoyerContenu(client.descriptionsFolder + fcmd.content);
 					}
+					fspCore.close();
 				}
+				serverSocket.close();
 			}
 
 			client.quit();

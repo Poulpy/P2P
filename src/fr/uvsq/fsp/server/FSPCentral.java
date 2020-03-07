@@ -78,7 +78,7 @@ public class FSPCentral extends FSPCore implements Runnable {
 	 */
 	public FSPCentral(Socket sock) {
 		super(sock);
-		configFolder = "central/";
+		configFolder = "src/fr/uvsq/fsp/server/";
 		cheminUtilisateurs = configFolder + "utilisateurs.csv";
 		descriptionsFolder = configFolder + "descriptions/";
 		try {
