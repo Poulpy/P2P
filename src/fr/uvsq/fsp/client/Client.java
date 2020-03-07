@@ -70,7 +70,7 @@ public class Client extends Application {
 		primaryStage.setX(100);
 		primaryStage.setY(100);
 
-		controller = new ClientController(view, client);
+		controller = new ClientController(primaryStage, view, client);
 	}
 
 	@Override

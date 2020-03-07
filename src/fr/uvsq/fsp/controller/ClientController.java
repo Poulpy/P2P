@@ -4,8 +4,13 @@ import fr.uvsq.fsp.util.FileLister;
 import fr.uvsq.fsp.client.FSPClient;
 import fr.uvsq.fsp.util.Command;
 import fr.uvsq.fsp.view.ClientView;
+
+import java.io.File;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import javafx.animation.FadeTransition;
 import javafx.application.Application;
@@ -28,6 +33,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -39,6 +45,8 @@ public class ClientController {
 	public ArrayList<String> filesMatching;
 	public ArrayList<String> filesShared;
 	public ArrayList<String> filesDownloaded;
+	
+	public FileChooser fileChooser;
 
 	public ClientView scene;
 	public FSPClient client;
@@ -46,7 +54,7 @@ public class ClientController {
 
 	public int swap = 0;
 
-	public ClientController(ClientView view, FSPClient fspClient) {
+	public ClientController(Stage stage, ClientView view, FSPClient fspClient) {
 		this.scene = view;
 		this.client = fspClient;
 
@@ -172,6 +180,31 @@ public class ClientController {
 			}
 		});
 
+		fileChooser = new FileChooser();
+		scene.uploadButton.setOnAction(new EventHandler<ActionEvent>() {
+			@Override
+			public void handle(ActionEvent e) {
+				if (true) {
+					// get the file selected 
+	                File file = fileChooser.showOpenDialog(stage); 
+	  
+	                if (file != null) { 
+	                      
+	                    
+	                    try {
+	                        Path sourceDirectory = Paths.get(file.getAbsolutePath());
+	                        Path targetDirectory = Paths.get(client.clientSharedFolder+sourceDirectory.getFileName().toString());
+
+	                        //copy source to target using Files Class
+	                        Files.copy(sourceDirectory, targetDirectory);
+	                    } catch (IOException ex) {
+	                        ex.printStackTrace();
+	                    }
+	                } 
+				}
+			}
+		});
+		
 		scene.downloadList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
