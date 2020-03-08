@@ -84,6 +84,14 @@ Les tests sont exécutés à chaque push.
 ```
 ant doc
 ```
+### Générer les fichiers jar
+
+
+```
+ant dist
+# pour éxecuter
+java -jar ...
+```
 
 
 ### Troubleshoting

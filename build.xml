@@ -1,181 +1,196 @@
 <project name="FSP" default="all" basedir=".">
-	<description>
-		Peer to peer application for sharing files.
-	</description>
+    <description>
+        Peer to peer application for sharing files.
+    </description>
 
-	<property environment="env."/>
-	<property name="env.CLASSPATH" value=""/>
-	<fail message="Unset $CLASSPATH / %CLASSPATH% before running Ant !">
-		<condition>
-			<not>
-				<equals arg1="${env.CLASSPATH}" arg2=""/>
-			</not>
-		</condition>
-	</fail>
+    <property environment="env."/>
+    <property name="env.CLASSPATH" value=""/>
+    <fail message="Unset $CLASSPATH / %CLASSPATH% before running Ant !">
+        <condition>
+            <not>
+                <equals arg1="${env.CLASSPATH}" arg2=""/>
+            </not>
+        </condition>
+    </fail>
 
-	<property name="build" location="build/"/>
-	<property name="build.central.descriptions.dir" location="build/central/descriptions/"/>
-	<property name="build.central.dir" location="build/central/"/>
-	<property name="build.central.dir.parent" location="${build.central.dir}/.."/>
-	<property name="build.client.descriptions.dir" location="build/client/descriptions/"/>
-	<property name="build.client.dir" location="build/client/"/>
-	<property name="build.client.dir.parent" location="${build.client.dir}/.."/>
-	<property name="build.fr.dir" location="build/fr/"/>
-	<property name="build.test.central.descriptions.dinfo.dir" location="build/test/central/descriptions/dinfo/"/>
-	<property name="build.test.central.descriptions.dinfo.dir" location="build/test/central/descriptions/dinfo/"/>
-	<property name="build.test.central.dir" location="build/test/central/"/>
-	<property name="build.test.client.descriptions.dir" location="build/test/client/descriptions/"/>
-	<property name="build.test.dir" location="build/test/"/>
-	<property name="dist" location="dist/"/>
-	<property name="docs" location="./docs/"/>
-	<property name="lib" location="lib/"/>
-	<property name="src" location="src/"/>
-	<property name="src.fr.uvsq.fsp.client.descriptions.dir" location="src/fr/uvsq/fsp/client/descriptions/"/>
-	<property name="src.fr.uvsq.fsp.server.users" location="src/fr/uvsq/fsp/server/utilisateurs.csv"/>
-	<property name="test" location="./src/test/"/>
-	<property name="src.fr.uvsq.fsp.client.stylesheet" location="src/fr/uvsq/fsp/client/stylesheet.css"/>
-	<property name="src.fr.uvsq.fsp.client.refresh" location="src/fr/uvsq/fsp/client/refresh.png"/>
-	<property name="build.client.shared.dir" location="build/client/shared/"/>
-	<property name="build.client.downloads.dir" location="build/client/downloads/"/>
-	<property name="src.fr.uvsq.fsp.client.shared.dir" location="src/fr/uvsq/fsp/client/shared/"/>
-	<property name="src.fr.uvsq.fsp.client.downloads.dir" location="src/fr/uvsq/fsp/client/downloads/"/>
+    <property name="build" location="build/"/>
+    <property name="build.central.descriptions.dir" location="build/central/descriptions/"/>
+    <property name="build.central.dir" location="build/central/"/>
+    <property name="build.central.dir.parent" location="${build.central.dir}/.."/>
+    <property name="build.client.descriptions.dir" location="build/client/descriptions/"/>
+    <property name="build.client.dir" location="build/client/"/>
+    <property name="build.client.dir.parent" location="${build.client.dir}/.."/>
+    <property name="build.fr.dir" location="build/fr/"/>
+    <property name="build.test.central.descriptions.dinfo.dir" location="build/test/central/descriptions/dinfo/"/>
+    <property name="build.test.central.descriptions.dinfo.dir" location="build/test/central/descriptions/dinfo/"/>
+    <property name="build.test.central.dir" location="build/test/central/"/>
+    <property name="build.test.client.descriptions.dir" location="build/test/client/descriptions/"/>
+    <property name="build.test.dir" location="build/test/"/>
+    <property name="dist" location="dist/"/>
+    <property name="docs" location="./docs/"/>
+    <property name="lib" location="lib/"/>
+    <property name="src" location="src/"/>
+    <property name="src.fr.uvsq.fsp.client.descriptions.dir" location="src/fr/uvsq/fsp/client/descriptions/"/>
+    <property name="src.fr.uvsq.fsp.server.users" location="src/fr/uvsq/fsp/server/utilisateurs.csv"/>
+    <property name="test" location="./src/test/"/>
+    <property name="src.fr.uvsq.fsp.client.stylesheet" location="src/fr/uvsq/fsp/client/stylesheet.css"/>
+    <property name="src.fr.uvsq.fsp.client.refresh" location="src/fr/uvsq/fsp/client/refresh.png"/>
+    <property name="build.client.shared.dir" location="build/client/shared/"/>
+    <property name="build.client.downloads.dir" location="build/client/downloads/"/>
+    <property name="src.fr.uvsq.fsp.client.shared.dir" location="src/fr/uvsq/fsp/client/shared/"/>
+    <property name="src.fr.uvsq.fsp.client.downloads.dir" location="src/fr/uvsq/fsp/client/downloads/"/>
 
-	<path id="classpath">
-		<pathelement location="${src}"/>
-		<fileset dir="${lib}">
-			<include name="*.jar"/>
-		</fileset>
-	</path>
+    <path id="classpath">
+        <pathelement location="${src}"/>
+        <fileset dir="${lib}">
+            <include name="*.jar"/>
+        </fileset>
+    </path>
 
-	<path id="classpath.test">
-		<pathelement location="${src}"/>
-		<pathelement location="${lib}/junit4.jar"/>
-		<pathelement location="${lib}/hamcrest-core.jar"/>
-		<pathelement location="${build}"/>
-	</path>
+    <path id="classpath.test">
+        <pathelement location="${src}"/>
+        <pathelement location="${lib}/junit4.jar"/>
+        <pathelement location="${lib}/hamcrest-core.jar"/>
+        <pathelement location="${build}"/>
+    </path>
 
-	<target name="init" depends="clean">
-		<tstamp/>
-		<mkdir dir="${build}"/>
-	</target>
+    <target name="init" depends="clean">
+        <tstamp/>
+        <mkdir dir="${build}"/>
+    </target>
 
-	<target name="all" depends="doc,test,dist"/>
+    <target name="all" depends="doc,test,dist"/>
 
-	<target name="compile" depends="init" description="Generating the class files">
-		<javac includeantruntime="false" sourcepath="" srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source">
-			<include name="**/*.java"/>
-			<classpath refid="classpath.test"/>
-			<compilerarg value="-Xlint:unchecked"/>
-		</javac>
-		<mkdir dir="${build.central.descriptions.dir}"/>
-		<!-- Copy users file (id, password hash) -->
-		<copy file="${src.fr.uvsq.fsp.server.users}" todir="${build.central.dir}"/>
-		<!-- Copy refresh png icon -->
-		<copy file="${src.fr.uvsq.fsp.client.refresh}" todir="${build.client.dir}"/>
+    <target name="compile" depends="init" description="Generating the class files">
+        <javac includeantruntime="false" sourcepath="" srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source">
+            <include name="**/*.java"/>
+            <classpath refid="classpath.test"/>
+            <compilerarg value="-Xlint:unchecked"/>
+        </javac>
+        <mkdir dir="${build.central.descriptions.dir}"/>
+        <!-- Copy users file (id, password hash) -->
+        <copy file="${src.fr.uvsq.fsp.server.users}" todir="${build.central.dir}"/>
+        <!-- Copy refresh png icon -->
+        <copy file="${src.fr.uvsq.fsp.client.refresh}" todir="${build.client.dir}"/>
 
-		<mkdir dir="${build.client.downloads.dir}"/>
-		<!-- Copy all downloads -->
-		<copy todir="${build.client.downloads.dir}">
-			<dirset dir="${src.fr.uvsq.fsp.client.downloads.dir}" includes="**">
-			</dirset>
-		</copy>
-		<copy todir="${build.client.downloads.dir}">
-			<fileset dir="${src.fr.uvsq.fsp.client.downloads.dir}" includes="**">
-			</fileset>
-		</copy>
+        <mkdir dir="${build.client.downloads.dir}"/>
+        <!-- Copy all downloads -->
+        <copy todir="${build.client.downloads.dir}">
+            <dirset dir="${src.fr.uvsq.fsp.client.downloads.dir}" includes="**">
+            </dirset>
+        </copy>
+        <copy todir="${build.client.downloads.dir}">
+            <fileset dir="${src.fr.uvsq.fsp.client.downloads.dir}" includes="**">
+            </fileset>
+        </copy>
 
-		<mkdir dir="${build.client.shared.dir}"/>
-		<!-- Copy all shared files -->
-		<copy todir="${build.client.shared.dir}">
-			<fileset dir="${src.fr.uvsq.fsp.client.shared.dir}">
-				<include name="*"/>
-			</fileset>
-		</copy>
+        <mkdir dir="${build.client.shared.dir}"/>
+        <!-- Copy all shared files -->
+        <copy todir="${build.client.shared.dir}">
+            <fileset dir="${src.fr.uvsq.fsp.client.shared.dir}">
+                <include name="*"/>
+            </fileset>
+        </copy>
 
-		<mkdir dir="${build.client.descriptions.dir}"/>
-		<!-- Copy all descriptions -->
-		<copy todir="${build.client.descriptions.dir}">
-			<fileset dir="${src.fr.uvsq.fsp.client.descriptions.dir}">
-				<include name="*"/>
-			</fileset>
-		</copy>
-		<copy file="${src.fr.uvsq.fsp.client.stylesheet}" todir="${build.client.dir}"/>
-	</target>
+        <mkdir dir="${build.client.descriptions.dir}"/>
+        <!-- Copy all descriptions -->
+        <copy todir="${build.client.descriptions.dir}">
+            <fileset dir="${src.fr.uvsq.fsp.client.descriptions.dir}">
+                <include name="*"/>
+            </fileset>
+        </copy>
+        <copy file="${src.fr.uvsq.fsp.client.stylesheet}" todir="${build.client.dir}"/>
+    </target>
 
-	<target name="dist" depends="compile" description="Generating the jar files">
-		<mkdir dir="${dist}/lib/"/>
-		<jar jarfile="${dist}/lib/fsp-central-${DSTAMP}.jar" basedir="${build}">
-			<manifest>
-				<attribute name="Main-Class" value="${src}.fr.uvsq.fsp.server.Central"/>
-			</manifest>
-		</jar>
-		<jar jarfile="${dist}/lib/fsp-server-${DSTAMP}.jar" basedir="${build}">
-			<manifest>
-				<attribute name="Main-Class" value="${src}.fr.uvsq.fsp.client.CServer"/>
-			</manifest>
-		</jar>
-		<jar jarfile="${dist}/lib/fsp-client-${DSTAMP}.jar" basedir="${build}">
-			<manifest>
-				<attribute name="Main-Class" value="${src}.fr.uvsq.fsp.client.Client"/>
-			</manifest>
-		</jar>
-	</target>
 
-	<target name="exe" depends="compile">
-		<java classname="fr.uvsq.fsp.server.Central" dir="${build}">
-			<classpath>
-				<path refid="classpath.test"/>
-				<pathelement location="${build.fr.dir}"/>
-			</classpath>
-			<arg value="60000"/>
-		</java>
-	</target>
+    <target name="dist" depends="compile" description="Generating the jar files">
+        <mkdir dir="${dist}/lib/"/>
+        <manifestclasspath property="lib.list" jarfile="dist/lib/fsp-central-${DSTAMP}.jar">
+            <classpath refid="classpath.test"/>
+        </manifestclasspath>
 
-	<target name="clean" description="Cleaning the build and dist folder">
-		<delete dir="${build}"/>
-		<delete dir="${dist}"/>
-	</target>
+        <manifestclasspath property="lib.list2" jarfile="dist/lib/fsp-server-${DSTAMP}.jar">
+            <classpath refid="classpath.test"/>
+        </manifestclasspath>
 
-	<target name="doc" description="Generating the documentation">
-		<javadoc sourcepath="${src}" destdir="${docs}">
-			<classpath refid="classpath.test"/>
-		</javadoc>
-	</target>
+        <manifestclasspath property="lib.list3" jarfile="dist/lib/fsp-client-${DSTAMP}.jar">
+            <classpath refid="classpath.test"/>
+        </manifestclasspath>
+        <jar jarfile="${dist}/lib/fsp-central-${DSTAMP}.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="fr.uvsq.fsp.server.Central"/>
+                <attribute name="Class-Path" value="${lib.list}"/>
+            </manifest>
+        </jar>
+        <jar jarfile="${dist}/lib/fsp-server-${DSTAMP}.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="fr.uvsq.fsp.client.CServer"/>
+                <attribute name="Class-Path" value="${lib.list2}"/>
+            </manifest>
+        </jar>
+        <jar jarfile="${dist}/lib/fsp-client-${DSTAMP}.jar" basedir="${build}">
+            <manifest>
+                <attribute name="Main-Class" value="fr.uvsq.fsp.client.Client"/>
+                <attribute name="Class-Path" value="${lib.list3}"/>
+            </manifest>
+        </jar>
+    </target>
 
-	<target name="init-test" depends="compile">
-		<!--
-		<copy todir="${build.test.dir}">
-			<fileset dir="${build.central.dir.parent}">
-				<include name="${build.central.dir}/**"/>
-			</fileset>
-			<fileset dir="${build.client.dir.parent}">
-				<include name="${build.client.dir}/**"/>
-			</fileset>
-		</copy>
-		-->
-		<mkdir dir="${build.test.central.descriptions.dinfo.dir}"/>
-		<copy file="${src.fr.uvsq.fsp.server.users}" todir="${build.test.central.dir}"/>
-		<copy todir="${build.test.central.descriptions.dinfo.dir}">
-			<fileset dir="${src.fr.uvsq.fsp.client.descriptions.dir}">
-				<include name="*"/>
-			</fileset>
-		</copy>
-		<mkdir dir="${build.test.client.descriptions.dir}"/>
-	</target>
+    <target name="exe" depends="compile">
+        <java classname="fr.uvsq.fsp.server.Central" dir="${build}">
+            <classpath>
+                <path refid="classpath.test"/>
+                <pathelement location="${build.fr.dir}"/>
+            </classpath>
+            <arg value="60000"/>
+        </java>
+    </target>
 
-	<target name="test" depends="compile, init-test" description="Compiling and executing the tests">
-		<junit printsummary="yes" haltonfailure="yes" fork="true">
-			<formatter type="plain"/>
-			<classpath>
-				<path refid="classpath.test"/>
-				<pathelement location="${build.test.dir}"/>
-			</classpath>
-			<test name="test.TestChecksum"/>
-			<test name="test.TestClient"/>
-			<test name="test.TestServer"/>
-			<test name="test.TestFileLister"/>
-			<test name="test.TestCSVParser"/>
-			<test name="test.TestPatternFinder"/>
-		</junit>
-	</target>
+    <target name="clean" description="Cleaning the build and dist folder">
+        <delete dir="${build}"/>
+        <delete dir="${dist}"/>
+    </target>
+
+    <target name="doc" description="Generating the documentation">
+        <javadoc sourcepath="${src}" destdir="${docs}">
+            <classpath refid="classpath.test"/>
+        </javadoc>
+    </target>
+
+    <target name="init-test" depends="compile">
+        <!--
+        <copy todir="${build.test.dir}">
+            <fileset dir="${build.central.dir.parent}">
+                <include name="${build.central.dir}/**"/>
+            </fileset>
+            <fileset dir="${build.client.dir.parent}">
+                <include name="${build.client.dir}/**"/>
+            </fileset>
+        </copy>
+        -->
+        <mkdir dir="${build.test.central.descriptions.dinfo.dir}"/>
+        <copy file="${src.fr.uvsq.fsp.server.users}" todir="${build.test.central.dir}"/>
+        <copy todir="${build.test.central.descriptions.dinfo.dir}">
+            <fileset dir="${src.fr.uvsq.fsp.client.descriptions.dir}">
+                <include name="*"/>
+            </fileset>
+        </copy>
+        <mkdir dir="${build.test.client.descriptions.dir}"/>
+    </target>
+
+    <target name="test" depends="compile, init-test" description="Compiling and executing the tests">
+        <junit printsummary="yes" haltonfailure="yes" fork="true">
+            <formatter type="plain"/>
+            <classpath>
+                <path refid="classpath.test"/>
+                <pathelement location="${build.test.dir}"/>
+            </classpath>
+            <test name="test.TestChecksum"/>
+            <test name="test.TestClient"/>
+            <test name="test.TestServer"/>
+            <test name="test.TestFileLister"/>
+            <test name="test.TestCSVParser"/>
+            <test name="test.TestPatternFinder"/>
+        </junit>
+    </target>
 </project>
