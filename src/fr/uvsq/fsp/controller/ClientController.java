@@ -217,9 +217,11 @@ public class ClientController {
 			String tmp[] = filesMatching.get(index).split("/");
 			try {
 				client.download(tmp[0], tmp[1]);
-				client.lireFichier(client.clientDownloadsFolder);
+				System.out.println("Fichier " + tmp[1] + "téléchargé");
+				scene.setNotification("Fichier " + tmp[1] + "téléchargé", "greenFont");
 			} catch (IOException e) {
 				e.printStackTrace();
+				scene.setNotification(e.getMessage(), "redFont");
 			}
 		}
 

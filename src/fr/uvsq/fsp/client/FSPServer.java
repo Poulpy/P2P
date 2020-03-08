@@ -26,12 +26,13 @@ public class FSPServer extends FSPNode {
 	/** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
 	public final String descriptionsFolder;
 	public ServerSocket serverSocket;
+
 	public FSPServer(String serverIP, int port, String descFolder) {
 		super(serverIP, port);
 		descriptionsFolder = descFolder;
 		new File(descriptionsFolder).mkdirs();
 	}
-	
+
 	public void type() throws IOException {
 		envoyerMessage("TYPE SERVER");
 	}

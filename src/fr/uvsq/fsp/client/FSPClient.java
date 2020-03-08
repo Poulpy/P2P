@@ -50,6 +50,7 @@ public class FSPClient extends FSPNode {
 		dClient.open();
 		System.out.println("DOWNLOAD " + fileName);
 		dClient.envoyerMessage("DOWNLOAD " + fileName);
+		dClient.lireFichier(clientDownloadsFolder);
 		dClient.close();
 		dClient.disconnect();
 	}

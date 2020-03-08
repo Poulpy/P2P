@@ -90,9 +90,12 @@ public class CServer {
 
 					// On envoie au client le fichier qu'il demande
 					if (cmd.command.equals("DOWNLOAD")) {
-						fspCore.envoyerContenu(client.descriptionsFolder + cmd.content);
+						System.out.println("Demande de fichier : " + cmd.content);
+						fspCore.envoyerFichier(client.descriptionsFolder + cmd.content);
+						System.out.println("Fichier " + cmd.content + " téléversé");
 					}
 					fspCore.close();
+					fspCore.socket.close();// TODO pas bien
 				}
 				serverSocket.close();
 			}
