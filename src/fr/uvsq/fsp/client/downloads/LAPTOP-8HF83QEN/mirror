@@ -1,0 +1,72 @@
+#!/bin/bash
+
+if [ $# -ne 2 ]
+then
+    echo 'Wrong number of arguments.'
+fi
+
+# prints the path between a directory and a file
+path() {
+    filename=$(basename $2)
+    echo $(echo $2 | sed "s/$1\/\(.*\)$filename/\1/g")
+}
+
+# $1 -> $2
+
+# for each erased file
+for file in $(find $1 -name "*~")
+do
+    filename=$(basename $file)
+    filename=${filename::-1}
+    # we check if the other repo has the file
+    f2=$(find $2 -name "$filename")
+    if [ "$f2" != '' ]
+    then
+        # if not, we create it by adding a ~
+        mv $f2 "$f2~"
+    fi
+done
+
+# for the other files
+for file in $(find $1 -type f -name "*[^~]")
+do
+    f2=$(find $2 -name $(basename $file))
+    # if the file doesn't exist in the other repo
+    if [ "$f2" = '' ]
+    then
+        # we create the directories in case they don't exist
+        # and only copy if it succeed
+        p="$2/$(path $1 $file)"
+        mkdir -p $p && cp --preserve $file $p
+    else
+        # if the file already exist, we update it with the same date
+        # we assume the files have the same path if they have the same
+        # filename
+        cp -u --preserve $file $f2
+    fi
+done
+
+# $2 -> $1
+
+for file in $(find $2 -name "*~")
+do
+    filename=$(basename $file)
+    filename=${filename::-1}
+    f2=$(find $1 -name "$filename")
+    if [ "$f2" != '' ]
+    then
+        mv $f2 "$f2~"
+    fi
+done
+
+for file in $(find $2 -type f)
+do
+    f2=$(find $1 -name $(basename $file))
+    if [ "$f2" = '' ]
+    then
+        p="$1/$(path $2 $file)"
+        mkdir -p $p && cp --preserve $file $p
+    else
+        cp -u --preserve $file $f2
+    fi
+done

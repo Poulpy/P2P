@@ -1,0 +1,36 @@
+#!/bin/bash
+
+x=0
+y=0
+z=0
+t=0
+
+while read operation
+do
+    if [ "$operation" = 'q' ]
+    then
+        exit 0
+    fi
+
+    # To escape the star *, the quotes are needed
+    for e in "$operation"
+    do
+        # + - / * \* are supported
+        if [[ "$e" == [\+\-\*/] || "$e" == '\*' ]]
+        then
+            echo "$x $e $y"
+            x=$(expr $x "$e" $y)
+            echo "= $x"
+            y=$z
+            z=$t
+            t=0
+        else
+            t=$z
+            z=$y
+            y=$x
+            x=$e
+        fi
+    done
+
+done < "${1:-/dev/stdin}"
+

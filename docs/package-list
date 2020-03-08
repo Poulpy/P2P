@@ -1,7 +1,7 @@
-abstractions
-client
-controler
-server
+fr.uvsq.fsp.abstractions
+fr.uvsq.fsp.client
+fr.uvsq.fsp.controller
+fr.uvsq.fsp.server
+fr.uvsq.fsp.util
+fr.uvsq.fsp.view
 test
-util
-view

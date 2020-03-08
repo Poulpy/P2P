@@ -1,163 +1,140 @@
 package fr.uvsq.fsp.client;
 
-import fr.uvsq.fsp.abstractions.Yoda;
+import fr.uvsq.fsp.abstractions.FSPNode;
 import fr.uvsq.fsp.util.Checksum;
 import java.io.BufferedInputStream;
-import java.io.DataInputStream;
+import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.io.FileWriter;
-import java.io.BufferedWriter;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Scanner;
-import java.net.InetAddress;
 
-public class FSPClient extends Yoda {
+public class FSPClient extends FSPNode {
 
-    /** Nom d'hôte de l'utilisateur */
-    public String hostname;
+	/** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
+	public final String clientFolder;
+	public final String descriptionsFolder;
+	public final String clientSharedFolder;
+	public final String clientDownloadsFolder;
 
-    /** Identifiant de l'utilisateur */
-    public String id = " ";
+	public FSPClient(String serverIP, int port, String clientFolder) {
+		super(serverIP, port);
+		this.clientFolder = clientFolder;
+		descriptionsFolder = clientFolder + "descriptions/";
+		clientSharedFolder = clientFolder + "shared/";
+		clientDownloadsFolder = clientFolder + "downloads/";
+	}
 
-    /** Mot de passe */
-    public String mdp = " ";
+	public void type() throws IOException {
+		envoyerMessage("TYPE CLIENT");
+	}
 
-    /** Répertoire qui contient les descriptions des fichiers partagés par le serveur */
-    public final String descriptionsFolder = "src/fr/uvsq/fsp/client/descriptions/";
+	public void download(String host, String fileName) throws IOException {
+		FSPNode dClient = new FSPNode(host, 50000);
+		dClient.connect();
+		dClient.open();
+		System.out.println("DOWNLOAD " + fileName);
+		dClient.envoyerMessage("DOWNLOAD " + fileName);
+		dClient.lireFichier(clientDownloadsFolder);
+		dClient.close();
+		dClient.disconnect();
+	}
 
-    public FSPClient(String serverIP, int port) {
-        super(serverIP, port);
-        new File(descriptionsFolder).mkdirs();
+	/**
+	 * Envoie le hostname au serveur centrale et
+	 * verifie qu'il existe sur usersConnected
+	 * s'il n'existe pas il ferme la connection
+	 * @throws IOException
+	 */
+	public boolean verifieHostname() throws IOException {
+		String reponse;
+		String hostname;
 
-        try {
-            hostname = InetAddress.getLocalHost().getHostName();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        }
-    }
+		hostname = InetAddress.getLocalHost().getHostName();
+		try {
+			super.envoyerMessage("HOST " + hostname);
+			reponse = super.lireMessage();
+			System.out.println(reponse);
 
-    public void disconnect() {
-        try {
-            socket.close();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+			// return reponse.startsWith("2");
+			if (reponse.startsWith("2")) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 
+	/**
+	 * Laisse l'utilisateur interroger le serveur centralisé
+	 * si l'utilisateur n'a rien entré, rien n'est envoyé
+	 * si l'utilisateur tape QUIT, on quitte la méthode
+	 */
+	public void queryCentral() {
+		Scanner scan;
+		String reponse;
+		String query;
+		boolean loop = true;
 
-    public void connect() throws UnknownHostException, IOException {
-        socket = new Socket(adresseIPServeur, port);
-    }
+		System.out.println("Interrogez le serveur. Tapez QUIT pour quitter le programme.");
+		scan = new Scanner(System.in);
 
-    /**
-     * Authentification
-     * @Server
-     */
-    public void login() {
-        Scanner scan;
-        String reponse;
+		try {
+			while (loop) {
+				System.out.print("> ");
+				query = scan.nextLine();
 
-        scan = new Scanner(System.in);
+				if (query.equals("QUIT")) {
+					loop = false;
+				} else if (!query.isEmpty()) {
+					search(query);
+					System.out.println(lireMessage());
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
-        try {
-            // On entre et on envoie l'identifiant ...
-            do {
-                System.out.print("Identifiant : ");
-                id = scan.nextLine();
-                super.envoyerMessage("USER " + id);
-                reponse = super.lireMessage();
-                System.out.println(reponse);
-            } while (!reponse.startsWith("2"));
+	public ArrayList<String> parseFilesFound(String content) {
+		ArrayList<String> filesMatching;
+		String[] files;
 
-            // ... puis le mot de passe
-            do {
-                System.out.print("Mot de passe : ");
-                mdp = scan.nextLine();
-                super.envoyerMessage("PASS " + Checksum.getMD5Hash(this.mdp));
-                reponse = super.lireMessage();
-                System.out.println(reponse);
-            } while (!reponse.startsWith("2"));
+		filesMatching = new ArrayList<String>();
+		files = content.split(" ");
 
-            System.out.println("Authentification réussie !");
-            hostname();
-            envoyerDescriptions(descriptionsFolder);
+		for (String file : files) {
+			filesMatching.add(file);
+		}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+		return filesMatching;
+	}
 
-    /**
-     * Envoie le nom d'hôte de l'utilisateur
-     */
-    public void hostname() throws IOException {
-        envoyerMessage("HOSTNAME " + hostname);
-    }
-
-    /**
-     * Laisse l'utilisateur interroger le serveur centralisé
-     * si l'utilisateur n'a rien entré, rien n'est envoyé
-     * si l'utilisateur tape QUIT, on quitte la méthode
-     */
-    public void queryCentral() {
-        Scanner scan;
-        String reponse;
-        String query;
-        boolean loop = true;
-
-        System.out.println("Interrogez le serveur. Tapez QUIT pour quitter le programme.");
-        scan = new Scanner(System.in);
-
-        try {
-            while (loop) {
-                System.out.print("> ");
-                query = scan.nextLine();
-
-                if (query.equals("QUIT")) {
-                    loop = false;
-                } else if (!query.isEmpty()) {
-                    search(query);
-                    System.out.println(lireMessage());
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Interroge le serveur : est-ce qu'un fichier contient ce mot-clef ?
-     *
-     * SEARCH film
-     */
-    public void search(String keyword) throws IOException {
-        super.envoyerMessage("SEARCH " + keyword);
-    }
-
-    /**
-     * Méthode à appeler quand l'utilisateur veut quitter la session
-     * Doit recevoir un accusé réception
-     */
-    public void quit() throws IOException {
-        super.envoyerMessage("QUIT");
-    }
-    
-   /* public void run() {
-    	
-    	
-    	
-    }*/
-    }
-    
-
+	/**
+	 * Interroge le serveur : est-ce qu'un fichier contient ce mot-clef ?
+	 *
+	 * SEARCH film
+	 */
+	public void search(String keyword) throws IOException {
+		super.envoyerMessage("SEARCH " + keyword);
+	}
+}
 
