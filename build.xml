@@ -100,23 +100,38 @@
 			</fileset>
 		</copy>
 		<copy file="${src.fr.uvsq.fsp.client.stylesheet}" todir="${build.client.dir}"/>
-	</target>
+    </target>
+
+    <manifestclasspath property="lib.list" jarfile="${dist}/lib/fsp-central-${DSTAMP}.jar">
+        <classpath refid="classpath.test"/>
+    </manifestclasspath>
+
+    <manifestclasspath property="lib.list2" jarfile="${dist}/lib/fsp-server-${DSTAMP}.jar">
+        <classpath refid="classpath.test"/>
+    </manifestclasspath>
+
+    <manifestclasspath property="lib.list3" jarfile="${dist}/lib/fsp-client-${DSTAMP}.jar">
+        <classpath refid="classpath.test"/>
+    </manifestclasspath>
 
 	<target name="dist" depends="compile" description="Generating the jar files">
 		<mkdir dir="${dist}/lib/"/>
 		<jar jarfile="${dist}/lib/fsp-central-${DSTAMP}.jar" basedir="${build}">
 			<manifest>
-				<attribute name="Main-Class" value="${src}.fr.uvsq.fsp.server.Central"/>
+				<attribute name="Main-Class" value="fr.uvsq.fsp.server.Central"/>
+                <attribute name="Class-Path" value="${lib.list}"/>
 			</manifest>
 		</jar>
 		<jar jarfile="${dist}/lib/fsp-server-${DSTAMP}.jar" basedir="${build}">
 			<manifest>
-				<attribute name="Main-Class" value="${src}.fr.uvsq.fsp.client.CServer"/>
+				<attribute name="Main-Class" value="fr.uvsq.fsp.client.CServer"/>
+                <attribute name="Class-Path" value="${lib.list2}"/>
 			</manifest>
 		</jar>
 		<jar jarfile="${dist}/lib/fsp-client-${DSTAMP}.jar" basedir="${build}">
 			<manifest>
-				<attribute name="Main-Class" value="${src}.fr.uvsq.fsp.client.Client"/>
+				<attribute name="Main-Class" value="fr.uvsq.fsp.client.Client"/>
+                <attribute name="Class-Path" value="${lib.list3}"/>
 			</manifest>
 		</jar>
 	</target>
