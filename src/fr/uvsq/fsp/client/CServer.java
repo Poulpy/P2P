@@ -34,13 +34,17 @@ import javafx.util.Duration;
 public class CServer {
 
 	public static void main(String[] args) {
+		Command cmd;
+		FSPCore fspCore;
 		FSPServer client;
-		boolean loop = true;
 		Scanner scan;
-		String query;
-		String serverIP;
+		ServerSocket serverSocket;
 		String id;
 		String mdp;
+		String msg;
+		String query;
+		String serverIP;
+		boolean loop = true;
 		int port;
 
 		if (args.length == 4) {
@@ -62,8 +66,6 @@ public class CServer {
 
 		client = new FSPServer(serverIP, port, "client/descriptions/");
 
-		ServerSocket serverSocket;
-
 		try {
 			client.connect();
 			client.open();
@@ -74,16 +76,21 @@ public class CServer {
 				scan = new Scanner(System.in);
 				serverSocket = new ServerSocket(50000, 10);
 
+				/*
+				 * Le serveur attend la connexion d'un client. Après ouverture de la socket, il attend
+				 * un message de la part du client
+				 */
 				while (loop) {
-					FSPCore fspCore = new FSPCore("DESKTOP-F5FEM34",50000);
+					fspCore = new FSPCore("127.0.0.1", 50000);
 					fspCore.socket = serverSocket.accept();
-					System.out.println("hgfhfytf");
 					fspCore.open();
-					String msg = fspCore.lireMessage();
-					System.out.println(msg);
-					Command fcmd = Command.parseCommand(msg);
-					if(fcmd.command.equals("Download")) {
-						fspCore.envoyerContenu(client.descriptionsFolder + fcmd.content);
+
+					msg = fspCore.lireMessage();
+					cmd = Command.parseCommand(msg);
+
+					// On envoie au client le fichier qu'il demande
+					if (cmd.command.equals("DOWNLOAD")) {
+						fspCore.envoyerContenu(client.descriptionsFolder + cmd.content);
 					}
 					fspCore.close();
 				}

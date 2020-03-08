@@ -4,7 +4,6 @@ import fr.uvsq.fsp.util.FileLister;
 import fr.uvsq.fsp.client.FSPClient;
 import fr.uvsq.fsp.util.Command;
 import fr.uvsq.fsp.view.ClientView;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -45,20 +44,28 @@ public class ClientController {
 	 * Files matching the search
 	 */
 	public ArrayList<String> filesMatching;
+
+	/**
+	 * Files shared by the user
+	 */
 	public ArrayList<String> filesShared;
+
+	/**
+	 * Files downloaded by the user
+	 */
 	public ArrayList<String> filesDownloaded;
-	
+
 	public FileChooser fileChooser;
 
 	public ClientView scene;
+	public Stage stage;
 	public FSPClient client;
 	public boolean isConnected = false;
-
-	public int swap = 0;
 
 	public ClientController(Stage stage, ClientView view, FSPClient fspClient) {
 		this.scene = view;
 		this.client = fspClient;
+		this.stage = stage;
 
 		scene.serverIPField.setText(client.adresseIPServeur);
 		if (client.port != 0)
@@ -88,7 +95,7 @@ public class ClientController {
 					client.connect();
 					client.open();
 					client.type();
-					if (client.verifieHostname()) {						
+					if (client.verifieHostname()) {
 						scene.displayConnection(true);
 						isConnected = true;
 					}
@@ -100,6 +107,9 @@ public class ClientController {
 		});
 
 		// événements
+		/*
+		 * Recherche par mot clef
+		 */
 		scene.searchButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
@@ -129,28 +139,12 @@ public class ClientController {
 		scene.fileList.setOnKeyPressed(new EventHandler<KeyEvent>() {
 			@Override
 			public void handle(KeyEvent ke) {
-				if (isConnected && ke.getCode().equals(KeyCode.ENTER)) {
-					ObservableList<Integer> indices = scene.fileList.getSelectionModel().getSelectedIndices();
-					ArrayList<String> downloads;
-
-					downloads = new ArrayList<String>();
-
-					for (Integer index : indices) {
-					// TODO Télécharger un fichier
-						System.out.println("GET " + filesMatching.get(index));
-						try {
-							client.download("127.0.0.1","starwars");
-							client.lireFichier(client.clientDownloadsFolder);
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						
-						downloads = samples();
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					try {
+						downloadEvent();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-
-					displayUploadMessage(downloads.size());
-
 				}
 			}
 		});
@@ -159,27 +153,10 @@ public class ClientController {
 		scene.downloadButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				if (isConnected) {
-					ObservableList<Integer> indices = scene.fileList.getSelectionModel().getSelectedIndices();
-					ArrayList<String> downloads;
-
-					downloads = new ArrayList<String>();
-
-					for (Integer index : indices) {
-						// TODO Télécharger un fichier
-						System.out.println("GET " + filesMatching.get(index));
-						try {
-							client.download("127.0.0.1","starwars");
-							client.lireFichier(client.clientDownloadsFolder);
-						} catch (IOException ex) {
-							// TODO Auto-generated catch block
-							ex.printStackTrace();
-						}
-
-						downloads = samples();
-					}
-
-					displayUploadMessage(downloads.size());
+				try {
+					downloadEvent();
+				} catch (IOException ex) {
+					ex.printStackTrace();
 				}
 			}
 		});
@@ -188,58 +165,28 @@ public class ClientController {
 		scene.uploadButton.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent e) {
-				if (true) {
-					// get the file selected 
-	                File file = fileChooser.showOpenDialog(stage); 
-	  
-	                if (file != null) { 
-	                      
-	                    
-	                    try {
-	                        Path sourceDirectory = Paths.get(file.getAbsolutePath());
-	                        Path targetDirectory = Paths.get(client.clientSharedFolder+sourceDirectory.getFileName().toString());
-
-	                        //copy source to target using Files Class
-	                        Files.copy(sourceDirectory, targetDirectory);
-	                        filesShared = FileLister.list(client.clientSharedFolder);
-	                		scene.setListView(scene.sharedList, filesShared);
-	                    } catch (IOException ex) {
-	                        ex.printStackTrace();
-	                    }
-	                } 
+				try {
+					uploadEvent();
+				} catch (IOException ex) {
+					ex.printStackTrace();
 				}
 			}
 		});
-		
+
 		scene.downloadList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
 				System.out.println(scene.downloadList.getSelectionModel().getSelectedItem());
 			}
 		});
-		
+
 		scene.sendDescriptionButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent e) {
-				String file = scene.sharedList.getSelectionModel().getSelectedItem();
-				if (null!=file) {
-					System.out.println(file + " : " + scene.descriptionArea.getText());
-					try (PrintWriter out = new PrintWriter(client.descriptionsFolder + file)) {
-					    out.println(scene.descriptionArea.getText());
-					} catch (FileNotFoundException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					try {
-						client.envoyerMessage("FILECOUNT 1");
-						client.envoyerFichier(client.descriptionsFolder + file);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-				} else {
-					System.out.println("Pas de sélection OwO");
-				
+				try {
+					descriptionEvent();
+				} catch (FileNotFoundException ex) {
+					ex.printStackTrace();
 				}
 			}
 		});
@@ -255,6 +202,28 @@ public class ClientController {
 		a.add("zeus/RAPPORT.pdf");
 
 		return a;
+	}
+
+	public void downloadEvent() throws IOException {
+		ObservableList<Integer> indices = scene.fileList.getSelectionModel().getSelectedIndices();
+		ArrayList<String> downloads;
+
+		downloads = new ArrayList<String>();
+
+		// Downloading each file
+		for (Integer index : indices) {
+			System.out.println("Téléchargement du fichier " + filesMatching.get(index));
+			System.out.println("DOWNLOAD " + filesMatching.get(index));
+			String tmp[] = filesMatching.get(index).split("/");
+			try {
+				client.download(tmp[0], tmp[1]);
+				client.lireFichier(client.clientDownloadsFolder);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		displayUploadMessage(indices.size());
 	}
 
 	/**
@@ -273,7 +242,52 @@ public class ClientController {
 
 		if (ftpCmd.command.equals("FOUND")) {
 			filesMatching = client.parseFilesFound(ftpCmd.content);
+			scene.setNotification(filesMatching.size() + " fichier(s) trouvé(s)", "greenFont");
 			scene.updateListView(filesMatching);
+		} else {
+			scene.setNotification("Pas de fichier trouvé", "redFont");
+		}
+	}
+
+	public void uploadEvent() throws IOException {
+		// get the file selected
+		File file = fileChooser.showOpenDialog(stage);
+
+		if (file != null) {
+			try {
+				Path sourceDirectory = Paths.get(file.getAbsolutePath());
+				Path targetDirectory = Paths.get(client.clientSharedFolder+sourceDirectory.getFileName().toString());
+
+				//copy source to target using Files Class
+				Files.copy(sourceDirectory, targetDirectory);
+				scene.setNotification("Fichier " + file + " téléversé", "greenFont");
+				filesShared = FileLister.list(client.clientSharedFolder);
+				scene.setListView(scene.sharedList, filesShared);
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+		}
+	}
+
+	public void descriptionEvent() throws FileNotFoundException {
+		String file;
+
+		file = scene.sharedList.getSelectionModel().getSelectedItem();
+
+		if (null != file) {
+			System.out.println("Creating the description for the file : " + file);
+			System.out.println("> " + scene.descriptionArea.getText());
+			try (PrintWriter out = new PrintWriter(client.descriptionsFolder + file)) {
+				out.println(scene.descriptionArea.getText());
+				scene.setNotification("Description créée pour le fichier " + file , "greenFont");
+				client.envoyerMessage("FILECOUNT 1");
+				client.envoyerFichier(client.descriptionsFolder + file);
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		} else {
+			System.out.println("Pas de fichier sélectionné");
+			scene.setNotification("Pas de fichier sélectionné", "redFont");
 		}
 	}
 

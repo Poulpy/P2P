@@ -242,6 +242,11 @@ public class ClientView extends Group {
 		ft.playFromStart();
 	}
 
+	public void setNotification(String text, String styleClass) {
+		messageLabel.getStyleClass().add(styleClass);
+		messageLabel.setText(text);
+	}
+
 	public void displayConnection(boolean successful) {
 		messageLabel.getStyleClass().clear();
 		if (successful) {

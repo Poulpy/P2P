@@ -198,6 +198,8 @@ public class FSPCore {
 			msg = lireMessage();
 			cmd = Command.parseCommand(msg);
 		} while (!cmd.command.equals("ACK"));
+
+		System.out.println("ACK received");
 	}
 
 
