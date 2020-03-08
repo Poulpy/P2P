@@ -225,6 +225,8 @@ public class ClientController {
 			}
 		}
 
+		filesDownloaded = FileLister.listWithLevel(client.clientDownloadsFolder, 1);
+		scene.setListView(scene.downloadList, filesDownloaded);
 		displayUploadMessage(indices.size());
 	}
 
