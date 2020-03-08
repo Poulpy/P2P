@@ -4,38 +4,6 @@
 FSP est un protocol similaire à FTP, en plus simple.
 La documentation est disponible [ici](https://poulpy.github.io/P2P/)
 
-## Comment un client communique avec un serveur TCP ?
-
-Le client envoie des *commandes* au serveur :
-- USER : fournit l'identifiant de l'utilisateur
-- PASS : fournit le mot de passe
-
-Une communication TCP ressemble donc à ça :
-Le client envoie le message suivant au serveur grâce à une socket :
-
-`USER toto`
-
-
-En fonction de la requête, la centrale peut renvoyer un code d'erreur ou de succès.
-Si c'est un code de succès, le client envoie son mot de passe pour finaliser sa connexion :
-
-`PASS password`
-
-Si le mot de passe est correct, l'utilisateur est connecté au serveur et peut donc lui
-envoyer d'autres commandes (pour voir quels fichiers sont partagés sur le serveur par exemple).
-
-## Nomenclature
-
-Commande (ou commande FTP) : désigne une étiquette et un contenu. `USER toto`, `PASS password` : USER et PASS sont des étiquettes. En fonction de l'étiquette, l'action demandée n'est pas la même.
-
-Client : le programme exécuté par l'utilisateur. Envoie des requêtes auprès de la Centrale pour quérir l'adresse de fichiers recherchés.
-
-Serveur : le programme exécuté par l'utilisateur. Gère l'authentification et l'envoi des descriptions des fichiers partagés par l'utilisateur.
-
-Central : le programme faisant office de serveur centralisé. Gère :
-- l'authentification
-- la recherche de fichiers par mot-clef
-- le stockage des descriptions des fichiers partagés
 
 ## En cours / Fait
 
@@ -54,15 +22,12 @@ Central : le programme faisant office de serveur centralisé. Gère :
 - Tuer les threads du Central quand on quitte le programme. [Ici](https://docs.oracle.com/javase/1.5.0/docs/guide/misc/threadPrimitiveDeprecation.html)
 Utiliser une pool de Thread.
 - Utiliser l'interface graphique (Rercherche : fait; Téléchargement : à faire)
-- Plusieurs clients peuvent se connecter au serveur (multi thread). TODO A TESTER
 - Un Serveur attend une connexion d'un client, pour télécharger un ou plusieurs fichiers
-- Le client met à jour les fichiers qu'il a téléchargé
 
 ## Todo Code
 
 - Voir si toutes les ressources sont bien libérées quand on quitte l'application (`close()`) => try with resource.
 - Ecrire des tests.
-- Plus de documentation (plus de tag : param, return, etc.)
 - Gérer les exceptions
 - Controller : une méthode pour gérer chaque événement Actuellement, tous les événements sont dans le constructeur !
 - ClientView ClientController : message qui marque Aucun fichier trouvé (recherche)
@@ -72,12 +37,6 @@ Utiliser une pool de Thread.
 
 ## Idées
 
-- Tester avec une Raspberry
-- Créer une spécification.
-Puisqu'on ne fait pas exactement une implémentation du protocol FTP,
-il est bien de spécifier ce qu'implémente notre application !
-- Dark mode
-- Interface graphique : ajouter un fichier dans le répertoire des fichiers partagés
 - Un checksum du contenu du message
 - Un parseur pour analyser les messages (on en revient à une classe Message);
 ça permettrait d'avoir un protocole plus extensible. Pour l'instant le contenu est séparé par des espaces :
@@ -126,11 +85,6 @@ Les tests sont exécutés à chaque push.
 ant doc
 ```
 
-### Mettre en ligne la documentation
-
-```
-git checkout gh-pages && git merge - && git push origin gh-pages && git checkout -
-```
 
 ### Troubleshoting
 
@@ -178,5 +132,5 @@ JavaFX 8
 
 JUnit 4
 
-Ant 10
+Ant 1.9.9
 
