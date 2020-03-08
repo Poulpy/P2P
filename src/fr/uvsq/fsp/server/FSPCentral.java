@@ -78,7 +78,7 @@ public class FSPCentral extends FSPCore implements Runnable {
 	 */
 	public FSPCentral(Socket sock) {
 		super(sock);
-		configFolder = "src/fr/uvsq/fsp/server/";
+		configFolder = "central/";
 		cheminUtilisateurs = configFolder + "utilisateurs.csv";
 		descriptionsFolder = configFolder + "descriptions/";
 		try {
@@ -179,7 +179,7 @@ public class FSPCentral extends FSPCore implements Runnable {
 				hostname = contenu;
 				handleHostCommand(contenu);
 				break;
-				
+
 			case "FILECOUNT":
 				System.out.println(userDescriptionFolder);
 				saveDescriptions(userDescriptionFolder, Integer.parseInt(contenu));

@@ -60,20 +60,20 @@ public class CServer {
 			mdp = scan.nextLine();
 		}
 
-		client = new FSPServer(serverIP, port, "src/fr/uvsq/fsp/client/descriptions/");
+		client = new FSPServer(serverIP, port, "client/descriptions/");
 
 		ServerSocket serverSocket;
-		
+
 		try {
 			client.connect();
 			client.open();
 			client.type();
-			
+
 			if (client.login(id, mdp)) {
 				System.out.println("Tapez QUIT pour quitter le programme.");
 				scan = new Scanner(System.in);
 				serverSocket = new ServerSocket(50000, 10);
-				
+
 				while (loop) {
 					FSPCore fspCore = new FSPCore("DESKTOP-F5FEM34",50000);
 					fspCore.socket = serverSocket.accept();
